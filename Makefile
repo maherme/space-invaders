@@ -1,8 +1,12 @@
 QUIET := @
 RM := rm -rf
 MKDIR := mkdir -p
+GCOVR := gcovr
 
 DIR_BIN := $(CURDIR)/bin
+DIR_BIN_TST := $(DIR_BIN)/tst
+DIR_COV := $(DIR_BIN_TST)/cov
+DIR_BIN_RLS := $(DIR_BIN)/rel
 DIR_SRC := $(CURDIR)/src
 DIR_TST := $(CURDIR)/tst
 
@@ -18,12 +22,14 @@ OBJ_TST := $(OBJ) \
 		   testGraphGlut.o \
 		   testGraphGlutCallbacks.o
 
-OBJ := $(addprefix $(DIR_BIN)/,$(OBJ))
-OBJ_TST := $(addprefix $(DIR_BIN)/,$(OBJ_TST))
+OBJ := $(addprefix $(DIR_BIN_RLS)/,$(OBJ))
+OBJ_TST := $(addprefix $(DIR_BIN_TST)/,$(OBJ_TST))
 
 CFLAGS := -c -Wall -Wextra -Wpedantic -Werror $(INCLUDES)
 LDFLAGS := -lglut -lGL
-TEST_LDFLAGS := -lcmocka \
+TEST_LDFLAGS := -lgcov \
+				--coverage \
+				-lcmocka \
 				-Wl,--wrap=glutInit \
 				-Wl,--wrap=glutInitDisplayMode \
 				-Wl,--wrap=glutInitWindowSize \
@@ -32,17 +38,39 @@ TEST_LDFLAGS := -lcmocka \
 				-Wl,--wrap=glutDisplayFunc \
 				-Wl,--wrap=glClear \
 				-Wl,--wrap=glutSwapBuffers
+GCOVRFLAGS := --html-details \
+			  --exclude $(DIR_TST) \
+			  -o $(DIR_COV)/coverage_report.html \
+			  --json-summary \
+			  $(DIR_COV)/coverage_report.json
 
-$(shell $(MKDIR) $(DIR_BIN))
+.PHONY: run-test
+run-test: test
+	$(QUIET) $(DIR_BIN_TST)/test
 
+.PHONY: test
+test: $(shell $(MKDIR) $(DIR_BIN_TST))
+test: $(shell $(MKDIR) $(DIR_COV))
+test: CFLAGS += --coverage
 test: $(OBJ_TST)
-	$(QUIET) $(CC) $^ -o $(DIR_BIN)/$@ $(TEST_LDFLAGS)
-	$(QUIET) $(DIR_BIN)/test
+	$(QUIET) $(CC) $^ -o $(DIR_BIN_TST)/$@ $(TEST_LDFLAGS)
 
-game: $(DIR_BIN)/main.o $(OBJ)
-	$(QUIET) $(CC) $^ -o $(DIR_BIN)/$@ $(LDFLAGS)
+.PHONY: game
+game: $(shell $(MKDIR) $(DIR_BIN_RLS))
+game: $(DIR_BIN_RLS)/main.o $(OBJ)
+	$(QUIET) $(CC) $^ -o $(DIR_BIN_RLS)/$@ $(LDFLAGS)
 
-$(DIR_BIN)/%.o: %.c
+.PHONY: all
+all: game test
+
+.PHONY: gen-coverage
+gen-coverage:
+	$(QUIET) $(GCOVR) $(GCOVRFLAGS) -o $(DIR_COV)/coverage_report.html
+
+$(DIR_BIN_TST)/%.o: %.c
+	$(QUIET) $(CC) $(CFLAGS) $< -o $@
+
+$(DIR_BIN_RLS)/%.o: %.c
 	$(QUIET) $(CC) $(CFLAGS) $< -o $@
 
 .PHONY: clean
