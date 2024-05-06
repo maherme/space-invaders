@@ -15,17 +15,21 @@ INCLUDES := -I$(DIR_SRC)
 VPATH := $(DIR_SRC) $(DIR_TST)
 
 OBJ := graphGlut.o \
-	   graphGlutCallbacks.o
+	   graphGlutCallbacks.o \
+	   spaceship.o \
+	   utils.o
 
 OBJ_TST := $(OBJ) \
 		   test.o \
 		   testGraphGlut.o \
-		   testGraphGlutCallbacks.o
+		   testGraphGlutCallbacks.o \
+		   testSpaceship.o \
+		   testUtils.o
 
 OBJ := $(addprefix $(DIR_BIN_RLS)/,$(OBJ))
 OBJ_TST := $(addprefix $(DIR_BIN_TST)/,$(OBJ_TST))
 
-CFLAGS := -c -Wall -Wextra -Wpedantic -Werror $(INCLUDES)
+CFLAGS := -c -Wall -Wextra -Wpedantic -Werror $(INCLUDES) -g
 LDFLAGS := -lglut -lGL
 TEST_LDFLAGS := -lgcov \
 				--coverage \
@@ -37,7 +41,14 @@ TEST_LDFLAGS := -lgcov \
 				-Wl,--wrap=glutCreateWindow \
 				-Wl,--wrap=glutDisplayFunc \
 				-Wl,--wrap=glClear \
-				-Wl,--wrap=glutSwapBuffers
+				-Wl,--wrap=glutSwapBuffers \
+				-Wl,--wrap=calloc \
+				-Wl,--wrap=perror \
+				-Wl,--wrap=exit \
+				-Wl,--wrap=glBindTexture \
+				-Wl,--wrap=glGenTextures \
+				-Wl,--wrap=glTexImage2D \
+				-Wl,--wrap=glTexParameteri
 GCOVRFLAGS := --html-details \
 			  --exclude $(DIR_TST) \
 			  -o $(DIR_COV)/coverage_report.html \
