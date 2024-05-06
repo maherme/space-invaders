@@ -1,0 +1,18 @@
+include ../../toolchain.mk
+include ../common.mk
+
+LDFLAGS += -Wl,--wrap=glutInit \
+		   -Wl,--wrap=glutInitDisplayMode \
+		   -Wl,--wrap=glutInitWindowSize \
+		   -Wl,--wrap=glutInitWindowPosition \
+		   -Wl,--wrap=glutCreateWindow \
+		   -Wl,--wrap=glutDisplayFunc \
+		   -Wl,--wrap=glutReshapeFunc \
+		   -Wl,--wrap=glClear \
+		   -Wl,--wrap=glutSwapBuffers \
+		   -Wl,--wrap=glViewport \
+		   -Wl,--wrap=glMatrixMode \
+		   -Wl,--wrap=glLoadIdentity \
+		   -Wl,--wrap=gluOrtho2D \
+		   -Wl,--wrap=glEnable \
+		   -Wl,--wrap=graphPrintImage

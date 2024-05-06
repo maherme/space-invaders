@@ -7,6 +7,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 #include "graphGlut.h"
+#include "graph.h"
 
 void
 testGraphInitGlut(void ** status);

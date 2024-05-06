@@ -11,4 +11,10 @@
 void
 testGraphGlutDisplay(void ** status);
 
+void
+testGraphGlutDisplayCallPrint(void **status);
+
+void
+testGraphGlutReshape(void **status);
+
 #endif
