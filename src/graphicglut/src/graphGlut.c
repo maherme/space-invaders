@@ -9,4 +9,6 @@ graphInitGlut(graphInitGlutConfig_t *config) {
     glutInitWindowPosition(config->windowPositionX, config->windowPositionY);
     (void)glutCreateWindow(config->windowName);
     glutDisplayFunc(config->displayFunc);
+    glutReshapeFunc(config->reshapeFunc);
+    glEnable(GL_TEXTURE_2D);
 }

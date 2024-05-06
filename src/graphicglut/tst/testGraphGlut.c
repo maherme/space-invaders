@@ -41,8 +41,23 @@ __wrap_glutDisplayFunc(void (*func)(void)) {
     function_called();
 }
 
+void
+__wrap_glutReshapeFunc(void (*func)(int w, int h)) {
+    check_expected_ptr(func);
+    function_called();
+}
+
+void
+__wrap_glEnable(GLenum cap) {
+    check_expected(cap);
+    function_called();
+}
+
 static void
-foo(void) {}
+fooDisplay(void) {}
+
+static void
+fooReshape(int w, int h) { (void)w, (void)h;}
 
 void
 testGraphInitGlut(void ** status) {
@@ -59,7 +74,8 @@ testGraphInitGlut(void ** status) {
         .windowPositionX = 0,
         .windowPositionY = 0,
         .windowName = "Foo",
-        .displayFunc = foo,
+        .displayFunc = fooDisplay,
+        .reshapeFunc = fooReshape,
     };
 
     expect_any(__wrap_glutInit, argcp);
@@ -81,8 +97,14 @@ testGraphInitGlut(void ** status) {
     will_return(__wrap_glutCreateWindow, 1);
     expect_function_call(__wrap_glutCreateWindow);
 
-    expect_value(__wrap_glutDisplayFunc, func, foo);
+    expect_value(__wrap_glutDisplayFunc, func, fooDisplay);
     expect_function_call(__wrap_glutDisplayFunc);
+
+    expect_value(__wrap_glutReshapeFunc, func, fooReshape);
+    expect_function_call(__wrap_glutReshapeFunc);
+
+    expect_value(__wrap_glEnable, cap, GL_TEXTURE_2D);
+    expect_function_call(__wrap_glEnable);
 
     graphInitGlut(&initGlutConfig);
 }

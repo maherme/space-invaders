@@ -3,9 +3,6 @@
 
 #include <GL/glut.h>
 
-#define WINDOW_WIDTH    448
-#define WINDOW_HEIGHT   512
-
 typedef struct {
     int *main_argc;
     char **main_argv;
@@ -16,6 +13,7 @@ typedef struct {
     int windowPositionY;
     char *windowName;
     void (*displayFunc)(void);
+    void (*reshapeFunc)(int w, int h);
 }graphInitGlutConfig_t;
 
 void
