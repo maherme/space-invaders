@@ -31,7 +31,7 @@ void
 testSpaceshipCreate(void **status) {
     (void)status;
 
-    will_return(__wrap_calloc, true);
+    expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_glGenTextures);
     expect_function_call(__wrap_glBindTexture);
     expect_function_call(__wrap_glTexImage2D);
@@ -58,7 +58,7 @@ void
 testSpaceshipGetSpriteSuccess(void **status) {
     (void)status;
 
-    will_return(__wrap_calloc, true);
+    expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_glGenTextures);
     expect_function_call(__wrap_glBindTexture);
     expect_function_call(__wrap_glTexImage2D);
