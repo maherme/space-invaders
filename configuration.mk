@@ -15,4 +15,9 @@ SRC:= $(foreach d,$(VPATH),$(call find_c_files,$(d)))
 OBJ := $(notdir $(patsubst %.c, %.o, $(SRC)))
 OBJ := $(addprefix $(DIR_BIN_RLS)/,$(OBJ))
 
-DIR_MAKES := $(CURDIR)/src/utils $(CURDIR)/src/spaceship $(CURDIR)/src/graphic $(CURDIR)/src/graphicglut
+DIR_MAKES := $(CURDIR)/src/utils \
+			 $(CURDIR)/src/spaceship\
+			 $(CURDIR)/src/graphic \
+			 $(CURDIR)/src/graphicglut \
+			 $(CURDIR)/src/keyboard \
+			 $(CURDIR)/src/engine

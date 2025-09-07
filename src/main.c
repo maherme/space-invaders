@@ -5,10 +5,22 @@
 #include "graphGlut.h"
 #include "graphGlutCallbacks.h"
 #include "graph.h"
+#include "keyboard.h"
+#include "engine.h"
 #include "spaceship.h"
 
 bool gaming = true;
 spaceship_t spaceship = NULL;
+
+void
+keyboardUpdate(void) {
+    if(keyboardGetSpecialKeyState(KEY_LEFT)) {
+        graphMoveImage(spaceshipGetSprite(spaceship), LEFT);
+    }
+    if(keyboardGetSpecialKeyState(KEY_RIGHT)) {
+        graphMoveImage(spaceshipGetSprite(spaceship), RIGHT);
+    }
+}
 
 int
 main(int argc, char **argv) {
@@ -26,12 +38,16 @@ main(int argc, char **argv) {
     };
 
     graphInitGlut(&initGlutConfig);
+    keyboardInit();
 
     spaceship = spaceshipCreate(WINDOW_WIDTH/2, 0);
     graphRegisterPrint(spaceshipGetSprite(spaceship));
+    engineRegister(keyboardUpdate);
 
     while(gaming) {
+        engineRun();
         glutMainLoopEvent();
+        graphGlutDisplay();
     }
 
     exit(EXIT_SUCCESS);

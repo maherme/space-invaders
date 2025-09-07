@@ -10,21 +10,21 @@ __wrap_calloc(size_t nelem, size_t elsize) {
     if(call_real) {
         return __real_calloc(nelem, elsize);
     }
-    check_expected(nelem);
-    check_expected(elsize);
+    check_expected_int(nelem);
+    check_expected_int(elsize);
     function_called();
     return (void *)mock();
 }
 
 void
 __wrap_perror(const char *s) {
-    check_expected(s);
+    check_expected_ptr(s);
     function_called();
 }
 
 void
 __wrap_exit(int status) {
-    check_expected(status);
+    check_expected_int(status);
     function_called();
 }
 
@@ -34,12 +34,12 @@ testUtilsCallocFail(void **status) {
 
     will_return(__wrap_calloc, false);
     will_return(__wrap_calloc, NULL);
-    expect_value(__wrap_calloc, nelem, 1);
-    expect_value(__wrap_calloc, elsize, 1);
+    expect_int_value(__wrap_calloc, nelem, 1);
+    expect_int_value(__wrap_calloc, elsize, 1);
     expect_function_call(__wrap_calloc);
     expect_string(__wrap_perror, s, "calloc");
     expect_function_call(__wrap_perror);
-    expect_value(__wrap_exit, status, EXIT_FAILURE);
+    expect_int_value(__wrap_exit, status, EXIT_FAILURE);
     expect_function_call(__wrap_exit);
 
     utilsCalloc(1, 1);
@@ -52,8 +52,8 @@ testUtilsCallocSuccess(void **status) {
 
     will_return(__wrap_calloc, false);
     will_return(__wrap_calloc, expected);
-    expect_value(__wrap_calloc, nelem, 1);
-    expect_value(__wrap_calloc, elsize, 1);
+    expect_int_value(__wrap_calloc, nelem, 1);
+    expect_int_value(__wrap_calloc, elsize, 1);
     expect_function_call(__wrap_calloc);
 
     assert_ptr_equal(utilsCalloc(1, 1), expected);

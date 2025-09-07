@@ -23,6 +23,8 @@ spaceshipCreate(int x, int y){
     inst->sprite.width = SPACESHIP_WIDTH;
     inst->sprite.height = SPACESHIP_HEIGHT;
     inst->sprite.image = (const char *)spaceshipImage;
+    inst->sprite.pixels_to_move = SPACESHIP_WIDTH/4;
+    inst->sprite.time_to_move = 1000/60;
     graphCreateImage(&inst->sprite);
 
     return inst;
