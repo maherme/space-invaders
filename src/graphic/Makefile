@@ -8,4 +8,5 @@ LDFLAGS += -Wl,--wrap=glGenTextures \
 		   -Wl,--wrap=glTexCoord2f \
 		   -Wl,--wrap=glVertex2i \
 		   -Wl,--wrap=glEnd \
-		   -Wl,--wrap=glBindTexture
+		   -Wl,--wrap=glBindTexture \
+		   -Wl,--wrap=gettimeofday

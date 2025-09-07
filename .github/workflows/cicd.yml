@@ -29,7 +29,13 @@ jobs:
           sudo apt-get install -y freeglut3-dev
       - name: Install cmocka
         run: |
-          sudo apt-get install -y libcmocka-dev
+          sudo apt-get install -y git cmake
+          git clone https://gitlab.com/cmocka/cmocka.git
+          cd cmocka
+          git switch --detach cmocka-2.0.1
+          cmake -S . -B build
+          cmake --build build
+          sudo cmake --install build
       - name: Compile project
         run: make all QUIET=""
       - name: Upload working path as artifact
@@ -48,14 +54,16 @@ jobs:
           name: working-repo
       - name: Install cmocka
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libcmocka-dev
+         sudo apt-get install -y cmake
+          cd cmocka
+          sudo cmake --install build 
       - name: Install gcovr
         run: |
           sudo apt-get install -y gcovr
       - name: Run unitary testing
         shell: bash
         run: |
+          export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
           make -t
           make run-test QUIET=""
           make coverage QUIET=""
