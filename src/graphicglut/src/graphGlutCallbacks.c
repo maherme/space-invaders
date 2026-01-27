@@ -1,19 +1,48 @@
 #include "graphGlutCallbacks.h"
 #include "graph.h"
 
-static void *context = NULL;
+static void *context[MAX_PRINT_CONTEXTS];
 
-void
+int
 graphRegisterPrint(void *ctx) {
-    context = ctx;
+    if(!ctx) {
+        return -1;
+    }
+
+    for(int i = 0; i < MAX_PRINT_CONTEXTS; i++) {
+        if(!context[i]) {
+            context[i] = ctx;
+            return 0;
+        }
+    }
+
+    return -1;
+}
+
+int
+graphUnregisterPrint(void *ctx) {
+    if(!ctx) {
+        return -1;
+    }
+
+    for(int i = 0; i < MAX_PRINT_CONTEXTS; i++) {
+        if(context[i] == ctx) {
+            context[i] = NULL;
+            return 0;
+        }
+    }
+
+    return -1;
 }
 
 void
 graphGlutDisplay(void){
     glClear(GL_COLOR_BUFFER_BIT);
  
-    if(context) {
-        graphPrintImage(context);
+    for(int i = 0; i < MAX_PRINT_CONTEXTS; i++) {
+        if(context[i] != NULL) {
+            graphPrintImage(context[i]);
+        }
     }
 
     glutSwapBuffers();
@@ -28,3 +57,12 @@ graphGlutReshape(int w, int h) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
+
+#ifdef UNIT_TESTING
+void
+helperUT_graphGlutResetRegisteredContext(void) {
+    for(int i = 0; i < MAX_PRINT_CONTEXTS; i++) {
+        context[i] = NULL;
+    }
+}
+#endif

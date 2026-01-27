@@ -9,3 +9,13 @@ utilsCalloc(size_t nelem, size_t elsize) {
     }
     return ret;
 }
+
+void
+utilsFree(void **ptr) {
+    if(!ptr || !*ptr) {
+        return;
+    }
+
+    free(*ptr);
+    *ptr = NULL;
+}

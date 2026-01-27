@@ -14,7 +14,4 @@ typedef struct spaceship_instance_t *spaceship_t;
 spaceship_t
 spaceshipCreate(int x, int y);
 
-sprite_t *
-spaceshipGetSprite(const spaceship_t this);
-
 #endif

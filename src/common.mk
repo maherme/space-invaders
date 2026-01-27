@@ -1,3 +1,5 @@
+# This Makefile applies only for building test
+#
 DIR_BIN := $(CURDIR)/bin
 DIR_COV := $(DIR_BIN)/cov
 SRC := $(wildcard $(CURDIR)/src/*.c) \
@@ -8,7 +10,7 @@ VPATH := $(sort $(dir $(SRC)))
 
 INCLUDES := $(VPATH:%=-I%)
 
-CFLAGS += --coverage
+CFLAGS += --coverage -DUNIT_TESTING
 LDFLAGS += -lgcov --coverage -lcmocka
 GCOVRFLAGS += --exclude $(CURDIR)/tst
 

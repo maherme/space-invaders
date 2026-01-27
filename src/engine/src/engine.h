@@ -5,17 +5,22 @@
 
 #define MONITOR_REFRESH_RATE    60
 #define ENGINE_RATE             (int)((1/(double)MONITOR_REFRESH_RATE)*1000)
-#define ENGINE_MAX_CALLBACKS 1
+#define ENGINE_MAX_CALLBACKS 3
 
 typedef void (*engine_cb_t)(void);
 
 int
 engineRegister(engine_cb_t cb);
 
-void
-engineRun(void);
+int
+engineUnregister(engine_cb_t cb);
 
 void
+engineRun(int rate);
+
+#ifdef UNIT_TESTING
+void
 helperUT_engineResetRegisteredCallbacks(void);
+#endif
 
 #endif

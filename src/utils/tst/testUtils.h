@@ -16,4 +16,10 @@ testUtilsCallocFail(void **status);
 void
 testUtilsCallocSuccess(void **status);
 
+void
+testUtilsFreeFail(void **status);
+
+void
+testUtilsFreeSuccess(void **status);
+
 #endif

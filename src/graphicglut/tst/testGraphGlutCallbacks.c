@@ -44,36 +44,112 @@ __wrap_gluOrtho2D(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top) 
 
 void
 __wrap_graphPrintImage(const sprite_t * const sprite) {
-    (void)sprite;
+    check_expected_ptr(sprite);
     function_called();
 }
 
+int
+setup(void **state) {
+    (void)state;
+    helperUT_graphGlutResetRegisteredContext();
+    return 0;
+}
+
 void
-testGraphGlutDisplay(void **status) {
+testGraphRegisterPrintFailNullParameter(void **status) {
     (void)status;
 
     expect_uint_value(__wrap_glClear, mask, GL_COLOR_BUFFER_BIT);
     expect_function_call(__wrap_glClear);
-
     expect_function_call(__wrap_glutSwapBuffers);
 
+    int result = graphRegisterPrint(NULL);
+    assert_int_equal(result, -1);
     graphGlutDisplay();
 }
 
 void
-testGraphGlutDisplayCallPrint(void **status) {
+testGraphRegisterPrintFailMaxCallbacks(void **status) {
     (void)status;
-
     void *expected_ctx = (void *)0xdeadbeef;
 
     expect_uint_value(__wrap_glClear, mask, GL_COLOR_BUFFER_BIT);
     expect_function_call(__wrap_glClear);
+    expect_uint_value_count(__wrap_graphPrintImage, sprite, (uintptr_t)expected_ctx, MAX_PRINT_CONTEXTS);
+    expect_function_calls(__wrap_graphPrintImage, MAX_PRINT_CONTEXTS);
+    expect_function_call(__wrap_glutSwapBuffers);
 
+    for(int i = 0; i < MAX_PRINT_CONTEXTS; i++) {
+        graphRegisterPrint(expected_ctx);
+    }
+    int result = graphRegisterPrint(expected_ctx);
+    assert_int_equal(result, -1);
+    graphGlutDisplay();
+}
+
+void
+testGraphRegisterPrintSuccess(void **status) {
+    (void)status;
+    void *expected_ctx = (void *)0xdeadbeef;
+
+    expect_uint_value(__wrap_glClear, mask, GL_COLOR_BUFFER_BIT);
+    expect_function_call(__wrap_glClear);
+    expect_uint_value(__wrap_graphPrintImage, sprite, (uintptr_t)expected_ctx);
     expect_function_call(__wrap_graphPrintImage);
-
     expect_function_call(__wrap_glutSwapBuffers);
 
     graphRegisterPrint(expected_ctx);
+    graphGlutDisplay();
+}
+
+void
+testGraphUnregisterPrintFailNullParameter(void **status) {
+    (void)status;
+
+    expect_uint_value(__wrap_glClear, mask, GL_COLOR_BUFFER_BIT);
+    expect_function_call(__wrap_glClear);
+    expect_function_call(__wrap_glutSwapBuffers);
+
+    int result = graphUnregisterPrint(NULL);
+    assert_int_equal(result, -1);
+    graphGlutDisplay();
+}
+
+void
+testGraphUnregisterPrintFailMaxCallbacks(void **status) {
+    (void)status;
+    void *expected_ctx = (void *)0xdeadbeef;
+
+    expect_uint_value(__wrap_glClear, mask, GL_COLOR_BUFFER_BIT);
+    expect_function_call(__wrap_glClear);
+    expect_function_call(__wrap_glutSwapBuffers);
+
+    int result = graphUnregisterPrint(expected_ctx);
+    assert_int_equal(result, -1);
+    graphGlutDisplay();
+}
+
+void
+testGraphUnregisterPrintSuccess(void **status) {
+    (void)status;
+    void *expected_ctx = (void *)0xdeadbeef;
+
+    expect_uint_value(__wrap_glClear, mask, GL_COLOR_BUFFER_BIT);
+    expect_function_call(__wrap_glClear);
+    expect_uint_value(__wrap_graphPrintImage, sprite, (uintptr_t)expected_ctx);
+    expect_function_call(__wrap_graphPrintImage);
+    expect_function_call(__wrap_glutSwapBuffers);
+
+    int result = graphRegisterPrint(expected_ctx);
+    assert_int_equal(result, 0);
+    graphGlutDisplay();
+
+    expect_uint_value(__wrap_glClear, mask, GL_COLOR_BUFFER_BIT);
+    expect_function_call(__wrap_glClear);
+    expect_function_call(__wrap_glutSwapBuffers);
+
+    result = graphUnregisterPrint(expected_ctx);
+    assert_int_equal(result, 0);
     graphGlutDisplay();
 }
 

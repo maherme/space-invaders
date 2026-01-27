@@ -9,18 +9,24 @@
 #include "engine.h"
 
 int
-setup(void ** state);
+setup(void **state);
 
 void
-testEngineRegisterFailNullParameter(void ** status);
+testEngineRegisterFailNullParameter(void **status);
 
 void
-testEngineRegisterFailMaxCallbacks(void ** status);
+testEngineRegisterFailMaxCallbacks(void **status);
 
 void
-testEngineRegisterSuccess(void ** status);
+testEngineRegisterSuccess(void **status);
 
 void
-testEngineRun(void ** status);
+testEngineUnregisterFailNullParameter(void **status);
+
+void
+testEngineUnregisterNoCallbackFound(void **status);
+
+void
+testEngineUnregisterSuccess(void **status);
 
 #endif

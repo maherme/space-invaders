@@ -8,17 +8,35 @@
 #include <cmocka.h>
 #include "keyboard.h"
 
+int
+setup(void **state);
+
 void
 testKeyboardInit(void ** status);
 
 void
+testKeyboardRegisterActionNullAction(void **status);
+
+void
+testKeyboardRegisterActionInvalidKeyAction(void **status);
+
+void
+testKeyboardRegisterActionInvalidKey(void **status);
+
+void
 testKeyboardKeyPressed(void ** status);
+
+void
+testKeyboardKeyReleased(void **status);
 
 void
 testKeyboardKeyPressedAndReleased(void ** status);
 
 void
 testKeyboardSpecialKeyPressed(void ** status);
+
+void
+testKeyboardSpecialKeyReleased(void **status);
 
 void
 testKeyboardSpecialKeyPressedAndReleased(void ** status);

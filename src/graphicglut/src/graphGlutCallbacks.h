@@ -3,13 +3,23 @@
 
 #include <GL/glut.h>
 
-void
+#define MAX_PRINT_CONTEXTS 2
+
+int
 graphRegisterPrint(void *ctx);
+
+int
+graphUnregisterPrint(void *ctx);
 
 void
 graphGlutDisplay(void);
 
 void
 graphGlutReshape(int w, int h);
+
+#ifdef UNIT_TESTING
+void
+helperUT_graphGlutResetRegisteredContext(void);
+#endif
 
 #endif

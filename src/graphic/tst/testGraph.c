@@ -1,4 +1,5 @@
 #include "testGraph.h"
+#include <stdio.h>
 
 void
 __wrap_glGenTextures(GLsizei n, GLuint *textures){
@@ -16,7 +17,7 @@ __wrap_glBindTexture(GLenum target, GLuint texture) {
 
 void
 __wrap_glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height,
-                    GLint border, GLenum format, GLenum type, const void * data) {
+                    GLint border, GLenum format, GLenum type, const void *data) {
     check_expected_uint(target);
     check_expected_int(level);
     check_expected_int(internalformat);
@@ -62,26 +63,29 @@ __wrap_glEnd(void) {
     function_called();
 }
 
-int
-__wrap_gettimeofday(struct timeval *restrict tv, struct timezone *restrict tz) {
-    if(tv) {
-        tv->tv_sec = mock_type(time_t);
-        tv->tv_usec = mock_type(suseconds_t);
-    }
-    check_expected_ptr(tz);
+void
+__wrap_glDeleteTextures(GLsizei n, const GLuint *textures) {
+    check_expected_int(n);
+    check_expected_ptr(textures);
     function_called();
-    return 0;
 }
 
 void
-testGraphCreateImageFail(void ** status) {
+__wrap_utilsFree(void **ptr) {
+    check_expected_ptr(ptr);
+    function_called();
+    free(*ptr);
+}
+
+void
+testGraphCreateImageFail(void **status) {
     (void)status;
 
     graphCreateImage(NULL);
 }
 
 void
-testGraphCreateImageSuccess(void ** status) {
+testGraphCreateImageSuccess(void **status) {
     (void)status;
     sprite_t sprite = {0};
 
@@ -116,19 +120,49 @@ testGraphCreateImageSuccess(void ** status) {
 } 
 
 void
-testGraphPrintImageFail(void ** status) {
+testGraphGetSpriteFail(void **status) {
+    (void)status;
+
+    assert_null(graphGetSprite(NULL));
+}
+
+void
+testGraphGetSpriteSuccess(void **status) {
+    (void)status;
+    base_t base = {0};
+    sprite_t *sprite = graphGetSprite(&base);
+
+    assert_ptr_equal((void *)&base.sprite, (void *)sprite);
+}
+
+void
+testGraphPrintImageFail(void **status) {
     (void)status;
 
     graphPrintImage(NULL);
 }
 
 void
-testGraphPrintImageSuccess(void ** status) {
+testGraphPrintImageSuccess(void **status) {
     (void)status;
     sprite_t sprite = {
         .width = 10,
         .height = 20,
     };
+
+    expect_uint_value(__wrap_glBindTexture, target, GL_TEXTURE_2D);
+    expect_function_call(__wrap_glBindTexture);
+
+    expect_uint_value(__wrap_glTexImage2D, target, GL_TEXTURE_2D);
+    expect_int_value(__wrap_glTexImage2D, level, 0);
+    expect_int_value(__wrap_glTexImage2D, internalformat, GL_RGBA);
+    expect_int_value(__wrap_glTexImage2D, width, sprite.width);
+    expect_int_value(__wrap_glTexImage2D, height, sprite.height);
+    expect_int_value(__wrap_glTexImage2D, border, 0);
+    expect_uint_value(__wrap_glTexImage2D, format, GL_RGBA);
+    expect_uint_value(__wrap_glTexImage2D, type, GL_UNSIGNED_BYTE);
+    expect_uint_value(__wrap_glTexImage2D, data, (uintptr_t)sprite.image);
+    expect_function_call(__wrap_glTexImage2D);
 
     expect_uint_value(__wrap_glBegin, mode, GL_QUADS);
     expect_function_call(__wrap_glBegin);
@@ -171,151 +205,25 @@ testGraphPrintImageSuccess(void ** status) {
 }
 
 void
-testGraphMoveImageFail(void ** status) {
+testGraphDestroyObjectNullParameter(void **status) {
     (void)status;
+    base_t *ptr = NULL;
 
-    graphMoveImage(NULL, RIGHT);
+    graphDestroyObject(NULL);
+    graphDestroyObject(&ptr);
 }
 
 void
-testGraphMoveImageWrongDirection(void ** status) {
+testGraphDestroyObjectSuccess(void **status) {
     (void)status;
-    sprite_t sprite = {
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 0,
-        .last_update.tv_usec = 0,
-        .time_to_move = 0,
-    };
+    base_t *object = calloc(1, sizeof(base_t));;
 
-    will_return(__wrap_gettimeofday, (time_t)1);
-    will_return(__wrap_gettimeofday, (suseconds_t)0);
-    expect_uint_value(__wrap_gettimeofday, tz, (uintptr_t)NULL);
-    expect_function_call(__wrap_gettimeofday);
+    expect_int_value(__wrap_glDeleteTextures, n, 1);
+    expect_uint_value(__wrap_glDeleteTextures, textures, (uintptr_t)&(object->sprite.textureId));
+    expect_function_call(__wrap_glDeleteTextures);
 
-    graphMoveImage(&sprite, 0xFF);
-}
+    expect_uint_value(__wrap_utilsFree, ptr, (uintptr_t)&object);
+    expect_function_call(__wrap_utilsFree);
 
-void
-testGraphMoveImageRight(void ** status) {
-    (void)status;
-    sprite_t sprite = {
-        .x = 100,
-        .y = 0,
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 0,
-        .last_update.tv_usec = 0,
-        .time_to_move = 0,
-        .pixels_to_move = 10,
-        .scaled_width = 20,
-    };
-    sprite_t old_sprite = sprite;
-
-    will_return(__wrap_gettimeofday, (time_t)1);
-    will_return(__wrap_gettimeofday, (suseconds_t)0);
-    expect_uint_value(__wrap_gettimeofday, tz, (uintptr_t)NULL);
-    expect_function_call(__wrap_gettimeofday);
-
-    graphMoveImage(&sprite, RIGHT);
-    assert_int_equal(sprite.x, old_sprite.x + sprite.pixels_to_move);
-    assert_int_equal(sprite.y, old_sprite.y);
-}
-
-void
-testGraphMoveImageRightMax(void ** status) {
-    (void)status;
-    sprite_t sprite = {
-        .x = 432,
-        .y = 0,
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 0,
-        .last_update.tv_usec = 0,
-        .time_to_move = 0,
-        .pixels_to_move = 10,
-        .scaled_width = 20,
-    };
-
-    will_return(__wrap_gettimeofday, (time_t)1);
-    will_return(__wrap_gettimeofday, (suseconds_t)0);
-    expect_uint_value(__wrap_gettimeofday, tz, (uintptr_t)NULL);
-    expect_function_call(__wrap_gettimeofday);
-
-    graphMoveImage(&sprite, RIGHT);
-    assert_int_equal(sprite.x, WINDOW_WIDTH - sprite.scaled_width);
-}
-
-void
-testGraphMoveImageLeft(void ** status) {
-    (void)status;
-    sprite_t sprite = {
-        .x = 100,
-        .y = 0,
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 0,
-        .last_update.tv_usec = 0,
-        .time_to_move = 0,
-        .pixels_to_move = 10,
-        .scaled_width = 20,
-    };
-    sprite_t old_sprite = sprite;
-
-    will_return(__wrap_gettimeofday, (time_t)1);
-    will_return(__wrap_gettimeofday, (suseconds_t)0);
-    expect_uint_value(__wrap_gettimeofday, tz, (uintptr_t)NULL);
-    expect_function_call(__wrap_gettimeofday);
-
-    graphMoveImage(&sprite, LEFT);
-    assert_int_equal(sprite.x, old_sprite.x - sprite.pixels_to_move);
-    assert_int_equal(sprite.y, old_sprite.y);
-}
-
-void
-testGraphMoveImageLeftMax(void ** status) {
-    (void)status;
-    sprite_t sprite = {
-        .x = 9,
-        .y = 0,
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 0,
-        .last_update.tv_usec = 0,
-        .time_to_move = 0,
-        .pixels_to_move = 10,
-    };
-
-    will_return(__wrap_gettimeofday, (time_t)1);
-    will_return(__wrap_gettimeofday, (suseconds_t)0);
-    expect_uint_value(__wrap_gettimeofday, tz, (uintptr_t)NULL);
-    expect_function_call(__wrap_gettimeofday);
-
-    graphMoveImage(&sprite, LEFT);
-    assert_int_equal(sprite.x, 0);
-}
-
-void
-testGraphMoveImageTooEarlyToMove(void ** status) {
-    (void)status;
-    sprite_t sprite = {
-        .x = 9,
-        .y = 0,
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 0,
-        .last_update.tv_usec = 0,
-        .time_to_move = 10000,
-        .pixels_to_move = 10,
-    };
-    sprite_t old_sprite = sprite;
-
-    will_return(__wrap_gettimeofday, (time_t)1);
-    will_return(__wrap_gettimeofday, (suseconds_t)0);
-    expect_uint_value(__wrap_gettimeofday, tz, (uintptr_t)NULL);
-    expect_function_call(__wrap_gettimeofday);
-
-    graphMoveImage(&sprite, LEFT);
-    assert_int_equal(sprite.x, old_sprite.x);
-    assert_int_equal(sprite.y, old_sprite.y);
+    graphDestroyObject(&object);
 }

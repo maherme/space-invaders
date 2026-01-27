@@ -3,15 +3,12 @@
 #include <stdint.h>
 #include <setjmp.h>
 #include <cmocka.h>
-#include "testUtils.h"
+#include "testBullet.h"
 
 int
 main(void) {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test(testUtilsCallocFail),
-        cmocka_unit_test(testUtilsCallocSuccess),
-        cmocka_unit_test(testUtilsFreeFail),
-        cmocka_unit_test(testUtilsFreeSuccess),
+        cmocka_unit_test(testBulletCreate),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
