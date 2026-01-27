@@ -9,36 +9,27 @@
 #include "graph.h"
 
 void
-testGraphCreateImageFail(void ** status);
+testGraphCreateImageFail(void **status);
 
 void
-testGraphCreateImageSuccess(void ** status);
+testGraphCreateImageSuccess(void **status);
 
 void
-testGraphPrintImageFail(void ** status);
+testGraphGetSpriteFail(void **status);
 
 void
-testGraphPrintImageSuccess(void ** status);
+testGraphGetSpriteSuccess(void **status);
 
 void
-testGraphMoveImageFail(void ** status);
+testGraphPrintImageFail(void **status);
 
 void
-testGraphMoveImageWrongDirection(void ** status);
+testGraphPrintImageSuccess(void **status);
 
 void
-testGraphMoveImageRight(void ** status);
+testGraphDestroyObjectNullParameter(void **status);
 
 void
-testGraphMoveImageRightMax(void ** status);
-
-void
-testGraphMoveImageLeft(void ** status);
-
-void
-testGraphMoveImageLeftMax(void ** status);
-
-void
-testGraphMoveImageTooEarlyToMove(void ** status);
+testGraphDestroyObjectSuccess(void **status);
 
 #endif

@@ -1,8 +1,8 @@
-#include "testSpaceship.h"
-#include "spaceship.h"
+#include "testBullet.h"
+#include "bullet.h"
 
 void
-testSpaceshipCreate(void **status) {
+testBulletCreate(void **status) {
     (void)status;
     int x_pos = 10;
     int y_pos = 20;
@@ -10,9 +10,10 @@ testSpaceshipCreate(void **status) {
     expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_graphCreateImage);
 
-    spaceship_t spaceship = spaceshipCreate(x_pos, y_pos);
-    sprite_t *sprite = graphGetSprite((base_t *)spaceship);
+    bullet_t bullet = bulletCreate(x_pos, y_pos);
+    sprite_t *sprite = graphGetSprite((base_t *)bullet);
 
     assert_int_equal(sprite->x, x_pos);
     assert_int_equal(sprite->y, y_pos);
 }
+ 

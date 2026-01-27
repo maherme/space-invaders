@@ -1,32 +1,56 @@
 #include "engine.h"
 
 static engine_cb_t callbacks[ENGINE_MAX_CALLBACKS];
-static int cb_count;
 
 int
 engineRegister(engine_cb_t cb) {
-    if((cb_count >= ENGINE_MAX_CALLBACKS) || !cb) {
+    if(!cb) {
         return -1;
     }
 
-    callbacks[cb_count] = cb;
-    return ++cb_count;
+    for(int i = 0; i < ENGINE_MAX_CALLBACKS; i++) {
+        if(!callbacks[i]) {
+            callbacks[i] = cb;
+            return 0;
+        }
+    }
+    return -1;
+}
+
+int
+engineUnregister(engine_cb_t cb) {
+    if(!cb) {
+        return -1;
+    }
+
+    for(int i = 0; i < ENGINE_MAX_CALLBACKS; i++) {
+        if(callbacks[i] == cb) {
+            callbacks[i] = NULL;
+            return 0;
+        }
+    }
+
+    return -1;
 }
 
 void
-engineRun(void) {
-    for(int i = 0 ; i < ENGINE_RATE; i++) {
-        for(int j = 0 ; j < cb_count; j++) {
-            callbacks[j]();
+engineRun(int rate) {
+    for(int i = 0; i < rate; i++) {
+        for(int j = 0; j < ENGINE_MAX_CALLBACKS; j++) {
+            if(callbacks[j] != NULL) {
+                callbacks[j]();
+            }
         }
         usleep(1000);
     }
 }
 
+
+#ifdef UNIT_TESTING
 void
 helperUT_engineResetRegisteredCallbacks(void) {
-    for(int i = 0; i < cb_count; i++) {
+    for(int i = 0; i < ENGINE_MAX_CALLBACKS; i++) {
         callbacks[i] = NULL;
     }
-    cb_count = 0;
 }
+#endif

@@ -11,7 +11,9 @@ main(void) {
         cmocka_unit_test_setup(testEngineRegisterFailNullParameter, setup),
         cmocka_unit_test_setup(testEngineRegisterFailMaxCallbacks, setup),
         cmocka_unit_test_setup(testEngineRegisterSuccess, setup),
-        cmocka_unit_test_setup(testEngineRun, setup),
+        cmocka_unit_test_setup(testEngineUnregisterFailNullParameter, setup),
+        cmocka_unit_test_setup(testEngineUnregisterNoCallbackFound, setup),
+        cmocka_unit_test_setup(testEngineUnregisterSuccess, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

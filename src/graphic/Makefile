@@ -9,4 +9,6 @@ LDFLAGS += -Wl,--wrap=glGenTextures \
 		   -Wl,--wrap=glVertex2i \
 		   -Wl,--wrap=glEnd \
 		   -Wl,--wrap=glBindTexture \
-		   -Wl,--wrap=gettimeofday
+		   -Wl,--wrap=glDeleteTextures \
+		   -Wl,--wrap=gettimeofday \
+		   -Wl,--wrap=utilsFree

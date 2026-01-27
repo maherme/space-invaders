@@ -9,7 +9,7 @@ __wrap_usleep(useconds_t usec) {
 }
 
 int
-setup(void ** state) {
+setup(void **state) {
     (void)state;
     helperUT_engineResetRegisteredCallbacks();
     return 0;
@@ -21,42 +21,86 @@ callback_foo(void) {
 }
 
 void
-testEngineRegisterFailNullParameter(void ** status) {
+testEngineRegisterFailNullParameter(void **status) {
     (void)status;
+
+    expect_uint_value(__wrap_usleep, usec, 1000);
+    expect_function_call(__wrap_usleep);
 
     int result = engineRegister(NULL);
     assert_int_equal(result, -1);
+    engineRun(1);
 }
 
 void
-testEngineRegisterFailMaxCallbacks(void ** status) {
+testEngineRegisterFailMaxCallbacks(void **status) {
     (void)status;
+
+    expect_function_calls(callback_foo, ENGINE_MAX_CALLBACKS);
+    expect_uint_value(__wrap_usleep, usec, 1000);
+    expect_function_call(__wrap_usleep);
 
     for(int i = 0; i < ENGINE_MAX_CALLBACKS; i++) {
         engineRegister(callback_foo);
     }
     int result = engineRegister(callback_foo);
     assert_int_equal(result, -1);
+    engineRun(1);
 }
 
 void
-testEngineRegisterSuccess(void ** status) {
+testEngineRegisterSuccess(void **status) {
     (void)status;
+
+    expect_function_call(callback_foo);
+    expect_uint_value(__wrap_usleep, usec, 1000);
+    expect_function_call(__wrap_usleep);
 
     int result = engineRegister(callback_foo);
-    assert_int_equal(result, 1);
+    assert_int_equal(result, 0);
+    engineRun(1);
 }
 
 void
-testEngineRun(void ** status) {
+testEngineUnregisterFailNullParameter(void **status) {
     (void)status;
 
-    engineRegister(callback_foo);
+    expect_uint_value(__wrap_usleep, usec, 1000);
+    expect_function_call(__wrap_usleep);
 
-    for(int i = 0; i < ENGINE_RATE; i++) {
-        expect_function_call(callback_foo);
-        expect_uint_value(__wrap_usleep, usec, 1000);
-        expect_function_call(__wrap_usleep);
-    }
-    engineRun();
+    int result = engineUnregister(callback_foo);
+    assert_int_equal(result, -1);
+    engineRun(1);
+}
+
+void
+testEngineUnregisterNoCallbackFound(void **status) {
+    (void)status;
+
+    expect_uint_value(__wrap_usleep, usec, 1000);
+    expect_function_call(__wrap_usleep);
+
+    int result = engineUnregister(NULL);
+    assert_int_equal(result, -1);
+    engineRun(1);
+}
+
+void
+testEngineUnregisterSuccess(void **status) {
+    (void)status;
+
+    expect_function_call(callback_foo);
+    expect_uint_value(__wrap_usleep, usec, 1000);
+    expect_function_call(__wrap_usleep);
+
+    int result = engineRegister(callback_foo);
+    assert_int_equal(result, 0);
+    engineRun(1);
+
+    expect_uint_value(__wrap_usleep, usec, 1000);
+    expect_function_call(__wrap_usleep);
+
+    result = engineUnregister(callback_foo);
+    assert_int_equal(result, 0);
+    engineRun(1);
 }

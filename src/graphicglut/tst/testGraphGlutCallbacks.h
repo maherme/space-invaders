@@ -8,11 +8,26 @@
 #include <cmocka.h>
 #include "graphGlutCallbacks.h"
 
-void
-testGraphGlutDisplay(void ** status);
+int
+setup(void ** state);
 
 void
-testGraphGlutDisplayCallPrint(void **status);
+testGraphRegisterPrintFailNullParameter(void **status);
+
+void
+testGraphRegisterPrintFailMaxCallbacks(void **status);
+
+void
+testGraphRegisterPrintSuccess(void **status);
+
+void
+testGraphUnregisterPrintFailNullParameter(void **status);
+
+void
+testGraphUnregisterPrintFailMaxCallbacks(void **status);
+
+void
+testGraphUnregisterPrintSuccess(void **status);
 
 void
 testGraphGlutReshape(void **status);

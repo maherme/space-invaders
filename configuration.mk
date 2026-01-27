@@ -17,7 +17,9 @@ OBJ := $(addprefix $(DIR_BIN_RLS)/,$(OBJ))
 
 DIR_MAKES := $(CURDIR)/src/utils \
 			 $(CURDIR)/src/spaceship\
+			 $(CURDIR)/src/bullet \
 			 $(CURDIR)/src/graphic \
 			 $(CURDIR)/src/graphicglut \
 			 $(CURDIR)/src/keyboard \
-			 $(CURDIR)/src/engine
+			 $(CURDIR)/src/engine \
+			 $(CURDIR)/src/physic

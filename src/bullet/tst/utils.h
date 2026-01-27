@@ -7,7 +7,4 @@
 void *
 utilsCalloc(size_t nelem, size_t elsize);
 
-void
-utilsFree(void **ptr);
-
 #endif

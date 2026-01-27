@@ -29,11 +29,3 @@ spaceshipCreate(int x, int y){
 
     return inst;
 }
-
-sprite_t *
-spaceshipGetSprite(const spaceship_t this) {
-    if(!this) {
-        return NULL;
-    }
-    return &this->sprite;
-}

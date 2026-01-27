@@ -1,7 +1,6 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
 
-#include <sys/time.h>
 #include <GL/glut.h>
 
 #define WINDOW_WIDTH    448
@@ -11,13 +10,6 @@
 #define R {(char)255, 0, 0, (char)255}
 #define G {0, (char)255, 0, (char)255}
 #define B {0, 0, 0, 0}
-
-typedef enum {
-    UP,
-    DOWN,
-    RIGHT,
-    LEFT
-} direction_t;
 
 typedef struct {
     int x;
@@ -34,13 +26,17 @@ typedef struct {
     int pixels_to_move;
 } sprite_t;
 
+typedef struct {
+    sprite_t sprite;
+} base_t;
+
 void
 graphCreateImage(sprite_t *sprite);
 
-void
-graphPrintImage(const sprite_t * const sprite);
+sprite_t *
+graphGetSprite(base_t *b);
 
 void
-graphMoveImage(sprite_t *sprite, direction_t direction);
+graphPrintImage(const sprite_t * const sprite);
 
 #endif

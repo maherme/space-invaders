@@ -9,8 +9,6 @@ int
 main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(testSpaceshipCreate),
-        cmocka_unit_test(testSpaceshipGetSpriteFail),
-        cmocka_unit_test(testSpaceshipGetSpriteSuccess),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

@@ -4,10 +4,26 @@
 #include <stdbool.h>
 #include <GL/glut.h>
 
+#define MAX_NUM_KEYS 256
+
 typedef enum {
-    KEY_RIGHT,
-    KEY_LEFT
+    SPECIAL_KEY_RIGHT,
+    SPECIAL_KEY_LEFT,
+    MAX_SPECIAL_KEYS
 }special_key_t;
+
+typedef enum {
+    ACTION_KEY_UP,
+    ACTION_KEY_DOWN,
+    ACTION_SPECIAL_KEY_UP,
+    ACTION_SPECIAL_KEY_DOWN,
+    MAX_KEY_ACTIONS
+}key_action_t;
+
+typedef void (*actions_cb)(void);
+
+int
+keyboardRegisterAction(actions_cb action, key_action_t type, int key);
 
 bool
 keyboardGetKeyState(unsigned char key);
@@ -17,5 +33,10 @@ keyboardGetSpecialKeyState(special_key_t key);
 
 void
 keyboardInit(void);
+
+#ifdef UNIT_TESTING
+void
+helperUT_keyboardResetRegisteredCallbacks(void);
+#endif 
 
 #endif 
