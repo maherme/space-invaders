@@ -1,5 +1,16 @@
+#
+# SPDX-License-Identifier: MIT
+# 
+# Copyright (c) 2025 Manuel Hernández Méndez
+# 
+# Authors:
+#   Manuel Hernández Méndez <maherme.dev@gmail.com>
+# 
+
+#
 # This Makefile applies only for building test
 #
+
 DIR_BIN := $(CURDIR)/bin
 DIR_COV := $(DIR_BIN)/cov
 SRC := $(wildcard $(CURDIR)/src/*.c) \

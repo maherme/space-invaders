@@ -1,3 +1,12 @@
+#
+# SPDX-License-Identifier: MIT
+# 
+# Copyright (c) 2025 Manuel Hernández Méndez
+# 
+# Authors:
+#   Manuel Hernández Méndez <maherme.dev@gmail.com>
+# 
+ 
 DIR_BIN := $(CURDIR)/bin
 DIR_BIN_RLS := $(DIR_BIN)/rel
 DIR_COV := $(DIR_BIN)/cov
