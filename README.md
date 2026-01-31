@@ -1,5 +1,5 @@
-# space-invaders
-[![build](https://github.com/maherme/space-invaders/actions/workflows/cicd.yml/badge.svg?job=build)](https://github.com/maherme/space-invaders/actions)
-[![unit_test_coverage](https://maherme.github.io/space-invaders/coverage/badges.svg)](https://maherme.github.io/space-invaders/coverage_report.html)
+# Invaders 1978 Inspired
+[![build](https://github.com/maherme/invaders-1978-inspired/actions/workflows/cicd.yml/badge.svg?job=build)](https://github.com/maherme/invaders-1978-inspired/actions)
+[![unit_test_coverage](https://maherme.github.io/invaders-1978-inspired/coverage/badges.svg)](https://maherme.github.io/invaders-1978-inspired/coverage_report.html)
 
-The Classic Space Invaders Game
+A **retro game inspired by Space Invaders**. 
