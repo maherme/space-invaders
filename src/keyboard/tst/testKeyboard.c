@@ -1,3 +1,12 @@
+/*
+ * SPDX-License-Identifier: MIT
+ *
+ * Copyright (c) 2026 Manuel Hernández Méndez
+ *
+ * Authors:
+ *   Manuel Hernández Méndez <maherme.dev@gmail.com>
+ */
+
 #include "testKeyboard.h"
 
 static void (*registered_keyboard_func)(unsigned char, int, int) = NULL;

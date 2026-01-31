@@ -1,3 +1,12 @@
+/*
+ * SPDX-License-Identifier: MIT
+ *
+ * Copyright (c) 2024 Manuel Hernández Méndez
+ *
+ * Authors:
+ *   Manuel Hernández Méndez <maherme.dev@gmail.com>
+ */
+
 #ifndef __GRAPHGLUT_H__
 #define __GRAPHGLUT_H__
 

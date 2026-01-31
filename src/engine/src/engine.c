@@ -1,3 +1,12 @@
+/*
+ * SPDX-License-Identifier: MIT
+ *
+ * Copyright (c) 2026 Manuel Hernández Méndez
+ *
+ * Authors:
+ *   Manuel Hernández Méndez <maherme.dev@gmail.com>
+ */
+
 #include "engine.h"
 
 static engine_cb_t callbacks[ENGINE_MAX_CALLBACKS];

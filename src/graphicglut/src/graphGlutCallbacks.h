@@ -1,3 +1,12 @@
+/*
+ * SPDX-License-Identifier: MIT
+ *
+ * Copyright (c) 2024 Manuel Hernández Méndez
+ *
+ * Authors:
+ *   Manuel Hernández Méndez <maherme.dev@gmail.com>
+ */
+
 #ifndef __GRAPHGLUTCALLBACKS_H__
 #define __GRAPHGLUTCALLBACKS_H__
 

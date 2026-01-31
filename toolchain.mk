@@ -1,3 +1,12 @@
+#
+# SPDX-License-Identifier: MIT
+# 
+# Copyright (c) 2025 Manuel Hernández Méndez
+# 
+# Authors:
+#   Manuel Hernández Méndez <maherme.dev@gmail.com>
+# 
+ 
 QUIET := @
 QUIET_MAKE := --no-print-directory
 RM:= rm -rf
