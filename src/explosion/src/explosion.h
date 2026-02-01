@@ -7,17 +7,22 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
-#ifndef __BULLET_H__
-#define __BULLET_H__
+#ifndef __EXPLOSION_H__
+#define __EXPLOSION_H__ 
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
+#include <stdbool.h>
 #include "utils.h"
 #include "graph.h"
 
-typedef struct bullet_instance_t *bullet_t;
+typedef struct explosion_instance_t *explosion_t;
 
-bullet_t
-bulletCreate(int x, int y);
+explosion_t
+explosionCreate(int x, int y);
+
+bool
+explosionTimeout(explosion_t this);
 
 #endif
