@@ -19,10 +19,12 @@
 #include "physic.h"
 #include "spaceship.h"
 #include "bullet.h"
+#include "explosion.h"
 
 bool gaming = true;
 spaceship_t spaceship = NULL;
 bullet_t bullet = NULL;
+explosion_t explosion = NULL;
 
 static void
 bulletMove(void) {
@@ -31,12 +33,23 @@ bulletMove(void) {
 
 static void
 bulletCheckCeiligCollision(void) {
-    if(physicCheckCeillingCollision(graphGetSprite((base_t *)bullet))) {
-        graphUnregisterPrint(graphGetSprite((base_t *)bullet));
+    sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
+    if(physicCheckCeillingCollision(bullet_sprite)) {
+        graphUnregisterPrint(bullet_sprite);
         engineUnregister(bulletCheckCeiligCollision);
         engineUnregister(bulletMove);
+        explosion = explosionCreate(bullet_sprite->x - 8,
+                                    bullet_sprite->y - bullet_sprite->scaled_height);
         graphDestroyObject((base_t **)&bullet);
-        bullet = NULL;
+        graphRegisterPrint(graphGetSprite((base_t *)explosion));
+    }
+}
+
+static void
+explosionCheckTimeout(void) {
+    if(explosionTimeout(explosion)) {
+        graphUnregisterPrint(graphGetSprite((base_t *)explosion));
+        graphDestroyObject((base_t **)&explosion);
     }
 }
 
@@ -84,6 +97,7 @@ main(int argc, char **argv) {
     spaceship = spaceshipCreate(WINDOW_WIDTH/2, 0);
     graphRegisterPrint(graphGetSprite((base_t *)spaceship));
     engineRegister(keyboardUpdate);
+    engineRegister(explosionCheckTimeout);
 
     while(gaming) {
         engineRun(ENGINE_RATE);

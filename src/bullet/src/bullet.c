@@ -9,6 +9,9 @@
 
 #include "bullet.h"
 
+#define BULLET_WIDTH                1
+#define BULLET_HEIGHT               4
+
 struct bullet_instance_t {
     sprite_t sprite;
 };

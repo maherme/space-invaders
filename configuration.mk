@@ -31,4 +31,5 @@ DIR_MAKES := $(CURDIR)/src/utils \
 			 $(CURDIR)/src/graphicglut \
 			 $(CURDIR)/src/keyboard \
 			 $(CURDIR)/src/engine \
-			 $(CURDIR)/src/physic
+			 $(CURDIR)/src/physic \
+			 $(CURDIR)/src/explosion
