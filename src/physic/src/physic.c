@@ -15,11 +15,7 @@ physicMoveSprite(sprite_t *sprite, direction_t direction) {
         return;
     }
 
-    struct timeval current_time;
-    gettimeofday(&current_time, NULL);
-    float delta_time = (current_time.tv_sec - sprite->last_update.tv_sec) * 1000.0f +
-                      (current_time.tv_usec - sprite->last_update.tv_usec) / 1000.0f;
-    if(delta_time < sprite->time_to_move) {
+    if(!utilsCheckTimeout(sprite->last_update, sprite->time_to_move)) {
         return;
     }
 
@@ -49,7 +45,7 @@ physicMoveSprite(sprite_t *sprite, direction_t direction) {
             break;
     }
 
-    sprite->last_update = current_time;
+    graphUpdateTimeSprite(sprite);
 }
 
 bool

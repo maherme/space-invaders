@@ -10,4 +10,5 @@
 include ../../toolchain.mk
 include ../common.mk
 
-LDFLAGS += -Wl,--wrap=gettimeofday
+LDFLAGS += -Wl,--wrap=utilsCheckTimeout \
+		   -Wl,--wrap=graphUpdateTimeSprite

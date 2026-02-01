@@ -86,6 +86,17 @@ __wrap_utilsFree(void **ptr) {
     free(*ptr);
 }
 
+int
+__wrap_clock_gettime(clockid_t clockid,
+                     struct timespec *tp) {
+    assert_int_equal(clockid, CLOCK_MONOTONIC);
+    assert_non_null(tp);
+    tp->tv_sec = (time_t)mock_type(time_t);
+    tp->tv_nsec = (long)mock_type(long);
+    function_called();
+    return 0;
+}
+
 void
 testGraphCreateImageFail(void **status) {
     (void)status;
@@ -142,6 +153,27 @@ testGraphGetSpriteSuccess(void **status) {
     sprite_t *sprite = graphGetSprite(&base);
 
     assert_ptr_equal((void *)&base.sprite, (void *)sprite);
+}
+
+void
+testGraphUpdateTimeSpriteNullParameter(void **status) {
+    (void)status;
+
+    graphUpdateTimeSprite(NULL);
+}
+
+void
+testGraphUpdateTimeSprite(void **status) {
+    (void)status;
+    sprite_t sprite = {0};
+
+    will_return(__wrap_clock_gettime, (time_t)9);
+    will_return(__wrap_clock_gettime, (long)(99));
+    expect_function_call(__wrap_clock_gettime);
+
+    graphUpdateTimeSprite(&sprite);
+    assert_int_equal((int)sprite.last_update.tv_sec, 9);
+    assert_int_equal((int)sprite.last_update.tv_nsec, 99);
 }
 
 void

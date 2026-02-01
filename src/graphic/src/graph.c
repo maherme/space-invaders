@@ -39,6 +39,17 @@ graphGetSprite(base_t *b) {
 }
 
 void
+graphUpdateTimeSprite(sprite_t *sprite) {
+    if(!sprite) {
+        return;
+    }
+
+    struct timespec current_time;
+    clock_gettime(CLOCK_MONOTONIC, &current_time);
+    sprite->last_update = current_time;
+}
+
+void
 graphPrintImage(const sprite_t * const sprite) {
     if(!sprite) {
         return;

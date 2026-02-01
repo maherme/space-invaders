@@ -12,4 +12,5 @@ include ../common.mk
 
 LDFLAGS += -Wl,--wrap=calloc \
 		   -Wl,--wrap=perror \
-		   -Wl,--wrap=exit
+		   -Wl,--wrap=exit \
+		   -Wl,--wrap=clock_gettime

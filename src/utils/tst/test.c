@@ -21,6 +21,11 @@ main(void) {
         cmocka_unit_test(testUtilsCallocSuccess),
         cmocka_unit_test(testUtilsFreeFail),
         cmocka_unit_test(testUtilsFreeSuccess),
+        cmocka_unit_test(testUtilsCheckTimeoutNegativeTimeoutParameter),
+        cmocka_unit_test(testUtilsCheckTimeoutExact),
+        cmocka_unit_test(testUtilsCheckTimeoutBefore),
+        cmocka_unit_test(testUtilsCheckTimeoutZero),
+        cmocka_unit_test(testUtilsCheckTimeoutFuture),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

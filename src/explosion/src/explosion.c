@@ -40,7 +40,7 @@ explosionCreate(int x, int y){
     inst->sprite.pixels_to_move = 0;
     inst->sprite.time_to_move = 0;
     graphCreateImage(&inst->sprite);
-    inst->explosion_time = 500000000LL;
+    inst->explosion_time = 500 * NS_PER_MS;
     clock_gettime(CLOCK_MONOTONIC, &inst->creation_time);
 
     return inst;
@@ -52,13 +52,17 @@ explosionTimeout(explosion_t this) {
         return false;
     }
 
-    struct timespec current_time;
-    clock_gettime(CLOCK_MONOTONIC, &current_time);
-    long long delta_time = (current_time.tv_sec - this->creation_time.tv_sec) * 1000000000LL +
-                           (current_time.tv_nsec - this->creation_time.tv_nsec);
-    if(delta_time >= this->explosion_time) {
-        return true;
-    }
-
-    return false;
+    return utilsCheckTimeout(this->creation_time, this->explosion_time);
 }
+
+#ifdef UNIT_TESTING
+struct timespec
+helperUT_explosionGetCreationTime(explosion_t this) {
+    return this->creation_time;
+}
+
+long long
+helperUT_explosionGetExplosionTime(explosion_t this) {
+    return this->explosion_time;
+}
+#endif

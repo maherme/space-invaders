@@ -11,7 +11,6 @@
 #define __GRAPH_H__
 
 #include <GL/glut.h>
-#include <sys/time.h>
 #include "utils.h"
 
 #define WINDOW_WIDTH    448
@@ -32,8 +31,8 @@ typedef struct {
     int scaled_height;
     const char *image;
     GLuint textureId;
-    struct timeval last_update;
-    float time_to_move;
+    struct timespec last_update;
+    long long time_to_move;
     int pixels_to_move;
 } sprite_t;
 
@@ -46,6 +45,9 @@ graphCreateImage(sprite_t *sprite);
 
 sprite_t *
 graphGetSprite(base_t *b);
+
+void
+graphUpdateTimeSprite(sprite_t *sprite);
 
 void
 graphPrintImage(const sprite_t * const sprite);
