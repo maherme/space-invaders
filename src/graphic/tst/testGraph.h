@@ -30,6 +30,12 @@ void
 testGraphGetSpriteSuccess(void **status);
 
 void
+testGraphUpdateTimeSpriteNullParameter(void **status);
+
+void
+testGraphUpdateTimeSprite(void **status);
+
+void
 testGraphPrintImageFail(void **status);
 
 void

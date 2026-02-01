@@ -31,4 +31,19 @@ testUtilsFreeFail(void **status);
 void
 testUtilsFreeSuccess(void **status);
 
+void
+testUtilsCheckTimeoutNegativeTimeoutParameter(void **status);
+
+void
+testUtilsCheckTimeoutExact(void **status);
+
+void
+testUtilsCheckTimeoutBefore(void **status);
+
+void
+testUtilsCheckTimeoutZero(void **status);
+
+void
+testUtilsCheckTimeoutFuture(void **status);
+
 #endif

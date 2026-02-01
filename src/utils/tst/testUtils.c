@@ -37,6 +37,17 @@ __wrap_exit(int status) {
     function_called();
 }
 
+int
+__wrap_clock_gettime(clockid_t clockid,
+                     struct timespec *tp) {
+    assert_int_equal(clockid, CLOCK_MONOTONIC);
+    assert_non_null(tp);
+    tp->tv_sec = (time_t)mock_type(time_t);
+    tp->tv_nsec = (long)mock_type(long);
+    function_called();
+    return 0;
+}
+
 void
 testUtilsCallocFail(void **status) {
     (void)status;
@@ -85,4 +96,72 @@ testUtilsFreeSuccess(void **status) {
     assert_non_null(ptr);
     utilsFree(&ptr);
     assert_null(ptr);
+}
+
+void
+testUtilsCheckTimeoutNegativeTimeoutParameter(void **status) {
+    (void)status;
+    struct timespec time = {0};
+
+    assert_false(utilsCheckTimeout(time,-1));
+}
+
+void
+testUtilsCheckTimeoutExact(void **status) {
+    (void)status;
+    struct timespec time = {
+        .tv_sec = 0,
+        .tv_nsec = 0
+    };
+
+    will_return(__wrap_clock_gettime, (time_t)0);
+    will_return(__wrap_clock_gettime, (long)(500 * NS_PER_MS));
+    expect_function_call(__wrap_clock_gettime);
+
+    assert_true(utilsCheckTimeout(time, 500 * NS_PER_MS));
+}
+
+void
+testUtilsCheckTimeoutBefore(void **status) {
+    (void)status;
+    struct timespec time = {
+        .tv_sec = 0,
+        .tv_nsec = 0
+    };
+
+    will_return(__wrap_clock_gettime, (time_t)0);
+    will_return(__wrap_clock_gettime, (long)(499999999));
+    expect_function_call(__wrap_clock_gettime);
+
+    assert_false(utilsCheckTimeout(time, 500 * NS_PER_MS));
+}
+
+void
+testUtilsCheckTimeoutZero(void **status) {
+    (void)status;
+    struct timespec time = {
+        .tv_sec = 0,
+        .tv_nsec = 0
+    };
+
+    will_return(__wrap_clock_gettime, (time_t)1);
+    will_return(__wrap_clock_gettime, (long)(123456789));
+    expect_function_call(__wrap_clock_gettime);
+
+    assert_true(utilsCheckTimeout(time, 0));
+}
+
+void
+testUtilsCheckTimeoutFuture(void **status) {
+    (void)status;
+    struct timespec time = {
+        .tv_sec = 1,
+        .tv_nsec = 500 * NS_PER_MS
+    };
+
+    will_return(__wrap_clock_gettime, (time_t)1);
+    will_return(__wrap_clock_gettime, (long)(500 * NS_PER_MS - 1));
+    expect_function_call(__wrap_clock_gettime);
+
+    assert_false(utilsCheckTimeout(time, 500 * NS_PER_MS));
 }

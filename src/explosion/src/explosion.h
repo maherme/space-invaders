@@ -12,7 +12,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
 #include <stdbool.h>
 #include "utils.h"
 #include "graph.h"
@@ -25,4 +24,12 @@ explosionCreate(int x, int y);
 bool
 explosionTimeout(explosion_t this);
 
-#endif
+#ifdef UNIT_TESTING
+struct timespec
+helperUT_explosionGetCreationTime(explosion_t this);
+
+long long
+helperUT_explosionGetExplosionTime(explosion_t this);
+#endif /* UNIT_TESTING */
+
+#endif /* __EXPLOSION_H__ */

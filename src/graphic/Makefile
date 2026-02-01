@@ -20,4 +20,5 @@ LDFLAGS += -Wl,--wrap=glGenTextures \
 		   -Wl,--wrap=glBindTexture \
 		   -Wl,--wrap=glDeleteTextures \
 		   -Wl,--wrap=gettimeofday \
-		   -Wl,--wrap=utilsFree
+		   -Wl,--wrap=utilsFree \
+		   -Wl,--wrap=clock_gettime

@@ -11,7 +11,7 @@
 #define __PHYSIC_H__
 
 #include "graph.h"
-#include <sys/time.h>
+#include "utils.h"
 #include <stdbool.h>
 
 typedef enum {

@@ -21,6 +21,8 @@ main(void) {
         cmocka_unit_test(testGraphCreateImageSuccess),
         cmocka_unit_test(testGraphGetSpriteFail),
         cmocka_unit_test(testGraphGetSpriteSuccess),
+        cmocka_unit_test(testGraphUpdateTimeSpriteNullParameter),
+        cmocka_unit_test(testGraphUpdateTimeSprite),
         cmocka_unit_test(testGraphPrintImageFail),
         cmocka_unit_test(testGraphPrintImageSuccess),
         cmocka_unit_test(testGraphDestroyObjectNullParameter),

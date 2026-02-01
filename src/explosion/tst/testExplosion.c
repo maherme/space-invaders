@@ -53,14 +53,20 @@ testExplosionTimeoutTrue(void **status) {
 
     expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_graphCreateImage);
-    will_return(__wrap_clock_gettime, 0);   /* tv_sec */
-    will_return(__wrap_clock_gettime, 0);   /* tv_nsec */
+    will_return(__wrap_clock_gettime, 1);   /* tv_sec */
+    will_return(__wrap_clock_gettime, 1);   /* tv_nsec */
     expect_function_call(__wrap_clock_gettime);
+
     explosion_t explosion = explosionCreate(0, 0);
 
-    will_return(__wrap_clock_gettime, 0);            /* tv_sec */
-    will_return(__wrap_clock_gettime, 500000000);    /* tv_nsec */
-    expect_function_call(__wrap_clock_gettime);
+    expect_int_value(__wrap_utilsCheckTimeout, time.tv_sec,
+                     helperUT_explosionGetCreationTime(explosion).tv_sec);
+    expect_int_value(__wrap_utilsCheckTimeout, time.tv_nsec,
+                     helperUT_explosionGetCreationTime(explosion).tv_nsec);
+    expect_int_value(__wrap_utilsCheckTimeout, timeout_ns,
+                     helperUT_explosionGetExplosionTime(explosion));
+    will_return(__wrap_utilsCheckTimeout, true);
+    expect_function_call(__wrap_utilsCheckTimeout);
     assert_true(explosionTimeout(explosion));
 }
 
@@ -70,13 +76,19 @@ testExplosionTimeoutFalse(void **status) {
 
     expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_graphCreateImage);
-    will_return(__wrap_clock_gettime, 0);   /* tv_sec */
-    will_return(__wrap_clock_gettime, 0);   /* tv_usec */
+    will_return(__wrap_clock_gettime, 1);   /* tv_sec */
+    will_return(__wrap_clock_gettime, 1);   /* tv_usec */
     expect_function_call(__wrap_clock_gettime);
+
     explosion_t explosion = explosionCreate(0, 0);
 
-    will_return(__wrap_clock_gettime, 0);           /* tv_sec */
-    will_return(__wrap_clock_gettime, 499999999);   /* tv_nsec */
-    expect_function_call(__wrap_clock_gettime);
+    expect_int_value(__wrap_utilsCheckTimeout, time.tv_sec,
+                     helperUT_explosionGetCreationTime(explosion).tv_sec);
+    expect_int_value(__wrap_utilsCheckTimeout, time.tv_nsec,
+                     helperUT_explosionGetCreationTime(explosion).tv_nsec);
+    expect_int_value(__wrap_utilsCheckTimeout, timeout_ns,
+                     helperUT_explosionGetExplosionTime(explosion));
+    will_return(__wrap_utilsCheckTimeout, false);
+    expect_function_call(__wrap_utilsCheckTimeout);
     assert_false(explosionTimeout(explosion));
 }

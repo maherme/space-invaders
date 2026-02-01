@@ -32,7 +32,7 @@ bulletCreate(int x, int y){
     inst->sprite.height = BULLET_HEIGHT;
     inst->sprite.image = (const char *)bulletImage;
     inst->sprite.pixels_to_move = 1;
-    inst->sprite.time_to_move = 2;
+    inst->sprite.time_to_move = 2 * NS_PER_MS;
     graphCreateImage(&inst->sprite);
 
     return inst;
