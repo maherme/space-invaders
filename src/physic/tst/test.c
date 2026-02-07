@@ -26,9 +26,11 @@ main(void) {
         cmocka_unit_test(testPhysicMoveSpriteUp),
         cmocka_unit_test(testPhysicMoveSpriteUpMax),
         cmocka_unit_test(testPhysicMoveSpriteTooEarlyToMove),
-        cmocka_unit_test(testPhysicCheckCeillingCollisionNullParameter),
-        cmocka_unit_test(testPhysicCheckCeillingCollisionTrue),
-        cmocka_unit_test(testPhysicCheckCeillingCollisionFalse),
+        cmocka_unit_test(testPhysicCheckBorderCollisionNullParameter),
+        cmocka_unit_test(testPhysicCheckBorderCollisionUpTrue),
+        cmocka_unit_test(testPhysicCheckBorderCollisionRightTrue),
+        cmocka_unit_test(testPhysicCheckBorderCollisionLeftTrue),
+        cmocka_unit_test(testPhysicCheckBorderCollisionFalse),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

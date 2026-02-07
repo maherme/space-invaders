@@ -1,0 +1,115 @@
+/*
+ * SPDX-License-Identifier: MIT
+ *
+ * Copyright (c) 2026 Manuel Hernández Méndez
+ *
+ * Authors:
+ *   Manuel Hernández Méndez <maherme.dev@gmail.com>
+ */
+
+#include "testUfo.h"
+#include "ufo.h"
+
+int
+__wrap_rand(void) {
+    function_called();
+    return (int)mock();
+}
+
+void
+testUfoCreateLeftDirection(void **status) {
+    (void)status;
+
+    expect_function_call(__wrap_utilsCalloc);
+    will_return(__wrap_rand, 1);
+    expect_function_call(__wrap_rand);
+    expect_function_call(__wrap_graphCreateImage);
+    expect_function_call(__wrap_graphUpdateTimeSprite);
+
+    ufo_t ufo = ufoCreate();
+    assert_int_equal(LEFT, ufoGetDirection(ufo));
+}
+
+void
+testUfoCreateRightDirection(void **status) {
+    (void)status;
+
+    expect_function_call(__wrap_utilsCalloc);
+    will_return(__wrap_rand, RAND_MAX);
+    expect_function_call(__wrap_rand);
+    expect_function_call(__wrap_graphCreateImage);
+    expect_function_call(__wrap_graphUpdateTimeSprite);
+
+    ufo_t ufo = ufoCreate();
+    assert_int_equal(RIGHT, ufoGetDirection(ufo));
+}
+
+void
+testUfoGetDirectionNullParameter(void **status) {
+    (void)status;
+
+    assert_int_equal(INVALID_DIR, ufoGetDirection(NULL));
+}
+
+void
+testUfoCheckForMovingNullParameter(void **status) {
+    (void)status;
+
+    assert_false(ufoCheckForMoving(NULL));
+}
+
+void
+testUfoCheckForMovingFalse(void **status) {
+    (void)status;
+
+    expect_function_call(__wrap_utilsCalloc);
+    will_return(__wrap_rand, RAND_MAX);
+    expect_function_call(__wrap_rand);
+    expect_function_call(__wrap_graphCreateImage);
+    expect_function_call(__wrap_graphUpdateTimeSprite);
+
+    ufo_t ufo = ufoCreate();
+
+    will_return(__wrap_utilsCheckTimeout, false);
+    expect_function_call(__wrap_utilsCheckTimeout);
+
+    assert_false(ufoCheckForMoving(ufo));
+}
+
+void
+testUfoCheckForMovingTrue(void **status) {
+    (void)status;
+
+    expect_function_call(__wrap_utilsCalloc);
+    will_return(__wrap_rand, RAND_MAX);
+    expect_function_call(__wrap_rand);
+    expect_function_call(__wrap_graphCreateImage);
+    expect_function_call(__wrap_graphUpdateTimeSprite);
+
+    ufo_t ufo = ufoCreate();
+
+    will_return(__wrap_utilsCheckTimeout, true);
+    expect_function_call(__wrap_utilsCheckTimeout);
+
+    assert_true(ufoCheckForMoving(ufo));
+}
+
+void
+testUfoCheckForMovingTrueMoreCalls(void **status){
+    (void)status;
+
+    expect_function_call(__wrap_utilsCalloc);
+    will_return(__wrap_rand, RAND_MAX);
+    expect_function_call(__wrap_rand);
+    expect_function_call(__wrap_graphCreateImage);
+    expect_function_call(__wrap_graphUpdateTimeSprite);
+
+    ufo_t ufo = ufoCreate();
+
+    will_return(__wrap_utilsCheckTimeout, true);
+    expect_function_call(__wrap_utilsCheckTimeout);
+
+    assert_true(ufoCheckForMoving(ufo));
+    /* no more calls to utilsCheckTimeout are expected from here */
+    assert_true(ufoCheckForMoving(ufo));
+}

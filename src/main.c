@@ -20,11 +20,13 @@
 #include "spaceship.h"
 #include "bullet.h"
 #include "explosion.h"
+#include "ufo.h"
 
 bool gaming = true;
 spaceship_t spaceship = NULL;
 bullet_t bullet = NULL;
 explosion_t explosion = NULL;
+ufo_t ufo = NULL;
 
 static void
 bulletMove(void) {
@@ -32,11 +34,11 @@ bulletMove(void) {
 }
 
 static void
-bulletCheckCeiligCollision(void) {
+bulletCheckCeilingCollision(void) {
     sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
-    if(physicCheckCeillingCollision(bullet_sprite)) {
+    if(physicCheckBorderCollision(bullet_sprite)) {
         graphUnregisterPrint(bullet_sprite);
-        engineUnregister(bulletCheckCeiligCollision);
+        engineUnregister(bulletCheckCeilingCollision);
         engineUnregister(bulletMove);
         explosion = explosionCreate(bullet_sprite->x - 8,
                                     bullet_sprite->y - bullet_sprite->scaled_height);
@@ -60,8 +62,26 @@ spaceshipFire(void) {
         bullet = bulletCreate(spaceship_sprite->x + spaceship_sprite->scaled_width/2,
                               spaceship_sprite->y + spaceship_sprite->scaled_height);
         graphRegisterPrint(graphGetSprite((base_t *)bullet));
-        engineRegister(bulletCheckCeiligCollision);
+        engineRegister(bulletCheckCeilingCollision);
         engineRegister(bulletMove);
+    }
+}
+
+static void
+ufoActions(void) {
+    if(!ufo) {
+        ufo = ufoCreate();
+        graphRegisterPrint(graphGetSprite((base_t *)ufo));
+        return;
+    }
+    else {
+        if(ufoCheckForMoving(ufo)) {
+            physicMoveSprite(graphGetSprite((base_t *)ufo), ufoGetDirection(ufo)); 
+        }
+        if(physicCheckBorderCollision(graphGetSprite((base_t *)ufo))) {
+            graphUnregisterPrint(graphGetSprite((base_t *)ufo));
+            graphDestroyObject((base_t **)&ufo);
+        }
     }
 }
 
@@ -90,6 +110,8 @@ main(int argc, char **argv) {
         .reshapeFunc = graphGlutReshape,
     };
 
+    srand(time(NULL));
+
     graphInitGlut(&initGlutConfig);
     keyboardRegisterAction(spaceshipFire, ACTION_KEY_DOWN, ' ');
     keyboardInit();
@@ -98,6 +120,7 @@ main(int argc, char **argv) {
     graphRegisterPrint(graphGetSprite((base_t *)spaceship));
     engineRegister(keyboardUpdate);
     engineRegister(explosionCheckTimeout);
+    engineRegister(ufoActions);
 
     while(gaming) {
         engineRun(ENGINE_RATE);

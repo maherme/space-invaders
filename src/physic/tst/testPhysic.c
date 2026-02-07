@@ -71,6 +71,7 @@ testPhysicMoveSpriteRight(void **status) {
         .time_to_move = 0,
         .pixels_to_move = 10,
         .scaled_width = 20,
+        .max_movement.right = 111,
     };
     sprite_t old_sprite = sprite;
 
@@ -94,9 +95,10 @@ testPhysicMoveSpriteRightMax(void **status) {
         .last_update.tv_nsec = 0,
         .time_to_move = 0,
         .pixels_to_move = 10,
-        .scaled_width = 20,
+        .scaled_width = 20, 
     };
     sprite.x = WINDOW_WIDTH - sprite.pixels_to_move;
+    sprite.max_movement.right = WINDOW_WIDTH - sprite.scaled_width;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
 
@@ -117,6 +119,7 @@ testPhysicMoveSpriteLeft(void **status) {
         .time_to_move = 0,
         .pixels_to_move = 10,
         .scaled_width = 20,
+        .max_movement.left = 0,
     };
     sprite_t old_sprite = sprite;
 
@@ -141,6 +144,7 @@ testPhysicMoveSpriteLeftMax(void **status) {
         .last_update.tv_nsec = 0,
         .time_to_move = 0,
         .pixels_to_move = 10,
+        .max_movement.left = 0,
     };
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
@@ -161,8 +165,9 @@ testPhysicMoveSpriteUp(void **status) {
         .last_update.tv_nsec = 0,
         .time_to_move = 0,
         .pixels_to_move = 10,
-        .scaled_width = 20,
+        .scaled_height = 20,
     };
+    sprite.max_movement.up = WINDOW_HEIGHT - sprite.scaled_height;
     sprite_t old_sprite = sprite;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
@@ -187,6 +192,7 @@ testPhysicMoveSpriteUpMax(void **status) {
         .pixels_to_move = 10,
     };
     sprite.y = WINDOW_HEIGHT - sprite.pixels_to_move;
+    sprite.max_movement.up = WINDOW_HEIGHT - sprite.scaled_height;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
 
@@ -217,31 +223,64 @@ testPhysicMoveSpriteTooEarlyToMove(void **status) {
 }
 
 void
-testPhysicCheckCeillingCollisionNullParameter(void **status) {
+testPhysicCheckBorderCollisionNullParameter(void **status) {
     (void)status;
 
-    assert_false(physicCheckCeillingCollision(NULL));
+    assert_false(physicCheckBorderCollision(NULL));
 }
 
 void
-testPhysicCheckCeillingCollisionTrue(void **status) {
+testPhysicCheckBorderCollisionUpTrue(void **status) {
     (void)status;
     sprite_t sprite = {
-        .y = 0,
-        .scaled_height = WINDOW_HEIGHT,
+        .x = 10,
+        .y = 10,
+        .max_movement.up = 10,
+        .max_movement.right = 20,
+        .max_movement.left = 0,
     };
 
-    assert_true(physicCheckCeillingCollision(&sprite));
+    assert_true(physicCheckBorderCollision(&sprite));
 }
 
 void
-testPhysicCheckCeillingCollisionFalse(void **status) {
+testPhysicCheckBorderCollisionRightTrue(void **status) {
     (void)status;
     sprite_t sprite = {
-        .y = 0,
-        .scaled_height = WINDOW_HEIGHT - 1,
+        .x = 10,
+        .y = 10,
+        .max_movement.up = 20,
+        .max_movement.right = 10,
+        .max_movement.left = 0,
     };
 
-    assert_false(physicCheckCeillingCollision(&sprite));
+    assert_true(physicCheckBorderCollision(&sprite));
+}
 
+void
+testPhysicCheckBorderCollisionLeftTrue(void **status) {
+    (void)status;
+    sprite_t sprite = {
+        .x = 10,
+        .y = 10,
+        .max_movement.up = 20,
+        .max_movement.right = 20,
+        .max_movement.left = 10,
+    };
+
+    assert_true(physicCheckBorderCollision(&sprite));
+}
+
+void
+testPhysicCheckBorderCollisionFalse(void **status) {
+    (void)status;
+    sprite_t sprite = {
+        .x = 10,
+        .y = 10,
+        .max_movement.up = 20,
+        .max_movement.right = 20,
+        .max_movement.left = 0,
+    };
+
+    assert_false(physicCheckBorderCollision(&sprite));
 }
