@@ -45,12 +45,18 @@ void
 testPhysicMoveSpriteTooEarlyToMove(void **status);
 
 void
-testPhysicCheckCeillingCollisionNullParameter(void **status);
+testPhysicCheckBorderCollisionNullParameter(void **status);
 
 void
-testPhysicCheckCeillingCollisionTrue(void **status);
+testPhysicCheckBorderCollisionUpTrue(void **status);
 
 void
-testPhysicCheckCeillingCollisionFalse(void **status);
+testPhysicCheckBorderCollisionRightTrue(void **status);
+
+void
+testPhysicCheckBorderCollisionLeftTrue(void **status);
+
+void
+testPhysicCheckBorderCollisionFalse(void **status);
 
 #endif

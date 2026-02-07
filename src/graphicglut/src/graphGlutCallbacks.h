@@ -12,7 +12,7 @@
 
 #include <GL/glut.h>
 
-#define MAX_PRINT_CONTEXTS 3
+#define MAX_PRINT_CONTEXTS 4
 
 int
 graphRegisterPrint(void *ctx);

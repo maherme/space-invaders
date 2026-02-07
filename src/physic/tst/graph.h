@@ -22,6 +22,13 @@
 #define B {0, 0, 0, 0}
 
 typedef struct {
+    int up;
+    int down;
+    int right;
+    int left;
+} max_movement_t;
+
+typedef struct {
     int x;
     int y;
     int width;
@@ -34,6 +41,7 @@ typedef struct {
     struct timespec last_update;
     long long time_to_move;
     int pixels_to_move;
+    max_movement_t max_movement;
 } sprite_t;
 
 typedef struct {

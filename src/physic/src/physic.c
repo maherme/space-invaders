@@ -21,22 +21,22 @@ physicMoveSprite(sprite_t *sprite, direction_t direction) {
 
     switch(direction) {
         case RIGHT:
-            if(sprite->x + sprite->pixels_to_move >= WINDOW_WIDTH - sprite->scaled_width) {
-                sprite->x = WINDOW_WIDTH - sprite->scaled_width;
+            if(sprite->x + sprite->pixels_to_move >= sprite->max_movement.right) {
+                sprite->x = sprite->max_movement.right;
                 return;
             }
             sprite->x += sprite->pixels_to_move;
             break;
         case LEFT:
-            if(sprite->x - sprite->pixels_to_move < 0) {
-                sprite->x = 0;
+            if(sprite->x - sprite->pixels_to_move <= sprite->max_movement.left) {
+                sprite->x = sprite->max_movement.left;
                 return;
             }
             sprite->x -= sprite->pixels_to_move;
             break;
         case UP:
-            if(sprite->y + sprite->pixels_to_move  >= WINDOW_HEIGHT - sprite->scaled_height) {
-                sprite->y = WINDOW_HEIGHT - sprite->scaled_height;
+            if(sprite->y + sprite->pixels_to_move  >= sprite->max_movement.up) {
+                sprite->y = sprite->max_movement.up;
                 return;
             }
             sprite->y += sprite->pixels_to_move;
@@ -49,12 +49,14 @@ physicMoveSprite(sprite_t *sprite, direction_t direction) {
 }
 
 bool
-physicCheckCeillingCollision(const sprite_t * const sprite)
+physicCheckBorderCollision(const sprite_t * const sprite)
 {
     if(!sprite)
         return false;
 
-    if(sprite->y + sprite->scaled_height >= WINDOW_HEIGHT)
+    if((sprite->y == sprite->max_movement.up) ||
+       (sprite->x == sprite->max_movement.right) ||
+       (sprite->x == sprite->max_movement.left))
         return true;
     return false;
 }

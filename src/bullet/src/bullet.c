@@ -34,6 +34,7 @@ bulletCreate(int x, int y){
     inst->sprite.pixels_to_move = 1;
     inst->sprite.time_to_move = 2 * NS_PER_MS;
     graphCreateImage(&inst->sprite);
+    inst->sprite.max_movement.up = WINDOW_HEIGHT - inst->sprite.scaled_height;
 
     return inst;
 }
