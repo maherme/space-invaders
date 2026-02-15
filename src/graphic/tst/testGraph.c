@@ -11,22 +11,25 @@
 #include <stdio.h>
 
 void
-__wrap_glGenTextures(GLsizei n, GLuint *textures){
+__wrap_glGenTextures(GLsizei n, GLuint *textures)
+{
     (void)textures;
     check_expected_int(n);
     function_called();
 }
 
 void
-__wrap_glBindTexture(GLenum target, GLuint texture) {
+__wrap_glBindTexture(GLenum target, GLuint texture)
+{
     (void)texture;
     check_expected_uint(target);
     function_called();
 }
 
 void
-__wrap_glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height,
-                    GLint border, GLenum format, GLenum type, const void *data) {
+__wrap_glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format,
+                    GLenum type, const void *data)
+{
     check_expected_uint(target);
     check_expected_int(level);
     check_expected_int(internalformat);
@@ -40,7 +43,8 @@ __wrap_glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei wi
 }
 
 void
-__wrap_glTexParameteri(GLenum target, GLenum pname, GLint param) {
+__wrap_glTexParameteri(GLenum target, GLenum pname, GLint param)
+{
     check_expected_uint(target);
     check_expected_uint(pname);
     check_expected_int(param);
@@ -48,47 +52,53 @@ __wrap_glTexParameteri(GLenum target, GLenum pname, GLint param) {
 }
 
 void
-__wrap_glBegin(GLenum mode) {
+__wrap_glBegin(GLenum mode)
+{
     check_expected_uint(mode);
     function_called();
 }
 
 void
-__wrap_glTexCoord2f(GLfloat s, GLfloat t) {
+__wrap_glTexCoord2f(GLfloat s, GLfloat t)
+{
     check_expected_float(s);
     check_expected_float(t);
     function_called();
 }
 
 void
-__wrap_glVertex2i(GLint x, GLint y) {
+__wrap_glVertex2i(GLint x, GLint y)
+{
     check_expected_int(x);
     check_expected_int(y);
     function_called();
 }
 
 void
-__wrap_glEnd(void) {
+__wrap_glEnd(void)
+{
     function_called();
 }
 
 void
-__wrap_glDeleteTextures(GLsizei n, const GLuint *textures) {
+__wrap_glDeleteTextures(GLsizei n, const GLuint *textures)
+{
     check_expected_int(n);
     check_expected_ptr(textures);
     function_called();
 }
 
 void
-__wrap_utilsFree(void **ptr) {
+__wrap_utilsFree(void **ptr)
+{
     check_expected_ptr(ptr);
     function_called();
     free(*ptr);
 }
 
 int
-__wrap_clock_gettime(clockid_t clockid,
-                     struct timespec *tp) {
+__wrap_clock_gettime(clockid_t clockid, struct timespec *tp)
+{
     assert_int_equal(clockid, CLOCK_MONOTONIC);
     assert_non_null(tp);
     tp->tv_sec = (time_t)mock_type(time_t);
@@ -98,14 +108,16 @@ __wrap_clock_gettime(clockid_t clockid,
 }
 
 void
-testGraphCreateImageFail(void **status) {
+testGraphCreateImageFail(void **status)
+{
     (void)status;
 
     graphCreateImage(NULL);
 }
 
 void
-testGraphCreateImageSuccess(void **status) {
+testGraphCreateImageSuccess(void **status)
+{
     (void)status;
     sprite_t sprite = {0};
 
@@ -137,17 +149,19 @@ testGraphCreateImageSuccess(void **status) {
     expect_function_call(__wrap_glTexParameteri);
 
     graphCreateImage(&sprite);
-} 
+}
 
 void
-testGraphGetSpriteFail(void **status) {
+testGraphGetSpriteFail(void **status)
+{
     (void)status;
 
     assert_null(graphGetSprite(NULL));
 }
 
 void
-testGraphGetSpriteSuccess(void **status) {
+testGraphGetSpriteSuccess(void **status)
+{
     (void)status;
     base_t base = {0};
     sprite_t *sprite = graphGetSprite(&base);
@@ -156,14 +170,42 @@ testGraphGetSpriteSuccess(void **status) {
 }
 
 void
-testGraphUpdateTimeSpriteNullParameter(void **status) {
+testGraphGetSpriteCoordinatesNullParameters(void **status)
+{
+    (void)status;
+    sprite_t sprite = {0};
+    sprite_coordinates_t coordinates = {0};
+
+    assert_int_equal(1, graphGetSpriteCoordinates(&sprite, NULL));
+    assert_int_equal(1, graphGetSpriteCoordinates(NULL, &coordinates));
+    assert_int_equal(1, graphGetSpriteCoordinates(NULL, NULL));
+}
+
+void
+testGraphGetSpriteCoordinates(void **status)
+{
+    (void)status;
+    sprite_t sprite = {.x = 1, .y = 2, .scaled_height = 3, .scaled_width = 4};
+    sprite_coordinates_t coordinates = {0};
+
+    assert_int_equal(0, graphGetSpriteCoordinates(&sprite, &coordinates));
+    assert_int_equal(sprite.x, coordinates.x1);
+    assert_int_equal(sprite.x + sprite.scaled_width, coordinates.x2);
+    assert_int_equal(sprite.y, coordinates.y1);
+    assert_int_equal(sprite.y + sprite.scaled_height, coordinates.y2);
+}
+
+void
+testGraphUpdateTimeSpriteNullParameter(void **status)
+{
     (void)status;
 
     graphUpdateTimeSprite(NULL);
 }
 
 void
-testGraphUpdateTimeSprite(void **status) {
+testGraphUpdateTimeSprite(void **status)
+{
     (void)status;
     sprite_t sprite = {0};
 
@@ -177,14 +219,16 @@ testGraphUpdateTimeSprite(void **status) {
 }
 
 void
-testGraphPrintImageFail(void **status) {
+testGraphPrintImageFail(void **status)
+{
     (void)status;
 
     graphPrintImage(NULL);
 }
 
 void
-testGraphPrintImageSuccess(void **status) {
+testGraphPrintImageSuccess(void **status)
+{
     (void)status;
     sprite_t sprite = {
         .width = 10,
@@ -246,7 +290,8 @@ testGraphPrintImageSuccess(void **status) {
 }
 
 void
-testGraphDestroyObjectNullParameter(void **status) {
+testGraphDestroyObjectNullParameter(void **status)
+{
     (void)status;
     base_t *ptr = NULL;
 
@@ -255,9 +300,11 @@ testGraphDestroyObjectNullParameter(void **status) {
 }
 
 void
-testGraphDestroyObjectSuccess(void **status) {
+testGraphDestroyObjectSuccess(void **status)
+{
     (void)status;
-    base_t *object = calloc(1, sizeof(base_t));;
+    base_t *object = calloc(1, sizeof(base_t));
+    ;
 
     expect_int_value(__wrap_glDeleteTextures, n, 1);
     expect_uint_value(__wrap_glDeleteTextures, textures, (uintptr_t)&(object->sprite.textureId));

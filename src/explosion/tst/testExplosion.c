@@ -7,12 +7,20 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
-#include "explosion.h"
 #include "testExplosion.h"
+#include "explosion.h"
 
 int
-__wrap_clock_gettime(clockid_t clockid,
-                     struct timespec *tp) {
+setup(void **state)
+{
+    (void)state;
+    helperUT_explosionResetList();
+    return 0;
+}
+
+int
+__wrap_clock_gettime(clockid_t clockid, struct timespec *tp)
+{
     assert_int_equal(clockid, CLOCK_MONOTONIC);
     assert_non_null(tp);
     tp->tv_sec = (time_t)mock_type(time_t);
@@ -22,73 +30,117 @@ __wrap_clock_gettime(clockid_t clockid,
 }
 
 void
-testExplosionCreate(void **status) {
+testExplosionCreateInvalidType(void **status)
+{
     (void)status;
     int x_pos = 10;
     int y_pos = 20;
 
     expect_function_call(__wrap_utilsCalloc);
-    expect_function_call(__wrap_graphCreateImage);
-    will_return(__wrap_clock_gettime, 0);   /* tv_sec */
-    will_return(__wrap_clock_gettime, 0);   /* tv_nsec */
-    expect_function_call(__wrap_clock_gettime);
+    expect_function_call(__wrap_utilsCalloc);
+    expect_function_call(__wrap_utilsFree);
+    expect_function_call(__wrap_utilsFree);
 
-    explosion_t explosion = explosionCreate(x_pos, y_pos);
-    sprite_t *sprite = graphGetSprite((base_t *)explosion);
-
-    assert_int_equal(sprite->x, x_pos);
-    assert_int_equal(sprite->y, y_pos);
+    explosionCreate(x_pos, y_pos, MAX_EXPLOSION_TYPE);
 }
 
-void
-testExplosionTimeoutNullParameter(void **status) {
-    (void)status;
-
-    assert_false(explosionTimeout(NULL));
-}
-
-void
-testExplosionTimeoutTrue(void **status) {
-    (void)status;
+static void
+registerExplosionBullet(void)
+{
+    int x_pos = 10;
+    int y_pos = 20;
 
     expect_function_call(__wrap_utilsCalloc);
+    expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_graphCreateImage);
-    will_return(__wrap_clock_gettime, 1);   /* tv_sec */
-    will_return(__wrap_clock_gettime, 1);   /* tv_nsec */
+    will_return(__wrap_clock_gettime, 0); /* tv_sec */
+    will_return(__wrap_clock_gettime, 0); /* tv_nsec */
     expect_function_call(__wrap_clock_gettime);
+    expect_function_call(__wrap_graphRegisterPrint);
 
-    explosion_t explosion = explosionCreate(0, 0);
-
-    expect_int_value(__wrap_utilsCheckTimeout, time.tv_sec,
-                     helperUT_explosionGetCreationTime(explosion).tv_sec);
-    expect_int_value(__wrap_utilsCheckTimeout, time.tv_nsec,
-                     helperUT_explosionGetCreationTime(explosion).tv_nsec);
-    expect_int_value(__wrap_utilsCheckTimeout, timeout_ns,
-                     helperUT_explosionGetExplosionTime(explosion));
-    will_return(__wrap_utilsCheckTimeout, true);
-    expect_function_call(__wrap_utilsCheckTimeout);
-    assert_true(explosionTimeout(explosion));
+    explosionCreate(x_pos, y_pos, EXPLOSION_BULLET);
 }
 
 void
-testExplosionTimeoutFalse(void **status) {
+testExplosionCreateBullet(void **status)
+{
     (void)status;
 
+    registerExplosionBullet();
+}
+
+void
+testExplosionCreateUfo(void **status)
+{
+    (void)status;
+    int x_pos = 10;
+    int y_pos = 20;
+
+    expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_graphCreateImage);
-    will_return(__wrap_clock_gettime, 1);   /* tv_sec */
-    will_return(__wrap_clock_gettime, 1);   /* tv_usec */
+    will_return(__wrap_clock_gettime, 0); /* tv_sec */
+    will_return(__wrap_clock_gettime, 0); /* tv_nsec */
     expect_function_call(__wrap_clock_gettime);
+    expect_function_call(__wrap_graphRegisterPrint);
 
-    explosion_t explosion = explosionCreate(0, 0);
+    explosionCreate(x_pos, y_pos, EXPLOSION_UFO);
+}
 
-    expect_int_value(__wrap_utilsCheckTimeout, time.tv_sec,
-                     helperUT_explosionGetCreationTime(explosion).tv_sec);
-    expect_int_value(__wrap_utilsCheckTimeout, time.tv_nsec,
-                     helperUT_explosionGetCreationTime(explosion).tv_nsec);
-    expect_int_value(__wrap_utilsCheckTimeout, timeout_ns,
-                     helperUT_explosionGetExplosionTime(explosion));
+void
+testExplosionsDestroyListEmpty(void **status)
+{
+    (void)status;
+
+    explosionsDestroy();
+}
+
+void
+testExplosionsDestroyTimeoutFalse(void **status)
+{
+    (void)status;
+    registerExplosionBullet();
+
     will_return(__wrap_utilsCheckTimeout, false);
     expect_function_call(__wrap_utilsCheckTimeout);
-    assert_false(explosionTimeout(explosion));
+    explosionsDestroy();
+}
+
+void
+testExplosionsDestroyTimeoutTrue(void **status)
+{
+    (void)status;
+    registerExplosionBullet();
+
+    will_return(__wrap_utilsCheckTimeout, true);
+    expect_function_call(__wrap_utilsCheckTimeout);
+    expect_function_call(__wrap_graphUnregisterPrint);
+    expect_function_call(__wrap_graphDestroyObject);
+    expect_function_call(__wrap_utilsFree);
+    explosionsDestroy();
+}
+
+void
+testExplosionsDestroyTwoExplosions(void **status)
+{
+    (void)status;
+    int number_explosions = 2;
+
+    for (int i = 0; i < number_explosions; i++)
+    {
+        registerExplosionBullet();
+    }
+
+    /* first registered explosion */
+    will_return(__wrap_utilsCheckTimeout, false);
+    expect_function_call(__wrap_utilsCheckTimeout);
+
+    /* second registered explosion */
+    will_return(__wrap_utilsCheckTimeout, true);
+    expect_function_call(__wrap_utilsCheckTimeout);
+    expect_function_call(__wrap_graphUnregisterPrint);
+    expect_function_call(__wrap_graphDestroyObject);
+    expect_function_call(__wrap_utilsFree);
+
+    explosionsDestroy();
 }

@@ -10,12 +10,12 @@
 #ifndef __TESTGRAPH_H__
 #define __TESTGRAPH_H__
 
+#include "graph.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "graph.h"
 
 void
 testGraphCreateImageFail(void **status);
@@ -28,6 +28,12 @@ testGraphGetSpriteFail(void **status);
 
 void
 testGraphGetSpriteSuccess(void **status);
+
+void
+testGraphGetSpriteCoordinatesNullParameters(void **status);
+
+void
+testGraphGetSpriteCoordinates(void **status);
 
 void
 testGraphUpdateTimeSpriteNullParameter(void **status);

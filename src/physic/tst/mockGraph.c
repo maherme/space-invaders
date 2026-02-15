@@ -7,15 +7,28 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
+#include "graph.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "graph.h"
 
 void
-__wrap_graphUpdateTimeSprite(sprite_t *sprite) {
+__wrap_graphUpdateTimeSprite(sprite_t *sprite)
+{
     check_expected_ptr(sprite);
     function_called();
+}
+
+int
+__wrap_graphGetSpriteCoordinates(const sprite_t *const sprite, sprite_coordinates_t *coordinates)
+{
+    check_expected_ptr(sprite);
+    coordinates->x1 = (int)mock_type(int);
+    coordinates->x2 = (int)mock_type(int);
+    coordinates->y1 = (int)mock_type(int);
+    coordinates->y2 = (int)mock_type(int);
+    function_called();
+    return 0;
 }

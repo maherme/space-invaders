@@ -8,28 +8,32 @@
  */
 
 #ifndef __EXPLOSION_H__
-#define __EXPLOSION_H__ 
+#define __EXPLOSION_H__
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include "utils.h"
 #include "graph.h"
+#include "graphGlutCallbacks.h"
+#include "utils.h"
+#include <assert.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-typedef struct explosion_instance_t *explosion_t;
+typedef enum
+{
+    EXPLOSION_BULLET,
+    EXPLOSION_UFO,
+    MAX_EXPLOSION_TYPE
+} explosion_type_t;
 
-explosion_t
-explosionCreate(int x, int y);
+void
+explosionCreate(int x, int y, explosion_type_t type);
 
-bool
-explosionTimeout(explosion_t this);
+void
+explosionsDestroy(void);
 
 #ifdef UNIT_TESTING
-struct timespec
-helperUT_explosionGetCreationTime(explosion_t this);
-
-long long
-helperUT_explosionGetExplosionTime(explosion_t this);
+void
+helperUT_explosionResetList(void);
 #endif /* UNIT_TESTING */
 
 #endif /* __EXPLOSION_H__ */

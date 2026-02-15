@@ -8,25 +8,37 @@
  */
 
 #ifndef __TESTEXPLOSION_H__
-#define __TESTEXPLOSION_H__ 
+#define __TESTEXPLOSION_H__
 
+#include "explosion.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "explosion.h"
+
+int
+setup(void **state);
 
 void
-testExplosionCreate(void **status);
+testExplosionCreateInvalidType(void **status);
 
 void
-testExplosionTimeoutNullParameter(void **status);
+testExplosionCreateBullet(void **status);
 
 void
-testExplosionTimeoutTrue(void **status);
+testExplosionCreateUfo(void **status);
 
 void
-testExplosionTimeoutFalse(void **status);
+testExplosionsDestroyListEmpty(void **status);
+
+void
+testExplosionsDestroyTimeoutFalse(void **status);
+
+void
+testExplosionsDestroyTimeoutTrue(void **status);
+
+void
+testExplosionsDestroyTwoExplosions(void **status);
 
 #endif
