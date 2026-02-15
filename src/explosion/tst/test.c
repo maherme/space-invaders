@@ -7,20 +7,24 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
+#include "testExplosion.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "testExplosion.h"
 
 int
-main(void) {
+main(void)
+{
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test(testExplosionCreate),
-        cmocka_unit_test(testExplosionTimeoutNullParameter),
-        cmocka_unit_test(testExplosionTimeoutTrue),
-        cmocka_unit_test(testExplosionTimeoutFalse),
+        cmocka_unit_test_setup(testExplosionCreateInvalidType, setup),
+        cmocka_unit_test_setup(testExplosionCreateBullet, setup),
+        cmocka_unit_test_setup(testExplosionCreateUfo, setup),
+        cmocka_unit_test_setup(testExplosionsDestroyListEmpty, setup),
+        cmocka_unit_test_setup(testExplosionsDestroyTimeoutFalse, setup),
+        cmocka_unit_test_setup(testExplosionsDestroyTimeoutTrue, setup),
+        cmocka_unit_test_setup(testExplosionsDestroyTwoExplosions, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

@@ -8,14 +8,14 @@
  */
 
 #ifndef __TESTPHYSIC_H__
-#define __TESTPHYSIC_H__ 
+#define __TESTPHYSIC_H__
 
+#include "physic.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "physic.h"
 
 void
 testPhysicMoveSpriteFail(void **status);
@@ -59,4 +59,10 @@ testPhysicCheckBorderCollisionLeftTrue(void **status);
 void
 testPhysicCheckBorderCollisionFalse(void **status);
 
-#endif
+void
+testPhysicCheckSpriteBoxCollisionNullParameters(void **status);
+
+void
+testPhysicCheckSpriteBoxCollisionFalse(void **status);
+
+#endif /* __TESTPHYSIC_H__ */

@@ -7,15 +7,16 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
+#include "testPhysic.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "testPhysic.h"
 
 int
-main(void) {
+main(void)
+{
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(testPhysicMoveSpriteFail),
         cmocka_unit_test(testPhysicMoveSpriteWrongDirection),
@@ -31,6 +32,8 @@ main(void) {
         cmocka_unit_test(testPhysicCheckBorderCollisionRightTrue),
         cmocka_unit_test(testPhysicCheckBorderCollisionLeftTrue),
         cmocka_unit_test(testPhysicCheckBorderCollisionFalse),
+        cmocka_unit_test(testPhysicCheckSpriteBoxCollisionNullParameters),
+        cmocka_unit_test(testPhysicCheckSpriteBoxCollisionFalse),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

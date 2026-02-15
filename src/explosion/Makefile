@@ -11,7 +11,11 @@ include ../../toolchain.mk
 include ../common.mk
 
 LDFLAGS += -Wl,--wrap=utilsCalloc \
+		   -Wl,--wrap=utilsFree \
+		   -Wl,--wrap=utilsCheckTimeout \
 		   -Wl,--wrap=graphCreateImage \
 		   -Wl,--wrap=graphGetSprite \
+		   -Wl,--wrap=graphDestroyObject \
 		   -Wl,--wrap=clock_gettime \
-		   -Wl,--wrap=utilsCheckTimeout
+		   -Wl,--wrap=graphRegisterPrint \
+		   -Wl,--wrap=graphUnregisterPrint

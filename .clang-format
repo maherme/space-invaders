@@ -1,0 +1,10 @@
+BasedOnStyle: LLVM
+BreakBeforeBraces: Allman
+AlwaysBreakAfterReturnType: All
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+IndentWidth: 4
+ColumnLimit: 129
+SpaceBeforeParens: ControlStatements
+IndentCaseLabels: true
+

@@ -11,4 +11,5 @@ include ../../toolchain.mk
 include ../common.mk
 
 LDFLAGS += -Wl,--wrap=utilsCheckTimeout \
-		   -Wl,--wrap=graphUpdateTimeSprite
+		   -Wl,--wrap=graphUpdateTimeSprite \
+		   -Wl,--wrap=graphGetSpriteCoordinates
