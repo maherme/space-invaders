@@ -12,7 +12,7 @@
 #
 
 DIR_BIN := $(CURDIR)/bin
-DIR_COV := $(DIR_BIN)/cov
+TEST_BIN := $(DIR_BIN)/test
 SRC := $(wildcard $(CURDIR)/src/*.c) \
 	   $(wildcard $(CURDIR)/tst/*.c)
 OBJ := $(addprefix $(DIR_BIN)/,$(notdir $(patsubst %.c,%.o,$(filter %.c,$(SRC)))))
@@ -21,28 +21,28 @@ VPATH := $(sort $(dir $(SRC)))
 
 INCLUDES := $(VPATH:%=-I%)
 
-CFLAGS += --coverage -DUNIT_TESTING
+CFLAGS += --coverage -DUNIT_TESTING -DNDEBUG -O0
 LDFLAGS += -lgcov --coverage -lcmocka
 GCOVRFLAGS += --exclude $(CURDIR)/tst
 
-$(shell $(MKDIR) $(DIR_BIN))
-$(shell $(MKDIR) $(DIR_COV))
+.PHONY: run-test test coverage clean-test
 
-.PHONY: run-test
-run-test: test
-	$(QUIET) $(DIR_BIN)/test
+run-test: $(TEST_BIN)
+	$(QUIET) $(TEST_BIN)
 
-.PHONY: test
-test: $(OBJ)
-	$(QUIET) $(CC) $^ -o $(DIR_BIN)/$@ $(LDFLAGS)
+test: $(TEST_BIN)
 
-$(DIR_BIN)/%.o: %.c
+$(TEST_BIN): $(OBJ)
+	$(QUIET) $(CC) $^ -o $@ $(LDFLAGS)
+
+$(DIR_BIN)/%.o: %.c | $(DIR_BIN)
 	$(QUIET) $(CC) $(CFLAGS) $< -o $@
 
-.PHONY: coverage
+$(DIR_BIN):
+	$(QUIET) $(MKDIR) $(DIR_BIN)
+
 coverage:
 	$(QUIET) $(GCOVR) $(GCOVRFLAGS)
 
-.PHONY: clean
-clean:
+clean-test:
 	$(QUIET) $(RM) $(DIR_BIN)

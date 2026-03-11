@@ -6,50 +6,50 @@
 # Authors:
 #   Manuel Hernández Méndez <maherme.dev@gmail.com>
 # 
- 
+
+PROJECT_ROOT := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+export PROJECT_ROOT
+
 include configuration.mk
 include toolchain.mk
 
 LDFLAGS += -lglut -lGL -lGLU
 GCOVRFLAGS += $(GCOV_EXCLUDE)
 
-.PHONY: run-test
-run-test: test
-	@for dir in $(DIR_MAKES); do \
-		$(MAKE) $(QUIET_MAKE) --directory=$$dir; \
-	done
+SUBGOALS := run-test test clean-test
 
-.PHONY: test
-test:
-	@for dir in $(DIR_MAKES); do \
-		$(MAKE) $(QUIET_MAKE) --directory=$$dir test; \
-	done
+.PHONY: $(SUBGOALS) $(DIR_MAKES) game all coverage clean clean-all prune install_gcovr
 
-.PHONY: clean-test
-clean-test:
-	@for dir in $(DIR_MAKES); do \
-		$(MAKE) $(QUIET_MAKE) --directory=$$dir clean; \
-	done
+$(SUBGOALS): $(DIR_MAKES)
 
-.PHONY: game
-game: $(shell $(MKDIR) $(DIR_BIN_RLS))
+$(DIR_MAKES):
+	$(QUIET) $(MAKE) $(QUIET_MAKE) -C $@ $(filter $(SUBGOALS),$(MAKECMDGOALS))
+
 game: $(OBJ)
 	$(QUIET) $(CC) $^ -o $(DIR_BIN_RLS)/$@ $(LDFLAGS)
 
-.PHONY: all
-all: game test
+all: game 
+	$(QUIET) $(MAKE) $(QUIET_MAKE) test
 
-.PHONY: coverage
-coverage: $(shell $(MKDIR) $(DIR_COV))
-coverage:
+coverage: $(GCOVR) |  $(DIR_COV)
 	$(QUIET) $(GCOVR) $(GCOVRFLAGS)
 
-$(DIR_BIN_RLS)/%.o: %.c
+$(DIR_COV):
+	$(QUIET) $(MKDIR) $(DIR_COV)
+
+install_gcovr: $(GCOVR)
+
+$(DIR_BIN_RLS)/%.o: %.c | $(DIR_BIN_RLS)
 	$(QUIET) $(CC) $(CFLAGS) $< -o $@
 
-.PHONY: clean
+$(DIR_BIN_RLS):
+	$(QUIET) $(MKDIR) $(DIR_BIN_RLS)
+
 clean:
 	$(QUIET) $(RM) $(DIR_BIN)
 
-.PHONY: clean-all
-clean-all: clean clean-test
+clean-all: clean
+	$(QUIET) $(MAKE) $(QUIET_MAKE) clean-test
+
+prune: clean-all
+	$(QUIET) $(RM) $(DIR_PYENV)

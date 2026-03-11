@@ -7,6 +7,7 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
+#include "aliens.h"
 #include "bullet.h"
 #include "engine.h"
 #include "explosion.h"
@@ -64,6 +65,33 @@ spaceshipFire(void)
         bullet = bulletCreate(spaceship_sprite->x + spaceship_sprite->scaled_width / 2,
                               spaceship_sprite->y + spaceship_sprite->scaled_height);
         graphRegisterPrint(graphGetSprite((base_t *)bullet));
+    }
+}
+
+static void
+alienDestroy(alien_t *alien)
+{
+    sprite_t *alien_sprite = graphGetSprite((base_t *)*alien);
+    graphUnregisterPrint(alien_sprite);
+    graphDestroyObject((base_t **)alien);
+}
+
+static void
+checkCollisionsAliensBullet(void)
+{
+    if (!bullet)
+        return;
+
+    int num_alien = aliensGetNumberInitialAliens();
+    for (int i = 0; i < num_alien; i++)
+    {
+        alien_t *alien = aliensGetAlienInstance(i);
+        if (physicCheckSpritesBoxCollision(graphGetSprite((base_t *)*alien), graphGetSprite((base_t *)bullet)))
+        {
+            bulletDestroy();
+            alienDestroy(alien);
+            return;
+        }
     }
 }
 
@@ -138,9 +166,11 @@ main(int argc, char **argv)
 
     spaceship = spaceshipCreate(WINDOW_WIDTH / 2, 0);
     graphRegisterPrint(graphGetSprite((base_t *)spaceship));
+    aliensCreate();
     engineRegister(keyboardUpdate);
     engineRegister(explosionsDestroy);
     engineRegister(ufoActions);
+    engineRegister(checkCollisionsAliensBullet);
     engineRegister(bulletActions);
 
     while (gaming)

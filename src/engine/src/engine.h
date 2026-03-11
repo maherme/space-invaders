@@ -14,7 +14,7 @@
 
 #define MONITOR_REFRESH_RATE 60
 #define ENGINE_RATE (int)((1 / (double)MONITOR_REFRESH_RATE) * 1000)
-#define ENGINE_MAX_CALLBACKS 5
+#define ENGINE_MAX_CALLBACKS 6
 
 typedef void (*engine_cb_t)(void);
 

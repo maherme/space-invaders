@@ -7,10 +7,10 @@
 #   Manuel Hernández Méndez <maherme.dev@gmail.com>
 # 
  
-DIR_BIN := $(CURDIR)/bin
+DIR_BIN := $(PROJECT_ROOT)/bin
 DIR_BIN_RLS := $(DIR_BIN)/rel
 DIR_COV := $(DIR_BIN)/cov
-DIR_SRC := $(CURDIR)/src
+DIR_SRC := $(PROJECT_ROOT)/src
 
 DIR_TST := $(filter-out %/src/ %/bin/,$(dir $(wildcard $(DIR_SRC)/*/*/.)))
 GCOV_EXCLUDE := $(foreach d,$(DIR_TST),$(addprefix -e ,$(d)))
@@ -24,13 +24,14 @@ SRC:= $(foreach d,$(VPATH),$(call find_c_files,$(d)))
 OBJ := $(notdir $(patsubst %.c, %.o, $(SRC)))
 OBJ := $(addprefix $(DIR_BIN_RLS)/,$(OBJ))
 
-DIR_MAKES := $(CURDIR)/src/utils \
-			 $(CURDIR)/src/spaceship\
-			 $(CURDIR)/src/bullet \
-			 $(CURDIR)/src/graphic \
-			 $(CURDIR)/src/graphicglut \
-			 $(CURDIR)/src/keyboard \
-			 $(CURDIR)/src/engine \
-			 $(CURDIR)/src/physic \
-			 $(CURDIR)/src/explosion \
-			 $(CURDIR)/src/ufo
+DIR_MAKES := $(PROJECT_ROOT)/src/utils \
+			 $(PROJECT_ROOT)/src/spaceship\
+			 $(PROJECT_ROOT)/src/bullet \
+			 $(PROJECT_ROOT)/src/graphic \
+			 $(PROJECT_ROOT)/src/graphicglut \
+			 $(PROJECT_ROOT)/src/keyboard \
+			 $(PROJECT_ROOT)/src/engine \
+			 $(PROJECT_ROOT)/src/physic \
+			 $(PROJECT_ROOT)/src/explosion \
+			 $(PROJECT_ROOT)/src/ufo \
+			 $(PROJECT_ROOT)/src/aliens
