@@ -16,6 +16,7 @@
 #define WINDOW_WIDTH 448
 #define WINDOW_HEIGHT 512
 
+#define NUM_RGBA_CHANNELS 4
 #define W {(char)255, (char)255, (char)255, (char)255}
 #define R {(char)255, 0, 0, (char)255}
 #define G {0, (char)255, 0, (char)255}

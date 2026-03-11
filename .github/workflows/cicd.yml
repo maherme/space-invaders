@@ -27,6 +27,36 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y freeglut3-dev
+      - name: Compile project
+        run: make game QUIET=""
+
+  unit_test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install gcc 15
+        run: |
+          NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          brew install gcc binutils
+          BREW_GCC_BIN=$(brew --prefix)/bin/gcc-15
+          BREW_GCOV_BIN=$(brew --prefix)/bin/gcov-15
+          sudo ln -sf $BREW_GCC_BIN /usr/bin/gcc
+          sudo ln -sf $(brew --prefix)/bin/g++-15 /usr/bin/g++
+          sudo ln -sf $BREW_GCOV_BIN /usr/bin/gcov
+          echo "CC=gcc" >> $GITHUB_ENV
+          echo "GCOV=gcov" >> $GITHUB_ENV
+          echo "/home/linuxbrew/.linuxbrew/opt/binutils/bin" >> $GITHUB_PATH
+          echo "/home/linuxbrew/.linuxbrew/bin" >> $GITHUB_PATH
+          gcc --version
+          g++ --version
+          gcov --version
+      - name: Install openGL and glut library
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y freeglut3-dev
       - name: Install cmocka
         run: |
           sudo apt-get install -y git cmake
@@ -36,35 +66,16 @@ jobs:
           cmake -S . -B build
           cmake --build build
           sudo cmake --install build
-      - name: Compile project
-        run: make all QUIET=""
-      - name: Upload working path as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: working-repo
-          path: .
-
-  unit_test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: working-repo
-      - name: Install cmocka
-        run: |
-         sudo apt-get install -y cmake
-          cd cmocka
-          sudo cmake --install build 
       - name: Install gcovr
         run: |
-          sudo apt-get install -y gcovr
+          make install_gcovr
       - name: Run unitary testing
         shell: bash
         run: |
+          export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
+          export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
           export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-          make -t
+          make test QUIET=""
           make run-test QUIET=""
           make coverage QUIET=""
       - name: Upload coverage report
