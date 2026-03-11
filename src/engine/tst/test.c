@@ -7,15 +7,16 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
+#include "testEngine.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "testEngine.h"
 
 int
-main(void) {
+main(void)
+{
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(testEngineRegisterFailNullParameter, setup),
         cmocka_unit_test_setup(testEngineRegisterFailMaxCallbacks, setup),

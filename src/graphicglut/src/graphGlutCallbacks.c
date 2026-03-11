@@ -13,13 +13,17 @@
 static void *context[MAX_PRINT_CONTEXTS];
 
 int
-graphRegisterPrint(void *ctx) {
-    if(!ctx) {
+graphRegisterPrint(void *ctx)
+{
+    if (!ctx)
+    {
         return -1;
     }
 
-    for(int i = 0; i < MAX_PRINT_CONTEXTS; i++) {
-        if(!context[i]) {
+    for (int i = 0; i < MAX_PRINT_CONTEXTS; i++)
+    {
+        if (!context[i])
+        {
             context[i] = ctx;
             return 0;
         }
@@ -29,13 +33,17 @@ graphRegisterPrint(void *ctx) {
 }
 
 int
-graphUnregisterPrint(void *ctx) {
-    if(!ctx) {
+graphUnregisterPrint(void *ctx)
+{
+    if (!ctx)
+    {
         return -1;
     }
 
-    for(int i = 0; i < MAX_PRINT_CONTEXTS; i++) {
-        if(context[i] == ctx) {
+    for (int i = 0; i < MAX_PRINT_CONTEXTS; i++)
+    {
+        if (context[i] == ctx)
+        {
             context[i] = NULL;
             return 0;
         }
@@ -45,11 +53,14 @@ graphUnregisterPrint(void *ctx) {
 }
 
 void
-graphGlutDisplay(void){
+graphGlutDisplay(void)
+{
     glClear(GL_COLOR_BUFFER_BIT);
- 
-    for(int i = 0; i < MAX_PRINT_CONTEXTS; i++) {
-        if(context[i] != NULL) {
+
+    for (int i = 0; i < MAX_PRINT_CONTEXTS; i++)
+    {
+        if (context[i] != NULL)
+        {
             graphPrintImage(context[i]);
         }
     }
@@ -58,7 +69,8 @@ graphGlutDisplay(void){
 }
 
 void
-graphGlutReshape(int w, int h) {
+graphGlutReshape(int w, int h)
+{
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -69,8 +81,10 @@ graphGlutReshape(int w, int h) {
 
 #ifdef UNIT_TESTING
 void
-helperUT_graphGlutResetRegisteredContext(void) {
-    for(int i = 0; i < MAX_PRINT_CONTEXTS; i++) {
+helperUT_graphGlutResetRegisteredContext(void)
+{
+    for (int i = 0; i < MAX_PRINT_CONTEXTS; i++)
+    {
         context[i] = NULL;
     }
 }

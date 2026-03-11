@@ -7,16 +7,17 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
+#include "testGraphGlut.h"
+#include "testGraphGlutCallbacks.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "testGraphGlut.h"
-#include "testGraphGlutCallbacks.h"
 
 int
-main(void) {
+main(void)
+{
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(testGraphInitGlut, setup),
         cmocka_unit_test_setup(testGraphRegisterPrintFailNullParameter, setup),

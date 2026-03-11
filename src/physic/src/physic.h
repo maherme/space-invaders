@@ -30,7 +30,6 @@ bool
 physicCheckBorderCollision(const sprite_t *const sprite);
 
 bool
-physicCheckSpritesBoxCollision(const sprite_t *const sprite1,
-                               const sprite_t *const sprite2);
+physicCheckSpritesBoxCollision(const sprite_t *const sprite1, const sprite_t *const sprite2);
 
 #endif

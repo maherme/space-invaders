@@ -10,15 +10,15 @@
 #ifndef __TESTGRAPHGLUT_H__
 #define __TESTGRAPHGLUT_H__
 
+#include "graph.h"
+#include "graphGlut.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "graphGlut.h"
-#include "graph.h"
 
 void
-testGraphInitGlut(void ** status);
+testGraphInitGlut(void **status);
 
 #endif

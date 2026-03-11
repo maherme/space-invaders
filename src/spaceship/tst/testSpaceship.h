@@ -10,12 +10,12 @@
 #ifndef __TESTSPACESHIP_H__
 #define __TESTSPACESHIP_H__
 
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include <stdbool.h>
 
 void
 testSpaceshipCreate(void **status);

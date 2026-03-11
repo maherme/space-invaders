@@ -10,24 +10,26 @@
 #ifndef __KEYBOARD_H__
 #define __KEYBOARD_H__
 
-#include <stdbool.h>
 #include <GL/glut.h>
+#include <stdbool.h>
 
 #define MAX_NUM_KEYS 256
 
-typedef enum {
+typedef enum
+{
     SPECIAL_KEY_RIGHT,
     SPECIAL_KEY_LEFT,
     MAX_SPECIAL_KEYS
-}special_key_t;
+} special_key_t;
 
-typedef enum {
+typedef enum
+{
     ACTION_KEY_UP,
     ACTION_KEY_DOWN,
     ACTION_SPECIAL_KEY_UP,
     ACTION_SPECIAL_KEY_DOWN,
     MAX_KEY_ACTIONS
-}key_action_t;
+} key_action_t;
 
 typedef void (*actions_cb)(void);
 
@@ -46,6 +48,6 @@ keyboardInit(void);
 #ifdef UNIT_TESTING
 void
 helperUT_keyboardResetRegisteredCallbacks(void);
-#endif 
+#endif
 
-#endif 
+#endif

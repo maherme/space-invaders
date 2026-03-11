@@ -11,7 +11,8 @@
 #include "spaceship.h"
 
 void
-testSpaceshipCreate(void **status) {
+testSpaceshipCreate(void **status)
+{
     (void)status;
     int x_pos = 10;
     int y_pos = 20;

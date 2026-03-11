@@ -10,13 +10,13 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-#define NS_PER_MS   1000000LL
-#define NS_PER_S    1000000000LL
+#define NS_PER_MS 1000000LL
+#define NS_PER_S 1000000000LL
 
 void *
 utilsCalloc(size_t nelem, size_t elsize);

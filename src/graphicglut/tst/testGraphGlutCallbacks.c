@@ -8,22 +8,25 @@
  */
 
 #include "testGraphGlutCallbacks.h"
-#include "graphGlutCallbacks.h"
 #include "graph.h"
+#include "graphGlutCallbacks.h"
 
 void
-__wrap_glClear(GLbitfield mask) {
+__wrap_glClear(GLbitfield mask)
+{
     check_expected_uint(mask);
     function_called();
 }
 
 void
-__wrap_glutSwapBuffers(void) {
+__wrap_glutSwapBuffers(void)
+{
     function_called();
 }
 
 void
-__wrap_glViewport(GLint x, GLint y, GLsizei width, GLsizei height) {
+__wrap_glViewport(GLint x, GLint y, GLsizei width, GLsizei height)
+{
     check_expected_int(x);
     check_expected_int(y);
     check_expected_int(width);
@@ -32,18 +35,21 @@ __wrap_glViewport(GLint x, GLint y, GLsizei width, GLsizei height) {
 }
 
 void
-__wrap_glMatrixMode(GLenum mode) {
+__wrap_glMatrixMode(GLenum mode)
+{
     check_expected_uint(mode);
     function_called();
 }
 
 void
-__wrap_glLoadIdentity(void) {
+__wrap_glLoadIdentity(void)
+{
     function_called();
 }
 
 void
-__wrap_gluOrtho2D(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top) {
+__wrap_gluOrtho2D(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top)
+{
     check_expected_double(left);
     check_expected_double(right);
     check_expected_double(bottom);
@@ -52,20 +58,23 @@ __wrap_gluOrtho2D(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top) 
 }
 
 void
-__wrap_graphPrintImage(const sprite_t * const sprite) {
+__wrap_graphPrintImage(const sprite_t *const sprite)
+{
     check_expected_ptr(sprite);
     function_called();
 }
 
 int
-setup(void **state) {
+setup(void **state)
+{
     (void)state;
     helperUT_graphGlutResetRegisteredContext();
     return 0;
 }
 
 void
-testGraphRegisterPrintFailNullParameter(void **status) {
+testGraphRegisterPrintFailNullParameter(void **status)
+{
     (void)status;
 
     expect_uint_value(__wrap_glClear, mask, GL_COLOR_BUFFER_BIT);
@@ -78,7 +87,8 @@ testGraphRegisterPrintFailNullParameter(void **status) {
 }
 
 void
-testGraphRegisterPrintFailMaxCallbacks(void **status) {
+testGraphRegisterPrintFailMaxCallbacks(void **status)
+{
     (void)status;
     void *expected_ctx = (void *)0xdeadbeef;
 
@@ -88,7 +98,8 @@ testGraphRegisterPrintFailMaxCallbacks(void **status) {
     expect_function_calls(__wrap_graphPrintImage, MAX_PRINT_CONTEXTS);
     expect_function_call(__wrap_glutSwapBuffers);
 
-    for(int i = 0; i < MAX_PRINT_CONTEXTS; i++) {
+    for (int i = 0; i < MAX_PRINT_CONTEXTS; i++)
+    {
         graphRegisterPrint(expected_ctx);
     }
     int result = graphRegisterPrint(expected_ctx);
@@ -97,7 +108,8 @@ testGraphRegisterPrintFailMaxCallbacks(void **status) {
 }
 
 void
-testGraphRegisterPrintSuccess(void **status) {
+testGraphRegisterPrintSuccess(void **status)
+{
     (void)status;
     void *expected_ctx = (void *)0xdeadbeef;
 
@@ -112,7 +124,8 @@ testGraphRegisterPrintSuccess(void **status) {
 }
 
 void
-testGraphUnregisterPrintFailNullParameter(void **status) {
+testGraphUnregisterPrintFailNullParameter(void **status)
+{
     (void)status;
 
     expect_uint_value(__wrap_glClear, mask, GL_COLOR_BUFFER_BIT);
@@ -125,7 +138,8 @@ testGraphUnregisterPrintFailNullParameter(void **status) {
 }
 
 void
-testGraphUnregisterPrintFailMaxCallbacks(void **status) {
+testGraphUnregisterPrintFailMaxCallbacks(void **status)
+{
     (void)status;
     void *expected_ctx = (void *)0xdeadbeef;
 
@@ -139,7 +153,8 @@ testGraphUnregisterPrintFailMaxCallbacks(void **status) {
 }
 
 void
-testGraphUnregisterPrintSuccess(void **status) {
+testGraphUnregisterPrintSuccess(void **status)
+{
     (void)status;
     void *expected_ctx = (void *)0xdeadbeef;
 
@@ -163,7 +178,8 @@ testGraphUnregisterPrintSuccess(void **status) {
 }
 
 void
-testGraphGlutReshape(void **status) {
+testGraphGlutReshape(void **status)
+{
     (void)status;
 
     expect_int_value(__wrap_glViewport, x, 0);

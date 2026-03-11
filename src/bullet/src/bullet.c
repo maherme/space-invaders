@@ -9,22 +9,19 @@
 
 #include "bullet.h"
 
-#define BULLET_WIDTH                1
-#define BULLET_HEIGHT               4
+#define BULLET_WIDTH 1
+#define BULLET_HEIGHT 4
 
-struct bullet_instance_t {
+struct bullet_instance_t
+{
     sprite_t sprite;
 };
 
-static const char bulletImage[BULLET_HEIGHT][BULLET_WIDTH][4] = {
-    {W},
-    {W},
-    {W},
-    {W}
-};
+static const char bulletImage[BULLET_HEIGHT][BULLET_WIDTH][4] = {{W}, {W}, {W}, {W}};
 
 bullet_t
-bulletCreate(int x, int y){
+bulletCreate(int x, int y)
+{
     bullet_t inst = utilsCalloc(1, sizeof(struct bullet_instance_t));
     inst->sprite.x = x;
     inst->sprite.y = y;

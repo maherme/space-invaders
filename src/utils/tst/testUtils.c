@@ -13,10 +13,12 @@ extern void *
 __real_calloc(size_t nelem, size_t elsize);
 
 void *
-__wrap_calloc(size_t nelem, size_t elsize) {
+__wrap_calloc(size_t nelem, size_t elsize)
+{
     bool call_real = mock_type(bool);
 
-    if(call_real) {
+    if (call_real)
+    {
         return __real_calloc(nelem, elsize);
     }
     check_expected_int(nelem);
@@ -26,20 +28,22 @@ __wrap_calloc(size_t nelem, size_t elsize) {
 }
 
 void
-__wrap_perror(const char *s) {
+__wrap_perror(const char *s)
+{
     check_expected_ptr(s);
     function_called();
 }
 
 void
-__wrap_exit(int status) {
+__wrap_exit(int status)
+{
     check_expected_int(status);
     function_called();
 }
 
 int
-__wrap_clock_gettime(clockid_t clockid,
-                     struct timespec *tp) {
+__wrap_clock_gettime(clockid_t clockid, struct timespec *tp)
+{
     assert_int_equal(clockid, CLOCK_MONOTONIC);
     assert_non_null(tp);
     tp->tv_sec = (time_t)mock_type(time_t);
@@ -49,7 +53,8 @@ __wrap_clock_gettime(clockid_t clockid,
 }
 
 void
-testUtilsCallocFail(void **status) {
+testUtilsCallocFail(void **status)
+{
     (void)status;
 
     will_return(__wrap_calloc, false);
@@ -66,7 +71,8 @@ testUtilsCallocFail(void **status) {
 }
 
 void
-testUtilsCallocSuccess(void **status) {
+testUtilsCallocSuccess(void **status)
+{
     (void)status;
     void *expected = (void *)0x12345678;
 
@@ -80,7 +86,8 @@ testUtilsCallocSuccess(void **status) {
 }
 
 void
-testUtilsFreeFail(void **status) {
+testUtilsFreeFail(void **status)
+{
     (void)status;
     void *ptr = NULL;
 
@@ -89,7 +96,8 @@ testUtilsFreeFail(void **status) {
 }
 
 void
-testUtilsFreeSuccess(void **status) {
+testUtilsFreeSuccess(void **status)
+{
     (void)status;
     void *ptr = malloc(1);
 
@@ -99,20 +107,19 @@ testUtilsFreeSuccess(void **status) {
 }
 
 void
-testUtilsCheckTimeoutNegativeTimeoutParameter(void **status) {
+testUtilsCheckTimeoutNegativeTimeoutParameter(void **status)
+{
     (void)status;
     struct timespec time = {0};
 
-    assert_false(utilsCheckTimeout(time,-1));
+    assert_false(utilsCheckTimeout(time, -1));
 }
 
 void
-testUtilsCheckTimeoutExact(void **status) {
+testUtilsCheckTimeoutExact(void **status)
+{
     (void)status;
-    struct timespec time = {
-        .tv_sec = 0,
-        .tv_nsec = 0
-    };
+    struct timespec time = {.tv_sec = 0, .tv_nsec = 0};
 
     will_return(__wrap_clock_gettime, (time_t)0);
     will_return(__wrap_clock_gettime, (long)(500 * NS_PER_MS));
@@ -122,12 +129,10 @@ testUtilsCheckTimeoutExact(void **status) {
 }
 
 void
-testUtilsCheckTimeoutBefore(void **status) {
+testUtilsCheckTimeoutBefore(void **status)
+{
     (void)status;
-    struct timespec time = {
-        .tv_sec = 0,
-        .tv_nsec = 0
-    };
+    struct timespec time = {.tv_sec = 0, .tv_nsec = 0};
 
     will_return(__wrap_clock_gettime, (time_t)0);
     will_return(__wrap_clock_gettime, (long)(499999999));
@@ -137,12 +142,10 @@ testUtilsCheckTimeoutBefore(void **status) {
 }
 
 void
-testUtilsCheckTimeoutZero(void **status) {
+testUtilsCheckTimeoutZero(void **status)
+{
     (void)status;
-    struct timespec time = {
-        .tv_sec = 0,
-        .tv_nsec = 0
-    };
+    struct timespec time = {.tv_sec = 0, .tv_nsec = 0};
 
     will_return(__wrap_clock_gettime, (time_t)1);
     will_return(__wrap_clock_gettime, (long)(123456789));
@@ -152,12 +155,10 @@ testUtilsCheckTimeoutZero(void **status) {
 }
 
 void
-testUtilsCheckTimeoutFuture(void **status) {
+testUtilsCheckTimeoutFuture(void **status)
+{
     (void)status;
-    struct timespec time = {
-        .tv_sec = 1,
-        .tv_nsec = 500 * NS_PER_MS
-    };
+    struct timespec time = {.tv_sec = 1, .tv_nsec = 500 * NS_PER_MS};
 
     will_return(__wrap_clock_gettime, (time_t)1);
     will_return(__wrap_clock_gettime, (long)(500 * NS_PER_MS - 1));

@@ -11,13 +11,15 @@
 #include "ufo.h"
 
 int
-__wrap_rand(void) {
+__wrap_rand(void)
+{
     function_called();
     return (int)mock();
 }
 
 void
-testUfoCreateLeftDirection(void **status) {
+testUfoCreateLeftDirection(void **status)
+{
     (void)status;
 
     expect_function_call(__wrap_utilsCalloc);
@@ -31,7 +33,8 @@ testUfoCreateLeftDirection(void **status) {
 }
 
 void
-testUfoCreateRightDirection(void **status) {
+testUfoCreateRightDirection(void **status)
+{
     (void)status;
 
     expect_function_call(__wrap_utilsCalloc);
@@ -45,21 +48,24 @@ testUfoCreateRightDirection(void **status) {
 }
 
 void
-testUfoGetDirectionNullParameter(void **status) {
+testUfoGetDirectionNullParameter(void **status)
+{
     (void)status;
 
     assert_int_equal(INVALID_DIR, ufoGetDirection(NULL));
 }
 
 void
-testUfoCheckForMovingNullParameter(void **status) {
+testUfoCheckForMovingNullParameter(void **status)
+{
     (void)status;
 
     assert_false(ufoCheckForMoving(NULL));
 }
 
 void
-testUfoCheckForMovingFalse(void **status) {
+testUfoCheckForMovingFalse(void **status)
+{
     (void)status;
 
     expect_function_call(__wrap_utilsCalloc);
@@ -77,7 +83,8 @@ testUfoCheckForMovingFalse(void **status) {
 }
 
 void
-testUfoCheckForMovingTrue(void **status) {
+testUfoCheckForMovingTrue(void **status)
+{
     (void)status;
 
     expect_function_call(__wrap_utilsCalloc);
@@ -95,7 +102,8 @@ testUfoCheckForMovingTrue(void **status) {
 }
 
 void
-testUfoCheckForMovingTrueMoreCalls(void **status){
+testUfoCheckForMovingTrueMoreCalls(void **status)
+{
     (void)status;
 
     expect_function_call(__wrap_utilsCalloc);

@@ -10,7 +10,8 @@
 #include "testEngine.h"
 
 int
-__wrap_usleep(useconds_t usec) {
+__wrap_usleep(useconds_t usec)
+{
     (void)usec;
     check_expected_uint(usec);
     function_called();
@@ -18,19 +19,22 @@ __wrap_usleep(useconds_t usec) {
 }
 
 int
-setup(void **state) {
+setup(void **state)
+{
     (void)state;
     helperUT_engineResetRegisteredCallbacks();
     return 0;
 }
 
 static void
-callback_foo(void) {
+callback_foo(void)
+{
     function_called();
 }
 
 void
-testEngineRegisterFailNullParameter(void **status) {
+testEngineRegisterFailNullParameter(void **status)
+{
     (void)status;
 
     expect_uint_value(__wrap_usleep, usec, 1000);
@@ -42,14 +46,16 @@ testEngineRegisterFailNullParameter(void **status) {
 }
 
 void
-testEngineRegisterFailMaxCallbacks(void **status) {
+testEngineRegisterFailMaxCallbacks(void **status)
+{
     (void)status;
 
     expect_function_calls(callback_foo, ENGINE_MAX_CALLBACKS);
     expect_uint_value(__wrap_usleep, usec, 1000);
     expect_function_call(__wrap_usleep);
 
-    for(int i = 0; i < ENGINE_MAX_CALLBACKS; i++) {
+    for (int i = 0; i < ENGINE_MAX_CALLBACKS; i++)
+    {
         engineRegister(callback_foo);
     }
     int result = engineRegister(callback_foo);
@@ -58,7 +64,8 @@ testEngineRegisterFailMaxCallbacks(void **status) {
 }
 
 void
-testEngineRegisterSuccess(void **status) {
+testEngineRegisterSuccess(void **status)
+{
     (void)status;
 
     expect_function_call(callback_foo);
@@ -71,7 +78,8 @@ testEngineRegisterSuccess(void **status) {
 }
 
 void
-testEngineUnregisterFailNullParameter(void **status) {
+testEngineUnregisterFailNullParameter(void **status)
+{
     (void)status;
 
     expect_uint_value(__wrap_usleep, usec, 1000);
@@ -83,7 +91,8 @@ testEngineUnregisterFailNullParameter(void **status) {
 }
 
 void
-testEngineUnregisterNoCallbackFound(void **status) {
+testEngineUnregisterNoCallbackFound(void **status)
+{
     (void)status;
 
     expect_uint_value(__wrap_usleep, usec, 1000);
@@ -95,7 +104,8 @@ testEngineUnregisterNoCallbackFound(void **status) {
 }
 
 void
-testEngineUnregisterSuccess(void **status) {
+testEngineUnregisterSuccess(void **status)
+{
     (void)status;
 
     expect_function_call(callback_foo);
