@@ -14,7 +14,8 @@
 #include "utils.h"
 #include <stdbool.h>
 
-typedef enum {
+typedef enum
+{
     UP,
     DOWN,
     RIGHT,

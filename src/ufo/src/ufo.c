@@ -9,41 +9,44 @@
 
 #include "ufo.h"
 
-struct ufo_instance_t {
+struct ufo_instance_t
+{
     sprite_t sprite;
     direction_t direction;
     long long time_to_appear;
 };
 
 static const char ufoImage[UFO_HEIGHT][UFO_WIDTH][4] = {
-    {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
-    {B, B, B, B, R, R, R, R, R, R, R, R, B, B, B, B},
-    {B, B, B, R, R, R, R, R, R, R, R, R, R, B, B, B},
-    {B, B, B, R, B, R, B, R, R, B, R, B, R, B, B, B},
-    {B, R, R, R, R, R, R, R, R, R, R, R, R, R, R, B},
-    {R, R, R, R, R, R, R, R, R, R, R, R, R, R, R, R},
-    {B, B, B, B, B, R, R, R, R, R, R, B, B, B, B, B},
-    {B, B, B, B, B, B, B, R, R, B, B, B, B, B, B, B},
+    {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B}, {B, B, B, B, R, R, R, R, R, R, R, R, B, B, B, B},
+    {B, B, B, R, R, R, R, R, R, R, R, R, R, B, B, B}, {B, B, B, R, B, R, B, R, R, B, R, B, R, B, B, B},
+    {B, R, R, R, R, R, R, R, R, R, R, R, R, R, R, B}, {R, R, R, R, R, R, R, R, R, R, R, R, R, R, R, R},
+    {B, B, B, B, B, R, R, R, R, R, R, B, B, B, B, B}, {B, B, B, B, B, B, B, R, R, B, B, B, B, B, B, B},
 };
 
 static void
-calculateDirection(ufo_t this) {
-    double random = (double)rand()/RAND_MAX;
+calculateDirection(ufo_t this)
+{
+    double random = (double)rand() / RAND_MAX;
     int random_direction = (random < 0.5) ? 0 : 1;
-    if(random_direction) {
+    if (random_direction)
+    {
         this->direction = RIGHT;
     }
-    else {
+    else
+    {
         this->direction = LEFT;
     }
 }
 
 static void
-calculateStartingCoord(ufo_t this) {
-    if(this->direction == RIGHT) {
+calculateStartingCoord(ufo_t this)
+{
+    if (this->direction == RIGHT)
+    {
         this->sprite.x = -UFO_WIDTH * 2;
     }
-    else {
+    else
+    {
         this->sprite.x = WINDOW_WIDTH;
     }
 
@@ -51,7 +54,8 @@ calculateStartingCoord(ufo_t this) {
 }
 
 ufo_t
-ufoCreate(void){
+ufoCreate(void)
+{
     ufo_t inst = utilsCalloc(1, sizeof(struct ufo_instance_t));
     calculateDirection(inst);
     calculateStartingCoord(inst);
@@ -70,27 +74,34 @@ ufoCreate(void){
 }
 
 direction_t
-ufoGetDirection(const ufo_t this) {
-    if(!this) {
+ufoGetDirection(const ufo_t this)
+{
+    if (!this)
+    {
         return INVALID_DIR;
     }
     return this->direction;
 }
 
 bool
-ufoCheckForMoving(ufo_t this) {
-    if(!this) {
+ufoCheckForMoving(ufo_t this)
+{
+    if (!this)
+    {
         return false;
     }
 
-    if(this->time_to_appear == 0) {
+    if (this->time_to_appear == 0)
+    {
         return true;
     }
 
-    if(!utilsCheckTimeout(this->sprite.last_update, this->time_to_appear)) {
+    if (!utilsCheckTimeout(this->sprite.last_update, this->time_to_appear))
+    {
         return false;
     }
-    else {
+    else
+    {
         this->time_to_appear = 0;
     }
 

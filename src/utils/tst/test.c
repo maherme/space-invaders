@@ -7,15 +7,16 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
+#include "testUtils.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "testUtils.h"
 
 int
-main(void) {
+main(void)
+{
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(testUtilsCallocFail),
         cmocka_unit_test(testUtilsCallocSuccess),

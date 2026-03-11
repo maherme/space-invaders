@@ -10,15 +10,15 @@
 #ifndef __TESTGRAPHGLUTCALLBACKS_H__
 #define __TESTGRAPHGLUTCALLBACKS_H__
 
+#include "graphGlutCallbacks.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "graphGlutCallbacks.h"
 
 int
-setup(void ** state);
+setup(void **state);
 
 void
 testGraphRegisterPrintFailNullParameter(void **status);

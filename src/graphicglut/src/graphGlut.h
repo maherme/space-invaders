@@ -12,7 +12,8 @@
 
 #include <GL/glut.h>
 
-typedef struct {
+typedef struct
+{
     int *main_argc;
     char **main_argv;
     unsigned int displayMode;
@@ -23,7 +24,7 @@ typedef struct {
     char *windowName;
     void (*displayFunc)(void);
     void (*reshapeFunc)(int w, int h);
-}graphInitGlutConfig_t;
+} graphInitGlutConfig_t;
 
 void
 graphInitGlut(graphInitGlutConfig_t *config);

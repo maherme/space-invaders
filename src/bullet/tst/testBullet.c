@@ -11,7 +11,8 @@
 #include "bullet.h"
 
 void
-testBulletCreate(void **status) {
+testBulletCreate(void **status)
+{
     (void)status;
     int x_pos = 10;
     int y_pos = 20;
@@ -25,4 +26,3 @@ testBulletCreate(void **status) {
     assert_int_equal(sprite->x, x_pos);
     assert_int_equal(sprite->y, y_pos);
 }
- 

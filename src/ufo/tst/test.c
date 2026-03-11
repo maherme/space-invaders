@@ -7,22 +7,20 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
+#include "testUfo.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "testUfo.h"
 
 int
-main(void) {
+main(void)
+{
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test(testUfoCreateLeftDirection),
-        cmocka_unit_test(testUfoCreateRightDirection),
-        cmocka_unit_test(testUfoGetDirectionNullParameter),
-        cmocka_unit_test(testUfoCheckForMovingNullParameter),
-        cmocka_unit_test(testUfoCheckForMovingFalse),
-        cmocka_unit_test(testUfoCheckForMovingTrue),
+        cmocka_unit_test(testUfoCreateLeftDirection),         cmocka_unit_test(testUfoCreateRightDirection),
+        cmocka_unit_test(testUfoGetDirectionNullParameter),   cmocka_unit_test(testUfoCheckForMovingNullParameter),
+        cmocka_unit_test(testUfoCheckForMovingFalse),         cmocka_unit_test(testUfoCheckForMovingTrue),
         cmocka_unit_test(testUfoCheckForMovingTrueMoreCalls),
     };
 

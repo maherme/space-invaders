@@ -10,14 +10,14 @@
 #ifndef __TESTUTILS_H__
 #define __TESTUTILS_H__
 
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <setjmp.h>
+#include "utils.h"
 #include <cmocka.h>
 #include <errno.h>
+#include <setjmp.h>
+#include <stdarg.h>
 #include <stdbool.h>
-#include "utils.h"
+#include <stddef.h>
+#include <stdint.h>
 
 void
 testUtilsCallocFail(void **status);

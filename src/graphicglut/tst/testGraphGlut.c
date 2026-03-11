@@ -10,34 +10,39 @@
 #include "testGraphGlut.h"
 
 void
-__wrap_glutInit(int *argcp, char **argv) {
+__wrap_glutInit(int *argcp, char **argv)
+{
     check_expected_ptr(argcp);
     check_expected_ptr(argv);
     function_called();
 }
 
 void
-__wrap_glutInitDisplayMode(unsigned int mode) {
+__wrap_glutInitDisplayMode(unsigned int mode)
+{
     check_expected_uint(mode);
     function_called();
 }
 
 void
-__wrap_glutInitWindowSize(int width, int height) {
+__wrap_glutInitWindowSize(int width, int height)
+{
     check_expected_int(width);
     check_expected_int(height);
     function_called();
 }
 
 void
-__wrap_glutInitWindowPosition(int x, int y) {
+__wrap_glutInitWindowPosition(int x, int y)
+{
     check_expected_int(x);
     check_expected_int(y);
     function_called();
 }
 
 int
-__wrap_glutCreateWindow(char *name) {
+__wrap_glutCreateWindow(char *name)
+{
     int windowNumber = mock_type(int);
     check_expected_ptr(name);
     function_called();
@@ -45,33 +50,42 @@ __wrap_glutCreateWindow(char *name) {
 }
 
 void
-__wrap_glutDisplayFunc(void (*_func)(void)) {
+__wrap_glutDisplayFunc(void (*_func)(void))
+{
     void *func = cast_to_void_pointer(_func);
     check_expected_ptr(func);
     function_called();
 }
 
 void
-__wrap_glutReshapeFunc(void (*_func)(int w, int h)) {
+__wrap_glutReshapeFunc(void (*_func)(int w, int h))
+{
     void *func = cast_to_void_pointer(_func);
     check_expected_ptr(func);
     function_called();
 }
 
 void
-__wrap_glEnable(GLenum cap) {
+__wrap_glEnable(GLenum cap)
+{
     check_expected_uint(cap);
     function_called();
 }
 
 static void
-fooDisplay(void) {}
+fooDisplay(void)
+{
+}
 
 static void
-fooReshape(int w, int h) { (void)w, (void)h;}
+fooReshape(int w, int h)
+{
+    (void)w, (void)h;
+}
 
 void
-testGraphInitGlut(void ** status) {
+testGraphInitGlut(void **status)
+{
     (void)status;
     int argc = 1;
     char *argv[] = {"Foo"};
@@ -93,7 +107,7 @@ testGraphInitGlut(void ** status) {
     expect_any(__wrap_glutInit, argv);
     expect_function_call(__wrap_glutInit);
 
-    expect_uint_value(__wrap_glutInitDisplayMode, mode, GLUT_DOUBLE |GLUT_RGB);
+    expect_uint_value(__wrap_glutInitDisplayMode, mode, GLUT_DOUBLE | GLUT_RGB);
     expect_function_call(__wrap_glutInitDisplayMode);
 
     expect_int_value(__wrap_glutInitWindowSize, width, WINDOW_WIDTH);

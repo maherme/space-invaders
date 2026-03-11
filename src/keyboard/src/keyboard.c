@@ -17,29 +17,35 @@ static actions_cb special_key_down_actions[MAX_NUM_KEYS];
 static actions_cb special_key_up_actions[MAX_NUM_KEYS];
 
 static void
-keyboardDown(unsigned char key, int x, int y) {
+keyboardDown(unsigned char key, int x, int y)
+{
     (void)x, (void)y;
     key_state[key] = true;
-    if(key_down_actions[key]) {
+    if (key_down_actions[key])
+    {
         key_down_actions[key]();
     }
 }
 
 static void
-keyboardUp(unsigned char key, int x, int y) {
-    (void) x, (void)y;
+keyboardUp(unsigned char key, int x, int y)
+{
+    (void)x, (void)y;
     key_state[key] = false;
-    if(key_up_actions[key]) {
+    if (key_up_actions[key])
+    {
         key_up_actions[key]();
     }
 }
 
 static void
-keyboardSpecialDown(int key, int x, int y) {
-    (void) x, (void)y;
+keyboardSpecialDown(int key, int x, int y)
+{
+    (void)x, (void)y;
     int _key = MAX_SPECIAL_KEYS;
 
-    switch(key) {
+    switch (key)
+    {
         case GLUT_KEY_LEFT:
             special_key_state[SPECIAL_KEY_LEFT] = true;
             _key = SPECIAL_KEY_LEFT;
@@ -50,17 +56,20 @@ keyboardSpecialDown(int key, int x, int y) {
             break;
     }
 
-    if(special_key_down_actions[_key]) {
+    if (special_key_down_actions[_key])
+    {
         special_key_down_actions[_key]();
     }
 }
 
 static void
-keyboardSpecialUp(int key, int x, int y) {
-    (void) x, (void)y;
+keyboardSpecialUp(int key, int x, int y)
+{
+    (void)x, (void)y;
     int _key = MAX_SPECIAL_KEYS;
 
-    switch(key) {
+    switch (key)
+    {
         case GLUT_KEY_LEFT:
             special_key_state[SPECIAL_KEY_LEFT] = false;
             _key = SPECIAL_KEY_LEFT;
@@ -71,18 +80,22 @@ keyboardSpecialUp(int key, int x, int y) {
             break;
     }
 
-    if(special_key_up_actions[_key]) {
+    if (special_key_up_actions[_key])
+    {
         special_key_up_actions[_key]();
     }
 }
 
 int
-keyboardRegisterAction(actions_cb action, key_action_t type, int key) {
-    if(!action || key > MAX_NUM_KEYS) {
+keyboardRegisterAction(actions_cb action, key_action_t type, int key)
+{
+    if (!action || key > MAX_NUM_KEYS)
+    {
         return -1;
     }
 
-    switch (type) {
+    switch (type)
+    {
         case ACTION_KEY_UP:
             key_up_actions[key] = action;
             break;
@@ -92,7 +105,7 @@ keyboardRegisterAction(actions_cb action, key_action_t type, int key) {
         case ACTION_SPECIAL_KEY_UP:
             special_key_up_actions[key] = action;
             break;
-        case ACTION_SPECIAL_KEY_DOWN: 
+        case ACTION_SPECIAL_KEY_DOWN:
             special_key_down_actions[key] = action;
             break;
         default:
@@ -104,17 +117,20 @@ keyboardRegisterAction(actions_cb action, key_action_t type, int key) {
 }
 
 bool
-keyboardGetKeyState(unsigned char key) {
+keyboardGetKeyState(unsigned char key)
+{
     return key_state[key];
 }
 
 bool
-keyboardGetSpecialKeyState(special_key_t key) {
+keyboardGetSpecialKeyState(special_key_t key)
+{
     return special_key_state[key];
 }
 
 void
-keyboardInit(void) {
+keyboardInit(void)
+{
     glutIgnoreKeyRepeat(1);
     glutKeyboardFunc(keyboardDown);
     glutKeyboardUpFunc(keyboardUp);
@@ -124,8 +140,10 @@ keyboardInit(void) {
 
 #ifdef UNIT_TESTING
 void
-helperUT_keyboardResetRegisteredCallbacks(void) {
-    for(int i = 0; i < MAX_NUM_KEYS; i++) {
+helperUT_keyboardResetRegisteredCallbacks(void)
+{
+    for (int i = 0; i < MAX_NUM_KEYS; i++)
+    {
         key_down_actions[i] = NULL;
         key_up_actions[i] = NULL;
         special_key_down_actions[i] = NULL;

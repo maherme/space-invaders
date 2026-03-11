@@ -15,52 +15,60 @@ static void (*registered_special_func)(int, int, int) = NULL;
 static void (*registered_special_up_func)(int, int, int) = NULL;
 
 void
-__wrap_glutIgnoreKeyRepeat(int ignore) {
+__wrap_glutIgnoreKeyRepeat(int ignore)
+{
     check_expected_int(ignore);
     function_called();
 }
 
 void
-__wrap_glutKeyboardFunc(void (*func)(unsigned char key, int x, int y)) {
+__wrap_glutKeyboardFunc(void (*func)(unsigned char key, int x, int y))
+{
     assert_non_null(func);
     registered_keyboard_func = func;
     function_called();
 }
 void
-__wrap_glutKeyboardUpFunc(void (*func)(unsigned char key, int x, int y)) {
+__wrap_glutKeyboardUpFunc(void (*func)(unsigned char key, int x, int y))
+{
     assert_non_null(func);
     registered_keyboard_up_func = func;
     function_called();
 }
 
 void
-__wrap_glutSpecialFunc(void (*func)(int key, int x, int y)) {
+__wrap_glutSpecialFunc(void (*func)(int key, int x, int y))
+{
     assert_non_null(func);
     registered_special_func = func;
     function_called();
 }
 
 void
-__wrap_glutSpecialUpFunc(void (*func)(int key, int x, int y)) {
+__wrap_glutSpecialUpFunc(void (*func)(int key, int x, int y))
+{
     assert_non_null(func);
     registered_special_up_func = func;
     function_called();
 }
 
 static void
-callback_foo(void) {
+callback_foo(void)
+{
     function_called();
 }
 
 int
-setup(void **state) {
+setup(void **state)
+{
     (void)state;
     helperUT_keyboardResetRegisteredCallbacks();
     return 0;
 }
 
 void
-testKeyboardInit(void **status) {
+testKeyboardInit(void **status)
+{
     (void)status;
 
     expect_int_value(__wrap_glutIgnoreKeyRepeat, ignore, 1);
@@ -71,10 +79,11 @@ testKeyboardInit(void **status) {
     expect_function_call(__wrap_glutSpecialUpFunc);
 
     keyboardInit();
-} 
+}
 
 void
-testKeyboardRegisterActionNullAction(void **status) {
+testKeyboardRegisterActionNullAction(void **status)
+{
     (void)status;
 
     int result = keyboardRegisterAction(NULL, ACTION_KEY_DOWN, 'a');
@@ -85,7 +94,8 @@ testKeyboardRegisterActionNullAction(void **status) {
 }
 
 void
-testKeyboardRegisterActionInvalidKeyAction(void **status) {
+testKeyboardRegisterActionInvalidKeyAction(void **status)
+{
     (void)status;
 
     int result = keyboardRegisterAction(callback_foo, MAX_KEY_ACTIONS, 'a');
@@ -96,7 +106,8 @@ testKeyboardRegisterActionInvalidKeyAction(void **status) {
 }
 
 void
-testKeyboardRegisterActionInvalidKey(void **status) {
+testKeyboardRegisterActionInvalidKey(void **status)
+{
     (void)status;
 
     int result = keyboardRegisterAction(callback_foo, ACTION_KEY_DOWN, 257);
@@ -107,7 +118,8 @@ testKeyboardRegisterActionInvalidKey(void **status) {
 }
 
 void
-testKeyboardKeyPressed(void **status) {
+testKeyboardKeyPressed(void **status)
+{
     (void)status;
 
     expect_function_call(callback_foo);
@@ -117,7 +129,8 @@ testKeyboardKeyPressed(void **status) {
     assert_true(keyboardGetKeyState('a'));
 }
 void
-testKeyboardKeyReleased(void **status) {
+testKeyboardKeyReleased(void **status)
+{
     (void)status;
 
     expect_function_call(callback_foo);
@@ -128,7 +141,8 @@ testKeyboardKeyReleased(void **status) {
 }
 
 void
-testKeyboardKeyPressedAndReleased(void **status) {
+testKeyboardKeyPressedAndReleased(void **status)
+{
     (void)status;
 
     registered_keyboard_func('a', 0, 0);
@@ -139,7 +153,8 @@ testKeyboardKeyPressedAndReleased(void **status) {
 }
 
 void
-testKeyboardSpecialKeyPressed(void **status) {
+testKeyboardSpecialKeyPressed(void **status)
+{
     (void)status;
 
     expect_function_call(callback_foo);
@@ -155,7 +170,8 @@ testKeyboardSpecialKeyPressed(void **status) {
 }
 
 void
-testKeyboardSpecialKeyReleased(void **status) {
+testKeyboardSpecialKeyReleased(void **status)
+{
     (void)status;
 
     expect_function_call(callback_foo);
@@ -171,7 +187,8 @@ testKeyboardSpecialKeyReleased(void **status) {
 }
 
 void
-testKeyboardSpecialKeyPressedAndReleased(void **status) {
+testKeyboardSpecialKeyPressedAndReleased(void **status)
+{
     (void)status;
 
     registered_special_func(GLUT_KEY_RIGHT, 0, 0);

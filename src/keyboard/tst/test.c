@@ -7,15 +7,16 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
+#include "testKeyboard.h"
+#include <cmocka.h>
+#include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include "testKeyboard.h"
 
 int
-main(void) {
+main(void)
+{
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(testKeyboardInit, setup),
         cmocka_unit_test_setup(testKeyboardRegisterActionNullAction, setup),

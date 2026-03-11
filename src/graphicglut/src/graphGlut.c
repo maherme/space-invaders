@@ -11,7 +11,8 @@
 #include "graphGlutCallbacks.h"
 
 void
-graphInitGlut(graphInitGlutConfig_t *config) {
+graphInitGlut(graphInitGlutConfig_t *config)
+{
     glutInit(config->main_argc, config->main_argv);
     glutInitDisplayMode(config->displayMode);
     glutInitWindowSize(config->windowWidth, config->windowHeight);
