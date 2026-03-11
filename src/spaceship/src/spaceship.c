@@ -15,9 +15,14 @@ struct spaceship_instance_t
 };
 
 static const char spaceshipImage[SPACESHIP_HEIGHT][SPACESHIP_WIDTH][4] = {
-    {B, B, B, B, B, B, G, B, B, B, B, B, B}, {B, B, B, B, B, G, G, G, B, B, B, B, B}, {B, B, B, B, B, G, G, G, B, B, B, B, B},
-    {B, G, G, G, G, G, G, G, G, G, G, G, B}, {G, G, G, G, G, G, G, G, G, G, G, G, G}, {G, G, G, G, G, G, G, G, G, G, G, G, G},
-    {B, B, G, G, B, B, B, B, B, G, G, B, B}, {B, G, G, G, G, B, B, B, G, G, G, G, B},
+    {B, B, B, B, B, B, G, B, B, B, B, B, B},
+    {B, B, B, B, B, G, G, G, B, B, B, B, B},
+    {B, B, B, B, B, G, G, G, B, B, B, B, B},
+    {B, G, G, G, G, G, G, G, G, G, G, G, B},
+    {G, G, G, G, G, G, G, G, G, G, G, G, G},
+    {G, G, G, G, G, G, G, G, G, G, G, G, G},
+    {B, B, G, G, B, B, B, B, B, G, G, B, B},
+    {B, G, G, G, G, B, B, B, G, G, G, G, B},
 };
 
 spaceship_t

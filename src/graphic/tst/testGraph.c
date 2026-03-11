@@ -27,8 +27,15 @@ __wrap_glBindTexture(GLenum target, GLuint texture)
 }
 
 void
-__wrap_glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format,
-                    GLenum type, const void *data)
+__wrap_glTexImage2D(GLenum target,
+                    GLint level,
+                    GLint internalformat,
+                    GLsizei width,
+                    GLsizei height,
+                    GLint border,
+                    GLenum format,
+                    GLenum type,
+                    const void *data)
 {
     check_expected_uint(target);
     check_expected_int(level);

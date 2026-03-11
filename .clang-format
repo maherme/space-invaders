@@ -7,4 +7,7 @@ IndentWidth: 4
 ColumnLimit: 129
 SpaceBeforeParens: ControlStatements
 IndentCaseLabels: true
-
+BinPackArguments: false
+BinPackParameters: false
+Cpp11BracedListStyle: true
+AllowAllArgumentsOnNextLine: false

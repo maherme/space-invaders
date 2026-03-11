@@ -17,10 +17,14 @@ struct ufo_instance_t
 };
 
 static const char ufoImage[UFO_HEIGHT][UFO_WIDTH][4] = {
-    {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B}, {B, B, B, B, R, R, R, R, R, R, R, R, B, B, B, B},
-    {B, B, B, R, R, R, R, R, R, R, R, R, R, B, B, B}, {B, B, B, R, B, R, B, R, R, B, R, B, R, B, B, B},
-    {B, R, R, R, R, R, R, R, R, R, R, R, R, R, R, B}, {R, R, R, R, R, R, R, R, R, R, R, R, R, R, R, R},
-    {B, B, B, B, B, R, R, R, R, R, R, B, B, B, B, B}, {B, B, B, B, B, B, B, R, R, B, B, B, B, B, B, B},
+    {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+    {B, B, B, B, R, R, R, R, R, R, R, R, B, B, B, B},
+    {B, B, B, R, R, R, R, R, R, R, R, R, R, B, B, B},
+    {B, B, B, R, B, R, B, R, R, B, R, B, R, B, B, B},
+    {B, R, R, R, R, R, R, R, R, R, R, R, R, R, R, B},
+    {R, R, R, R, R, R, R, R, R, R, R, R, R, R, R, R},
+    {B, B, B, B, B, R, R, R, R, R, R, B, B, B, B, B},
+    {B, B, B, B, B, B, B, R, R, B, B, B, B, B, B, B},
 };
 
 static void
