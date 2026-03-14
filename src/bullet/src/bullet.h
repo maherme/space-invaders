@@ -10,11 +10,6 @@
 #ifndef __BULLET_H__
 #define __BULLET_H__
 
-#include "graph.h"
-#include "utils.h"
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef struct bullet_instance_t *bullet_t;
 
 bullet_t

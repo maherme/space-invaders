@@ -64,7 +64,6 @@ spaceshipFire(void)
         sprite_t *spaceship_sprite = graphGetSprite((base_t *)spaceship);
         bullet = bulletCreate(spaceship_sprite->x + spaceship_sprite->scaled_width / 2,
                               spaceship_sprite->y + spaceship_sprite->scaled_height);
-        graphRegisterPrint(graphGetSprite((base_t *)bullet));
     }
 }
 
@@ -101,7 +100,6 @@ ufoActions(void)
     if (!ufo)
     {
         ufo = ufoCreate();
-        graphRegisterPrint(graphGetSprite((base_t *)ufo));
         return;
     }
     else
@@ -165,7 +163,6 @@ main(int argc, char **argv)
     keyboardInit();
 
     spaceship = spaceshipCreate(WINDOW_WIDTH / 2, 0);
-    graphRegisterPrint(graphGetSprite((base_t *)spaceship));
     aliensCreate();
     engineRegister(keyboardUpdate);
     engineRegister(explosionsDestroy);

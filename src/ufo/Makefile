@@ -10,9 +10,15 @@
 include ../../toolchain.mk
 include ../common.mk
 
+INCLUDES += -I../graphic/src \
+			-I../utils/src \
+			-I../graphicglut/src \
+			-I../physic/src
+
 LDFLAGS += -Wl,--wrap=utilsCalloc \
 		   -Wl,--wrap=utilsCheckTimeout \
 		   -Wl,--wrap=graphCreateImage \
 		   -Wl,--wrap=graphGetSprite \
 		   -Wl,--wrap=graphUpdateTimeSprite \
+		   -Wl,--wrap=graphRegisterPrint \
 		   -Wl,--wrap=rand

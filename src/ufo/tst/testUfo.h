@@ -10,13 +10,6 @@
 #ifndef __TESTUFO_H__
 #define __TESTUFO_H__
 
-#include <cmocka.h>
-#include <setjmp.h>
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-
 void
 testUfoCreateLeftDirection(void **status);
 

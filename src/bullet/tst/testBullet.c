@@ -9,6 +9,12 @@
 
 #include "testBullet.h"
 #include "bullet.h"
+#include "graph.h"
+#include <cmocka.h>
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
 
 void
 testBulletCreate(void **status)
@@ -19,6 +25,7 @@ testBulletCreate(void **status)
 
     expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_graphCreateImage);
+    expect_function_call(__wrap_graphRegisterPrint);
 
     bullet_t bullet = bulletCreate(x_pos, y_pos);
     sprite_t *sprite = graphGetSprite((base_t *)bullet);

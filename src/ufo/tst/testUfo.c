@@ -9,6 +9,11 @@
 
 #include "testUfo.h"
 #include "ufo.h"
+#include <cmocka.h>
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
 
 int
 __wrap_rand(void)
@@ -27,6 +32,7 @@ testUfoCreateLeftDirection(void **status)
     expect_function_call(__wrap_rand);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphUpdateTimeSprite);
+    expect_function_call(__wrap_graphRegisterPrint);
 
     ufo_t ufo = ufoCreate();
     assert_int_equal(LEFT, ufoGetDirection(ufo));
@@ -42,6 +48,7 @@ testUfoCreateRightDirection(void **status)
     expect_function_call(__wrap_rand);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphUpdateTimeSprite);
+    expect_function_call(__wrap_graphRegisterPrint);
 
     ufo_t ufo = ufoCreate();
     assert_int_equal(RIGHT, ufoGetDirection(ufo));
@@ -73,6 +80,7 @@ testUfoCheckForMovingFalse(void **status)
     expect_function_call(__wrap_rand);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphUpdateTimeSprite);
+    expect_function_call(__wrap_graphRegisterPrint);
 
     ufo_t ufo = ufoCreate();
 
@@ -92,6 +100,7 @@ testUfoCheckForMovingTrue(void **status)
     expect_function_call(__wrap_rand);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphUpdateTimeSprite);
+    expect_function_call(__wrap_graphRegisterPrint);
 
     ufo_t ufo = ufoCreate();
 
@@ -111,6 +120,7 @@ testUfoCheckForMovingTrueMoreCalls(void **status)
     expect_function_call(__wrap_rand);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphUpdateTimeSprite);
+    expect_function_call(__wrap_graphRegisterPrint);
 
     ufo_t ufo = ufoCreate();
 

@@ -10,9 +10,7 @@
 #ifndef __UFO_H__
 #define __UFO_H__
 
-#include "graph.h"
 #include "physic.h"
-#include "utils.h"
 #include <stdbool.h>
 
 #define UFO_WIDTH 16

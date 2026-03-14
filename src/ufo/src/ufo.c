@@ -8,6 +8,10 @@
  */
 
 #include "ufo.h"
+#include "graph.h"
+#include "graphGlutCallbacks.h"
+#include "physic.h"
+#include "utils.h"
 
 struct ufo_instance_t
 {
@@ -73,6 +77,7 @@ ufoCreate(void)
     inst->sprite.max_movement.right = WINDOW_WIDTH + 1;
     inst->sprite.max_movement.left = -(inst->sprite.scaled_width + 1);
     graphUpdateTimeSprite(&inst->sprite);
+    graphRegisterPrint(&inst->sprite);
 
     return inst;
 }

@@ -10,11 +10,6 @@
 #ifndef __SPACESHIP_H__
 #define __SPACESHIP_H__
 
-#include "graph.h"
-#include "utils.h"
-#include <stdio.h>
-#include <stdlib.h>
-
 #define SPACESHIP_WIDTH 13
 #define SPACESHIP_HEIGHT 8
 

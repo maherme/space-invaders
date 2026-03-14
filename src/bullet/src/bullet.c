@@ -8,6 +8,9 @@
  */
 
 #include "bullet.h"
+#include "graph.h"
+#include "graphGlutCallbacks.h"
+#include "utils.h"
 
 #define BULLET_WIDTH 1
 #define BULLET_HEIGHT 4
@@ -32,6 +35,7 @@ bulletCreate(int x, int y)
     inst->sprite.time_to_move = 2 * NS_PER_MS;
     graphCreateImage(&inst->sprite);
     inst->sprite.max_movement.up = WINDOW_HEIGHT - inst->sprite.scaled_height;
+    graphRegisterPrint(&inst->sprite);
 
     return inst;
 }

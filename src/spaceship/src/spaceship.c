@@ -8,6 +8,9 @@
  */
 
 #include "spaceship.h"
+#include "graph.h"
+#include "graphGlutCallbacks.h"
+#include "utils.h"
 
 struct spaceship_instance_t
 {
@@ -39,6 +42,7 @@ spaceshipCreate(int x, int y)
     graphCreateImage(&inst->sprite);
     inst->sprite.max_movement.right = WINDOW_WIDTH - inst->sprite.scaled_width;
     inst->sprite.max_movement.left = 0;
+    graphRegisterPrint(&inst->sprite);
 
     return inst;
 }

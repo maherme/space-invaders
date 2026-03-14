@@ -155,7 +155,7 @@ alienCreate(int x, int y, alien_type_t type)
     inst->sprite.max_movement.right = 0;
     inst->sprite.max_movement.left = 0;
     graphUpdateTimeSprite(&inst->sprite);
-    graphRegisterPrint(graphGetSprite((base_t *)inst));
+    graphRegisterPrint(&inst->sprite);
 
     return inst;
 }
