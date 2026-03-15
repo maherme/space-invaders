@@ -20,61 +20,32 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: opensuse/tumbleweed:latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Install openGL and glut library
+      - name: Install toolchain
         run: |
-          sudo apt-get update
-          sudo apt-get install -y freeglut3-dev
+          zypper in -y make gcc binutils freeglut-devel libglut3
       - name: Compile project
-        run: make game QUIET=""
+        run: |
+          make game QUIET=""
 
   unit_test:
     runs-on: ubuntu-latest
-    needs: build
+    container:
+      image: opensuse/tumbleweed:latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Install gcc 15
+      - name: Install toolchain
         run: |
-          NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          brew install gcc binutils
-          BREW_GCC_BIN=$(brew --prefix)/bin/gcc-15
-          BREW_GCOV_BIN=$(brew --prefix)/bin/gcov-15
-          sudo ln -sf $BREW_GCC_BIN /usr/bin/gcc
-          sudo ln -sf $(brew --prefix)/bin/g++-15 /usr/bin/g++
-          sudo ln -sf $BREW_GCOV_BIN /usr/bin/gcov
-          echo "CC=gcc" >> $GITHUB_ENV
-          echo "GCOV=gcov" >> $GITHUB_ENV
-          echo "/home/linuxbrew/.linuxbrew/opt/binutils/bin" >> $GITHUB_PATH
-          echo "/home/linuxbrew/.linuxbrew/bin" >> $GITHUB_PATH
-          gcc --version
-          g++ --version
-          gcov --version
-      - name: Install openGL and glut library
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y freeglut3-dev
-      - name: Install cmocka
-        run: |
-          sudo apt-get install -y git cmake
-          git clone https://gitlab.com/cmocka/cmocka.git
-          cd cmocka
-          git switch --detach cmocka-2.0.1
-          cmake -S . -B build
-          cmake --build build
-          sudo cmake --install build
-      - name: Install gcovr
-        run: |
-          make install_gcovr
+          zypper in -y make gcc binutils freeglut-devel libglut3 \
+          libcmocka-devel python3
       - name: Run unitary testing
         shell: bash
         run: |
-          export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
-          export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
-          export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
           make test QUIET=""
           make run-test QUIET=""
           make coverage QUIET=""
