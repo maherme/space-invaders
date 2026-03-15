@@ -10,7 +10,8 @@
 include ../../toolchain.mk
 include ../common.mk
 
-INCLUDES += -I../graphic/src
+INCLUDES += -I../graphic/src \
+			-I../utils/src
 
 LDFLAGS += -Wl,--wrap=glutInit \
 		   -Wl,--wrap=glutInitDisplayMode \
@@ -26,4 +27,6 @@ LDFLAGS += -Wl,--wrap=glutInit \
 		   -Wl,--wrap=glLoadIdentity \
 		   -Wl,--wrap=gluOrtho2D \
 		   -Wl,--wrap=glEnable \
-		   -Wl,--wrap=graphPrintImage
+		   -Wl,--wrap=graphPrintImage \
+		   -Wl,--wrap=utilsCalloc \
+		   -Wl,--wrap=utilsFree

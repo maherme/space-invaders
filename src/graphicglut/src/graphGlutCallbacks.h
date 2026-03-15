@@ -10,8 +10,6 @@
 #ifndef __GRAPHGLUTCALLBACKS_H__
 #define __GRAPHGLUTCALLBACKS_H__
 
-#define MAX_PRINT_CONTEXTS 59
-
 int
 graphRegisterPrint(void *ctx);
 
