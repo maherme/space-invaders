@@ -13,6 +13,9 @@
 #include "physic.h"
 #include "utils.h"
 
+#define UFO_WIDTH 16
+#define UFO_HEIGHT 8
+
 struct ufo_instance_t
 {
     sprite_t sprite;
@@ -20,7 +23,7 @@ struct ufo_instance_t
     long long time_to_appear;
 };
 
-static const char ufoImage[UFO_HEIGHT][UFO_WIDTH][4] = {
+static const char ufoImage[UFO_HEIGHT][UFO_WIDTH][NUM_RGBA_CHANNELS] = {
     {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
     {B, B, B, B, R, R, R, R, R, R, R, R, B, B, B, B},
     {B, B, B, R, R, R, R, R, R, R, R, R, R, B, B, B},

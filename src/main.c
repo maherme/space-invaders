@@ -22,6 +22,7 @@
 #include <GL/glut.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <time.h>
 
 bool gaming = true;
 spaceship_t spaceship = NULL;

@@ -8,6 +8,9 @@
  */
 
 #include "graph.h"
+#include "utils.h"
+#include <GL/glut.h>
+#include <time.h>
 
 #define SCALE_IMAGE 2
 

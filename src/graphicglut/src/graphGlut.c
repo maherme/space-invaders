@@ -8,7 +8,7 @@
  */
 
 #include "graphGlut.h"
-#include "graphGlutCallbacks.h"
+#include <GL/glut.h>
 
 void
 graphInitGlut(graphInitGlutConfig_t *config)

@@ -10,9 +10,6 @@
 #ifndef __SPACESHIP_H__
 #define __SPACESHIP_H__
 
-#define SPACESHIP_WIDTH 13
-#define SPACESHIP_HEIGHT 8
-
 typedef struct spaceship_instance_t *spaceship_t;
 
 spaceship_t

@@ -10,6 +10,8 @@
 include ../../toolchain.mk
 include ../common.mk
 
+INCLUDES += -I../graphic/src
+
 LDFLAGS += -Wl,--wrap=glutInit \
 		   -Wl,--wrap=glutInitDisplayMode \
 		   -Wl,--wrap=glutInitWindowSize \

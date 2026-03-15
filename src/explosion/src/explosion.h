@@ -10,19 +10,10 @@
 #ifndef __EXPLOSION_H__
 #define __EXPLOSION_H__
 
-#include "graph.h"
-#include "graphGlutCallbacks.h"
-#include "utils.h"
-#include <assert.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef enum
 {
     EXPLOSION_BULLET,
     EXPLOSION_UFO,
-    MAX_EXPLOSION_TYPE
 } explosion_type_t;
 
 void

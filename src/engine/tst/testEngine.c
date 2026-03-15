@@ -8,6 +8,13 @@
  */
 
 #include "testEngine.h"
+#include "engine.h"
+#include <cmocka.h>
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <unistd.h>
 
 int
 __wrap_usleep(useconds_t usec)

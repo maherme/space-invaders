@@ -12,12 +12,15 @@
 #include "graphGlutCallbacks.h"
 #include "utils.h"
 
+#define SPACESHIP_WIDTH 13
+#define SPACESHIP_HEIGHT 8
+
 struct spaceship_instance_t
 {
     sprite_t sprite;
 };
 
-static const char spaceshipImage[SPACESHIP_HEIGHT][SPACESHIP_WIDTH][4] = {
+static const char spaceshipImage[SPACESHIP_HEIGHT][SPACESHIP_WIDTH][NUM_RGBA_CHANNELS] = {
     {B, B, B, B, B, B, G, B, B, B, B, B, B},
     {B, B, B, B, B, G, G, G, B, B, B, B, B},
     {B, B, B, B, B, G, G, G, B, B, B, B, B},

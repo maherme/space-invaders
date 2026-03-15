@@ -10,8 +10,6 @@
 #ifndef __GRAPHGLUT_H__
 #define __GRAPHGLUT_H__
 
-#include <GL/glut.h>
-
 typedef struct
 {
     int *main_argc;

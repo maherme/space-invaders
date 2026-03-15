@@ -8,7 +8,13 @@
  */
 
 #include "testPhysic.h"
-#include <stdio.h>
+#include "physic.h"
+#include "utils.h"
+#include <cmocka.h>
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
 
 void
 testPhysicMoveSpriteFail(void **status)

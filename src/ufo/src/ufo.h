@@ -13,9 +13,6 @@
 #include "physic.h"
 #include <stdbool.h>
 
-#define UFO_WIDTH 16
-#define UFO_HEIGHT 8
-
 typedef struct ufo_instance_t *ufo_t;
 
 ufo_t

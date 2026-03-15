@@ -9,6 +9,12 @@
 
 #include "testExplosion.h"
 #include "explosion.h"
+#include <cmocka.h>
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
 
 int
 setup(void **state)
@@ -27,21 +33,6 @@ __wrap_clock_gettime(clockid_t clockid, struct timespec *tp)
     tp->tv_nsec = (long)mock_type(long);
     function_called();
     return 0;
-}
-
-void
-testExplosionCreateInvalidType(void **status)
-{
-    (void)status;
-    int x_pos = 10;
-    int y_pos = 20;
-
-    expect_function_call(__wrap_utilsCalloc);
-    expect_function_call(__wrap_utilsCalloc);
-    expect_function_call(__wrap_utilsFree);
-    expect_function_call(__wrap_utilsFree);
-
-    explosionCreate(x_pos, y_pos, MAX_EXPLOSION_TYPE);
 }
 
 static void

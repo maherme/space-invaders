@@ -8,6 +8,15 @@
  */
 
 #include "testUtils.h"
+#include "utils.h"
+#include <cmocka.h>
+#include <errno.h>
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
 
 extern void *
 __real_calloc(size_t nelem, size_t elsize);

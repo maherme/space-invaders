@@ -11,13 +11,11 @@
 #define __PHYSIC_H__
 
 #include "graph.h"
-#include "utils.h"
 #include <stdbool.h>
 
 typedef enum
 {
     UP,
-    DOWN,
     RIGHT,
     LEFT,
     INVALID_DIR

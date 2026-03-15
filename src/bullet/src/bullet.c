@@ -20,7 +20,7 @@ struct bullet_instance_t
     sprite_t sprite;
 };
 
-static const char bulletImage[BULLET_HEIGHT][BULLET_WIDTH][4] = {{W}, {W}, {W}, {W}};
+static const char bulletImage[BULLET_HEIGHT][BULLET_WIDTH][NUM_RGBA_CHANNELS] = {{W}, {W}, {W}, {W}};
 
 bullet_t
 bulletCreate(int x, int y)

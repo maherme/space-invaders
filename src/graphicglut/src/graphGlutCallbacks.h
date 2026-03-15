@@ -10,8 +10,6 @@
 #ifndef __GRAPHGLUTCALLBACKS_H__
 #define __GRAPHGLUTCALLBACKS_H__
 
-#include <GL/glut.h>
-
 #define MAX_PRINT_CONTEXTS 59
 
 int

@@ -11,8 +11,6 @@
 #define __UTILS_H__
 
 #include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 
 #define NS_PER_MS 1000000LL
