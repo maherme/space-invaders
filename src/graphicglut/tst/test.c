@@ -21,11 +21,12 @@ main(void)
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(testGraphInitGlut, setup),
         cmocka_unit_test_setup(testGraphRegisterPrintFailNullParameter, setup),
-        cmocka_unit_test_setup(testGraphRegisterPrintFailMaxCallbacks, setup),
         cmocka_unit_test_setup(testGraphRegisterPrintSuccess, setup),
         cmocka_unit_test_setup(testGraphUnregisterPrintFailNullParameter, setup),
-        cmocka_unit_test_setup(testGraphUnregisterPrintFailMaxCallbacks, setup),
-        cmocka_unit_test_setup(testGraphUnregisterPrintSuccess, setup),
+        cmocka_unit_test_setup(testGraphUnregisterPrintNoCallbacksFound, setup),
+        cmocka_unit_test_setup(testGraphUnregisterPrintSuccessOneCallback, setup),
+        cmocka_unit_test_setup(testGraphUnregisterPrintSuccessLastCallback, setup),
+        cmocka_unit_test_setup(testGraphUnregisterPrintSuccessMiddleCallback, setup),
         cmocka_unit_test_setup(testGraphGlutReshape, setup),
     };
 

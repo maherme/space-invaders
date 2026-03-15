@@ -17,19 +17,22 @@ void
 testGraphRegisterPrintFailNullParameter(void **status);
 
 void
-testGraphRegisterPrintFailMaxCallbacks(void **status);
-
-void
 testGraphRegisterPrintSuccess(void **status);
 
 void
 testGraphUnregisterPrintFailNullParameter(void **status);
 
 void
-testGraphUnregisterPrintFailMaxCallbacks(void **status);
+testGraphUnregisterPrintNoCallbacksFound(void **status);
 
 void
-testGraphUnregisterPrintSuccess(void **status);
+testGraphUnregisterPrintSuccessOneCallback(void **status);
+
+void
+testGraphUnregisterPrintSuccessLastCallback(void **status);
+
+void
+testGraphUnregisterPrintSuccessMiddleCallback(void **status);
 
 void
 testGraphGlutReshape(void **status);
