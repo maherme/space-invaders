@@ -10,7 +10,6 @@
 #ifndef __KEYBOARD_H__
 #define __KEYBOARD_H__
 
-#include <GL/glut.h>
 #include <stdbool.h>
 
 #define MAX_NUM_KEYS 256

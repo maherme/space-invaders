@@ -14,7 +14,8 @@ MKDIR := mkdir -p
 DIR_PYENV := $(PROJECT_ROOT)/venv_gcovr
 GCOVR := $(DIR_PYENV)/bin/gcovr
 
-CFLAGS = -c -Wall -Wextra -Wpedantic -Werror $(INCLUDES)
+CFLAGS = -c -Wall -Wextra -Wpedantic -Werror \
+		 -Wswitch-enum -Wswitch-default $(INCLUDES)
 LDFLAGS :=
 GCOVRFLAGS = --html-details \
 			 -o $(DIR_COV)/coverage_report.html \

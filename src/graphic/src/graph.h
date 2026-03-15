@@ -10,7 +10,6 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
 
-#include "utils.h"
 #include <GL/glut.h>
 
 #define WINDOW_WIDTH 448

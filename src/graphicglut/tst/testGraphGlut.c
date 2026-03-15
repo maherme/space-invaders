@@ -8,6 +8,13 @@
  */
 
 #include "testGraphGlut.h"
+#include "graph.h"
+#include "graphGlut.h"
+#include <cmocka.h>
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
 
 void
 __wrap_glutInit(int *argcp, char **argv)

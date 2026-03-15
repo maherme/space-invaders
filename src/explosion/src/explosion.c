@@ -8,6 +8,11 @@
  */
 
 #include "explosion.h"
+#include "graph.h"
+#include "graphGlutCallbacks.h"
+#include "utils.h"
+#include <assert.h>
+#include <stdbool.h>
 
 #define EXPLOSION_BULLET_WIDTH 8
 #define EXPLOSION_BULLET_HEIGHT 8
@@ -32,7 +37,7 @@ static struct explosion *head = NULL;
 
 static const struct explosion_bullet
 {
-    const char image[EXPLOSION_BULLET_HEIGHT][EXPLOSION_BULLET_WIDTH][4];
+    const char image[EXPLOSION_BULLET_HEIGHT][EXPLOSION_BULLET_WIDTH][NUM_RGBA_CHANNELS];
     const int image_width;
     const int image_height;
     const long long explosion_time;
@@ -50,7 +55,7 @@ static const struct explosion_bullet
 
 static const struct explosion_ufo
 {
-    const char image[EXPLOSION_UFO_HEIGHT][EXPLOSION_UFO_WIDTH][4];
+    const char image[EXPLOSION_UFO_HEIGHT][EXPLOSION_UFO_WIDTH][NUM_RGBA_CHANNELS];
     const int image_width;
     const int image_height;
     const long long explosion_time;
@@ -66,7 +71,7 @@ static const struct explosion_ufo
                    .image_height = EXPLOSION_UFO_HEIGHT,
                    .explosion_time = 500 * NS_PER_MS};
 
-static int
+static void
 setExplosionType(struct explosion_instance_t *instance, explosion_type_t type)
 {
     instance->type = type;
@@ -84,12 +89,13 @@ setExplosionType(struct explosion_instance_t *instance, explosion_type_t type)
             instance->sprite.image = (char *)explosion_ufo.image;
             instance->explosion_time = explosion_ufo.explosion_time;
             break;
+            /* GCOVR_EXCL_START */
         default:
-            return 1;
-            break;
+            assert(!"invalid alien type");
+            UNREACHABLE();
+            break; /* GCOVR_EXCL_BR_SOURCE */
+                   /* GCOVR_EXCL_STOP */
     }
-
-    return 0;
 }
 
 void
@@ -97,12 +103,7 @@ explosionCreate(int x, int y, explosion_type_t type)
 {
     struct explosion *new_explosion = utilsCalloc(1, sizeof(struct explosion));
     struct explosion_instance_t *inst = utilsCalloc(1, sizeof(struct explosion_instance_t));
-    if (setExplosionType(inst, type))
-    {
-        utilsFree((void **)&new_explosion);
-        utilsFree((void **)&inst);
-        return;
-    }
+    setExplosionType(inst, type);
     inst->sprite.x = x;
     inst->sprite.y = y;
     inst->sprite.pixels_to_move = 0;
@@ -118,7 +119,7 @@ explosionCreate(int x, int y, explosion_type_t type)
 static bool
 explosionTimeout(struct explosion_instance_t *this)
 {
-    assert(this); // GCOV_EXCL_LINE
+    assert(this); /* GCOVR_EXCL_LINE */
 
     if (utilsCheckTimeout(this->creation_time, this->explosion_time))
     {

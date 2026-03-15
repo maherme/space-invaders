@@ -10,6 +10,9 @@
 include ../../toolchain.mk
 include ../common.mk
 
+INCLUDES += -I../graphic/src \
+			-I../utils/src
+
 LDFLAGS += -Wl,--wrap=utilsCheckTimeout \
 		   -Wl,--wrap=graphUpdateTimeSprite \
 		   -Wl,--wrap=graphGetSpriteCoordinates

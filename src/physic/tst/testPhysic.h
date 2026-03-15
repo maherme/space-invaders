@@ -10,13 +10,6 @@
 #ifndef __TESTPHYSIC_H__
 #define __TESTPHYSIC_H__
 
-#include "physic.h"
-#include <cmocka.h>
-#include <setjmp.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
-
 void
 testPhysicMoveSpriteFail(void **status);
 

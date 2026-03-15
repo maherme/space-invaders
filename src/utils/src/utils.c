@@ -8,6 +8,9 @@
  */
 
 #include "utils.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 void *
 utilsCalloc(size_t nelem, size_t elsize)

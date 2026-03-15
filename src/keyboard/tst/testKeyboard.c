@@ -8,6 +8,13 @@
  */
 
 #include "testKeyboard.h"
+#include "keyboard.h"
+#include <GL/glut.h>
+#include <cmocka.h>
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
 
 static void (*registered_keyboard_func)(unsigned char, int, int) = NULL;
 static void (*registered_keyboard_up_func)(unsigned char, int, int) = NULL;

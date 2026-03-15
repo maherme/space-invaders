@@ -13,6 +13,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 void *
 __wrap_utilsCalloc(size_t nelem, size_t elsize)

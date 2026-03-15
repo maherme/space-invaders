@@ -9,6 +9,7 @@
 
 #include "graphGlutCallbacks.h"
 #include "graph.h"
+#include <GL/glut.h>
 
 static void *context[MAX_PRINT_CONTEXTS];
 

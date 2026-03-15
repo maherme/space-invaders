@@ -8,6 +8,8 @@
  */
 
 #include "keyboard.h"
+#include <GL/glut.h>
+#include <stdbool.h>
 
 static bool key_state[MAX_NUM_KEYS];
 static actions_cb key_down_actions[MAX_NUM_KEYS];
@@ -54,6 +56,8 @@ keyboardSpecialDown(int key, int x, int y)
             special_key_state[SPECIAL_KEY_RIGHT] = true;
             _key = SPECIAL_KEY_RIGHT;
             break;
+        default:
+            break;
     }
 
     if (special_key_down_actions[_key])
@@ -77,6 +81,8 @@ keyboardSpecialUp(int key, int x, int y)
         case GLUT_KEY_RIGHT:
             special_key_state[SPECIAL_KEY_RIGHT] = false;
             _key = SPECIAL_KEY_RIGHT;
+            break;
+        default:
             break;
     }
 
@@ -108,6 +114,7 @@ keyboardRegisterAction(actions_cb action, key_action_t type, int key)
         case ACTION_SPECIAL_KEY_DOWN:
             special_key_down_actions[key] = action;
             break;
+        case MAX_KEY_ACTIONS:
         default:
             return -1;
             break;

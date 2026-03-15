@@ -10,6 +10,11 @@
 #include "testGraphGlutCallbacks.h"
 #include "graph.h"
 #include "graphGlutCallbacks.h"
+#include <cmocka.h>
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
 
 void
 __wrap_glClear(GLbitfield mask)

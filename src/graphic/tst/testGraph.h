@@ -10,13 +10,6 @@
 #ifndef __TESTGRAPH_H__
 #define __TESTGRAPH_H__
 
-#include "graph.h"
-#include <cmocka.h>
-#include <setjmp.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
-
 void
 testGraphCreateImageFail(void **status);
 

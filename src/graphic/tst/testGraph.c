@@ -8,7 +8,13 @@
  */
 
 #include "testGraph.h"
-#include <stdio.h>
+#include "graph.h"
+#include <cmocka.h>
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
 
 void
 __wrap_glGenTextures(GLsizei n, GLuint *textures)

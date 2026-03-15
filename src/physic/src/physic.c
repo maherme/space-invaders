@@ -8,6 +8,9 @@
  */
 
 #include "physic.h"
+#include "graph.h"
+#include "utils.h"
+#include <stdbool.h>
 
 void
 physicMoveSprite(sprite_t *sprite, direction_t direction)
@@ -48,6 +51,7 @@ physicMoveSprite(sprite_t *sprite, direction_t direction)
             }
             sprite->y += sprite->pixels_to_move;
             break;
+        case INVALID_DIR:
         default:
             break;
     }

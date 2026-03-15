@@ -8,6 +8,7 @@
  */
 
 #include "engine.h"
+#include <unistd.h>
 
 static engine_cb_t callbacks[ENGINE_MAX_CALLBACKS];
 

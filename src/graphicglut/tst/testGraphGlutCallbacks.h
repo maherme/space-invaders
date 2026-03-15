@@ -10,13 +10,6 @@
 #ifndef __TESTGRAPHGLUTCALLBACKS_H__
 #define __TESTGRAPHGLUTCALLBACKS_H__
 
-#include "graphGlutCallbacks.h"
-#include <cmocka.h>
-#include <setjmp.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
-
 int
 setup(void **state);
 
