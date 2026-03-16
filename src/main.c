@@ -89,6 +89,8 @@ checkCollisionsAliensBullet(void)
         if (physicCheckSpritesBoxCollision(graphGetSprite((base_t *)*alien), graphGetSprite((base_t *)bullet)))
         {
             bulletDestroy();
+            sprite_t *alien_sprite = graphGetSprite((base_t *)*alien);
+            explosionCreate(alien_sprite->x, alien_sprite->y, EXPLOSION_ALIEN);
             alienDestroy(alien);
             return;
         }

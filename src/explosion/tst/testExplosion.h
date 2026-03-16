@@ -14,13 +14,7 @@ int
 setup(void **state);
 
 void
-testExplosionCreateInvalidType(void **status);
-
-void
-testExplosionCreateBullet(void **status);
-
-void
-testExplosionCreateUfo(void **status);
+testExplosionCreate(void **status);
 
 void
 testExplosionsDestroyListEmpty(void **status);
