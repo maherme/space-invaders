@@ -164,7 +164,7 @@ explosionCreate(int x, int y, explosion_type_t type)
     explosion_node_t *new_node = utilsCalloc(1, sizeof(explosion_node_t));
     explosion_t *new_explosion = utilsCalloc(1, sizeof(explosion_t));
     setExplosionType(new_explosion, type);
-    new_explosion->sprite.x = x;
+    new_explosion->sprite.x = x - new_explosion->sprite.width / 2;
     new_explosion->sprite.y = y;
     new_explosion->sprite.pixels_to_move = 0;
     new_explosion->sprite.time_to_move = 0;
