@@ -10,4 +10,8 @@
 include ../../toolchain.mk
 include ../common.mk
 
-LDFLAGS += -Wl,--wrap=usleep
+INCLUDES += -I../utils/src
+
+LDFLAGS += -Wl,--wrap=usleep \
+		   -Wl,--wrap=utilsCalloc \
+		   -Wl,--wrap=utilsFree

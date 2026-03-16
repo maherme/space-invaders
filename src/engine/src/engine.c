@@ -8,9 +8,17 @@
  */
 
 #include "engine.h"
+#include "list.h"
+#include "utils.h"
 #include <unistd.h>
 
-static engine_cb_t callbacks[ENGINE_MAX_CALLBACKS];
+typedef struct cb_node
+{
+    engine_cb_t callback;
+    struct list_head node;
+} cb_node_t;
+
+static LIST_HEAD(callbacks);
 
 int
 engineRegister(engine_cb_t cb)
@@ -20,15 +28,11 @@ engineRegister(engine_cb_t cb)
         return -1;
     }
 
-    for (int i = 0; i < ENGINE_MAX_CALLBACKS; i++)
-    {
-        if (!callbacks[i])
-        {
-            callbacks[i] = cb;
-            return 0;
-        }
-    }
-    return -1;
+    cb_node_t *n = utilsCalloc(1, sizeof(*n));
+    n->callback = cb;
+    list_add(&n->node, &callbacks);
+
+    return 0;
 }
 
 int
@@ -39,16 +43,20 @@ engineUnregister(engine_cb_t cb)
         return -1;
     }
 
-    for (int i = 0; i < ENGINE_MAX_CALLBACKS; i++)
+    cb_node_t *n, *tmp;
+    int removed = 0;
+
+    list_for_each_entry_safe(n, tmp, &callbacks, node)
     {
-        if (callbacks[i] == cb)
+        if (n->callback == cb)
         {
-            callbacks[i] = NULL;
-            return 0;
+            list_del(&n->node);
+            utilsFree((void **)&n);
+            removed++;
         }
     }
 
-    return -1;
+    return removed;
 }
 
 void
@@ -56,12 +64,11 @@ engineRun(int rate)
 {
     for (int i = 0; i < rate; i++)
     {
-        for (int j = 0; j < ENGINE_MAX_CALLBACKS; j++)
+        cb_node_t *n;
+
+        list_for_each_entry(n, &callbacks, node)
         {
-            if (callbacks[j] != NULL)
-            {
-                callbacks[j]();
-            }
+            n->callback();
         }
         usleep(1000);
     }
@@ -71,9 +78,6 @@ engineRun(int rate)
 void
 helperUT_engineResetRegisteredCallbacks(void)
 {
-    for (int i = 0; i < ENGINE_MAX_CALLBACKS; i++)
-    {
-        callbacks[i] = NULL;
-    }
+    list_clear(&callbacks, cb_node_t, node);
 }
 #endif

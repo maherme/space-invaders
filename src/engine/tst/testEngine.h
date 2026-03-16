@@ -17,9 +17,6 @@ void
 testEngineRegisterFailNullParameter(void **status);
 
 void
-testEngineRegisterFailMaxCallbacks(void **status);
-
-void
 testEngineRegisterSuccess(void **status);
 
 void

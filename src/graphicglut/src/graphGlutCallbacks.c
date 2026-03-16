@@ -9,16 +9,17 @@
 
 #include "graphGlutCallbacks.h"
 #include "graph.h"
+#include "list.h"
 #include "utils.h"
 #include <GL/glut.h>
 
-typedef struct context
+typedef struct ctx_node
 {
     void *context;
-    struct context *next;
-} context_t;
+    struct list_head node;
+} ctx_node_t;
 
-static context_t *head = NULL;
+static LIST_HEAD(contexts);
 
 int
 graphRegisterPrint(void *ctx)
@@ -28,10 +29,9 @@ graphRegisterPrint(void *ctx)
         return -1;
     }
 
-    context_t *new_node = utilsCalloc(1, sizeof(context_t));
-    new_node->context = ctx;
-    new_node->next = head;
-    head = new_node;
+    ctx_node_t *n = utilsCalloc(1, sizeof(*n));
+    n->context = ctx;
+    list_add(&n->node, &contexts);
 
     return 0;
 }
@@ -39,53 +39,38 @@ graphRegisterPrint(void *ctx)
 int
 graphUnregisterPrint(void *ctx)
 {
-    context_t *current = head;
-    context_t *prev = NULL;
-    int unregister_contexts = 0;
-
     if (!ctx)
     {
         return -1;
     }
 
-    while (current)
+    ctx_node_t *n, *tmp;
+    int removed = 0;
+
+    list_for_each_entry_safe(n, tmp, &contexts, node)
     {
-        if (ctx == current->context)
+        if (n->context == ctx)
         {
-            if (!prev)
-            {
-                head = current->next;
-            }
-            else
-            {
-                prev->next = current->next;
-            }
-            context_t *tmp = current;
-            current = current->next;
-            utilsFree((void **)&tmp);
-            unregister_contexts++;
-        }
-        else
-        {
-            prev = current;
-            current = current->next;
+            list_del(&n->node);
+            utilsFree((void **)&n);
+            removed++;
         }
     }
 
-    return unregister_contexts;
+    return removed;
 }
 
 void
 graphGlutDisplay(void)
 {
-    context_t *tmp = head;
 
     glClear(GL_COLOR_BUFFER_BIT);
 
-    while (tmp)
+    ctx_node_t *n;
+
+    list_for_each_entry(n, &contexts, node)
     {
-        graphPrintImage(tmp->context);
-        tmp = tmp->next;
+        graphPrintImage(n->context);
     }
 
     glutSwapBuffers();
@@ -106,11 +91,6 @@ graphGlutReshape(int w, int h)
 void
 helperUT_graphGlutResetRegisteredContext(void)
 {
-    while (head)
-    {
-        context_t *tmp = head;
-        head = head->next;
-        free(tmp);
-    }
+    list_clear(&contexts, ctx_node_t, node);
 }
 #endif
