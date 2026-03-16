@@ -14,6 +14,7 @@ typedef enum
 {
     EXPLOSION_BULLET,
     EXPLOSION_UFO,
+    EXPLOSION_ALIEN,
 } explosion_type_t;
 
 void

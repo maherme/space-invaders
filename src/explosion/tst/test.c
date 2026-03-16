@@ -18,8 +18,7 @@ int
 main(void)
 {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test_setup(testExplosionCreateBullet, setup),
-        cmocka_unit_test_setup(testExplosionCreateUfo, setup),
+        cmocka_unit_test_setup(testExplosionCreate, setup),
         cmocka_unit_test_setup(testExplosionsDestroyListEmpty, setup),
         cmocka_unit_test_setup(testExplosionsDestroyTimeoutFalse, setup),
         cmocka_unit_test_setup(testExplosionsDestroyTimeoutTrue, setup),

@@ -52,30 +52,27 @@ registerExplosionBullet(void)
     explosionCreate(x_pos, y_pos, EXPLOSION_BULLET);
 }
 
-void
-testExplosionCreateBullet(void **status)
-{
-    (void)status;
-
-    registerExplosionBullet();
-}
+static explosion_type_t explosions[] = {EXPLOSION_BULLET, EXPLOSION_UFO, EXPLOSION_ALIEN};
 
 void
-testExplosionCreateUfo(void **status)
+testExplosionCreate(void **status)
 {
     (void)status;
     int x_pos = 10;
     int y_pos = 20;
 
-    expect_function_call(__wrap_utilsCalloc);
-    expect_function_call(__wrap_utilsCalloc);
-    expect_function_call(__wrap_graphCreateImage);
-    will_return(__wrap_clock_gettime, 0); /* tv_sec */
-    will_return(__wrap_clock_gettime, 0); /* tv_nsec */
-    expect_function_call(__wrap_clock_gettime);
-    expect_function_call(__wrap_graphRegisterPrint);
+    for (size_t i = 0; i < sizeof(explosions) / sizeof(explosions[0]); i++)
+    {
+        expect_function_call(__wrap_utilsCalloc);
+        expect_function_call(__wrap_utilsCalloc);
+        expect_function_call(__wrap_graphCreateImage);
+        will_return(__wrap_clock_gettime, 0); /* tv_sec */
+        will_return(__wrap_clock_gettime, 0); /* tv_nsec */
+        expect_function_call(__wrap_clock_gettime);
+        expect_function_call(__wrap_graphRegisterPrint);
 
-    explosionCreate(x_pos, y_pos, EXPLOSION_UFO);
+        explosionCreate(x_pos, y_pos, explosions[i]);
+    }
 }
 
 void

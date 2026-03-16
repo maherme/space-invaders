@@ -19,6 +19,9 @@
 #define EXPLOSION_BULLET_HEIGHT 8
 #define EXPLOSION_UFO_WIDTH 24
 #define EXPLOSION_UFO_HEIGHT 8
+#define EXPLOSION_ALIEN_NUM_IMGS 4
+#define EXPLOSION_ALIEN_WIDTH 14
+#define EXPLOSION_ALIEN_HEIGHT 8
 
 typedef struct explosion
 {
@@ -72,9 +75,58 @@ static const struct explosion_ufo
                    .image_height = EXPLOSION_UFO_HEIGHT,
                    .explosion_time = 500 * NS_PER_MS};
 
+static const struct explosion_alien
+{
+    const char image[EXPLOSION_ALIEN_NUM_IMGS][EXPLOSION_ALIEN_HEIGHT][EXPLOSION_ALIEN_WIDTH][NUM_RGBA_CHANNELS];
+    const int image_width;
+    const int image_height;
+    const long long explosion_time;
+} explosion_alien = {.image =
+                         {/* image 1 */
+                          {{B, B, B, B, B, B, B, B, B, B, W, B, B, B},
+                           {B, W, B, B, W, B, B, B, B, B, B, B, W, B},
+                           {B, B, B, B, B, W, B, B, W, B, B, B, B, B},
+                           {B, B, B, B, B, B, W, W, B, B, B, B, B, W},
+                           {B, B, W, B, B, B, W, W, B, W, B, B, B, B},
+                           {B, B, B, B, W, W, B, B, W, B, B, W, B, B},
+                           {W, B, B, B, B, B, B, B, B, B, B, B, B, B},
+                           {B, B, W, B, B, B, W, B, B, B, W, B, B, W}},
+                          /* image 2 */
+                          {{B, B, B, B, B, B, B, B, B, B, W, B, B, B},
+                           {B, B, B, B, W, B, B, W, B, B, B, B, B, B},
+                           {B, B, B, B, B, W, B, B, B, B, B, B, B, B},
+                           {B, B, B, B, B, B, W, W, B, B, W, B, B, B},
+                           {B, B, B, B, B, B, W, W, B, B, B, B, B, B},
+                           {B, B, B, B, W, W, B, B, W, B, B, W, B, B},
+                           {B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+                           {B, B, B, W, B, B, W, B, B, B, W, B, B, B}},
+                          /* image 3 */
+                          {{B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+                           {B, W, B, W, B, B, B, B, B, B, B, B, B, B},
+                           {B, B, B, B, B, W, B, B, W, B, B, B, B, B},
+                           {B, B, B, B, W, B, W, W, B, B, B, B, B, B},
+                           {B, B, W, B, B, B, W, W, B, B, B, B, B, B},
+                           {B, B, B, B, B, W, B, B, W, B, B, W, B, B},
+                           {B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+                           {B, B, B, W, B, B, W, B, B, B, B, B, B, B}},
+                          /* image 4 */
+                          {{B, B, B, B, B, B, B, B, B, B, B, B, W, B},
+                           {B, B, B, B, B, B, W, B, B, B, W, B, B, B},
+                           {W, B, B, W, B, W, B, B, W, B, B, B, B, B},
+                           {B, B, B, B, B, B, W, W, B, B, B, B, B, B},
+                           {B, B, B, B, B, B, W, W, B, W, B, W, B, B},
+                           {B, B, B, B, W, W, B, B, W, B, B, B, B, B},
+                           {B, W, B, B, B, B, B, B, B, B, B, B, B, B},
+                           {B, B, B, B, B, B, B, W, B, B, B, W, B, B}}},
+                     .image_width = EXPLOSION_ALIEN_WIDTH,
+                     .image_height = EXPLOSION_ALIEN_HEIGHT,
+                     .explosion_time = 500 * NS_PER_MS};
+
 static void
 setExplosionType(explosion_t *instance, explosion_type_t type)
 {
+    static int explosion_alien_next = 0;
+
     instance->type = type;
     switch (type)
     {
@@ -90,9 +142,16 @@ setExplosionType(explosion_t *instance, explosion_type_t type)
             instance->sprite.image = (char *)explosion_ufo.image;
             instance->explosion_time = explosion_ufo.explosion_time;
             break;
+        case EXPLOSION_ALIEN:
+            instance->sprite.width = explosion_alien.image_width;
+            instance->sprite.height = explosion_alien.image_height;
+            instance->sprite.image = (char *)explosion_alien.image[explosion_alien_next];
+            explosion_alien_next = (explosion_alien_next + 1) % EXPLOSION_ALIEN_NUM_IMGS;
+            instance->explosion_time = explosion_alien.explosion_time;
+            break;
             /* GCOVR_EXCL_START */
         default:
-            assert(!"invalid alien type");
+            assert(!"invalid explosion type");
             UNREACHABLE();
             break; /* GCOVR_EXCL_BR_SOURCE */
                    /* GCOVR_EXCL_STOP */
