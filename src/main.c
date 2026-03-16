@@ -48,7 +48,7 @@ bulletActions(void)
     sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
     if (physicCheckBorderCollision(bullet_sprite))
     {
-        explosionCreate(bullet_sprite->x - 8, bullet_sprite->y - bullet_sprite->scaled_height, EXPLOSION_BULLET);
+        explosionCreate(bullet_sprite->x, bullet_sprite->y - bullet_sprite->scaled_height, EXPLOSION_BULLET);
         bulletDestroy();
     }
     else
@@ -90,7 +90,7 @@ checkCollisionsAliensBullet(void)
         {
             bulletDestroy();
             sprite_t *alien_sprite = graphGetSprite((base_t *)*alien);
-            explosionCreate(alien_sprite->x, alien_sprite->y, EXPLOSION_ALIEN);
+            explosionCreate(alien_sprite->x + alien_sprite->width / 2, alien_sprite->y, EXPLOSION_ALIEN);
             alienDestroy(alien);
             return;
         }
@@ -121,7 +121,7 @@ ufoActions(void)
         {
             if (physicCheckSpritesBoxCollision(ufo_sprite, graphGetSprite((base_t *)bullet)))
             {
-                explosionCreate(ufo_sprite->x, ufo_sprite->y, EXPLOSION_UFO);
+                explosionCreate(ufo_sprite->x + ufo_sprite->width / 2, ufo_sprite->y, EXPLOSION_UFO);
                 graphUnregisterPrint(ufo_sprite);
                 graphDestroyObject((base_t **)&ufo);
                 bulletDestroy();
