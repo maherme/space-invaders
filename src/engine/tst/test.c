@@ -19,7 +19,6 @@ main(void)
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(testEngineRegisterFailNullParameter, setup),
-        cmocka_unit_test_setup(testEngineRegisterFailMaxCallbacks, setup),
         cmocka_unit_test_setup(testEngineRegisterSuccess, setup),
         cmocka_unit_test_setup(testEngineUnregisterFailNullParameter, setup),
         cmocka_unit_test_setup(testEngineUnregisterNoCallbackFound, setup),

@@ -10,6 +10,7 @@
 #include "explosion.h"
 #include "graph.h"
 #include "graphGlutCallbacks.h"
+#include "list.h"
 #include "utils.h"
 #include <assert.h>
 #include <stdbool.h>
@@ -19,21 +20,21 @@
 #define EXPLOSION_UFO_WIDTH 24
 #define EXPLOSION_UFO_HEIGHT 8
 
-struct explosion_instance_t
+typedef struct explosion
 {
     sprite_t sprite;
     struct timespec creation_time;
     long long explosion_time;
     explosion_type_t type;
-};
+} explosion_t;
 
-struct explosion
+typedef struct explosion_node
 {
-    struct explosion_instance_t *explosion;
-    struct explosion *next;
-};
+    explosion_t *explosion;
+    struct list_head node;
+} explosion_node_t;
 
-static struct explosion *head = NULL;
+static LIST_HEAD(explosions);
 
 static const struct explosion_bullet
 {
@@ -72,7 +73,7 @@ static const struct explosion_ufo
                    .explosion_time = 500 * NS_PER_MS};
 
 static void
-setExplosionType(struct explosion_instance_t *instance, explosion_type_t type)
+setExplosionType(explosion_t *instance, explosion_type_t type)
 {
     instance->type = type;
     switch (type)
@@ -101,23 +102,22 @@ setExplosionType(struct explosion_instance_t *instance, explosion_type_t type)
 void
 explosionCreate(int x, int y, explosion_type_t type)
 {
-    struct explosion *new_explosion = utilsCalloc(1, sizeof(struct explosion));
-    struct explosion_instance_t *inst = utilsCalloc(1, sizeof(struct explosion_instance_t));
-    setExplosionType(inst, type);
-    inst->sprite.x = x;
-    inst->sprite.y = y;
-    inst->sprite.pixels_to_move = 0;
-    inst->sprite.time_to_move = 0;
-    graphCreateImage(&inst->sprite);
-    clock_gettime(CLOCK_MONOTONIC, &inst->creation_time);
-    graphRegisterPrint(graphGetSprite((base_t *)inst));
-    new_explosion->explosion = inst;
-    new_explosion->next = head;
-    head = new_explosion;
+    explosion_node_t *new_node = utilsCalloc(1, sizeof(explosion_node_t));
+    explosion_t *new_explosion = utilsCalloc(1, sizeof(explosion_t));
+    setExplosionType(new_explosion, type);
+    new_explosion->sprite.x = x;
+    new_explosion->sprite.y = y;
+    new_explosion->sprite.pixels_to_move = 0;
+    new_explosion->sprite.time_to_move = 0;
+    graphCreateImage(&new_explosion->sprite);
+    clock_gettime(CLOCK_MONOTONIC, &new_explosion->creation_time);
+    graphRegisterPrint(graphGetSprite((base_t *)new_explosion));
+    new_node->explosion = new_explosion;
+    list_add(&new_node->node, &explosions);
 }
 
 static bool
-explosionTimeout(struct explosion_instance_t *this)
+explosionTimeout(explosion_t *this)
 {
     assert(this); /* GCOVR_EXCL_LINE */
 
@@ -134,29 +134,14 @@ explosionTimeout(struct explosion_instance_t *this)
 void
 explosionsDestroy(void)
 {
-    struct explosion *current = head;
-    struct explosion *prev = NULL;
+    explosion_node_t *n, *tmp;
 
-    while (current)
+    list_for_each_entry_safe(n, tmp, &explosions, node)
     {
-        if (explosionTimeout(current->explosion))
+        if (explosionTimeout(n->explosion))
         {
-            if (!prev)
-            {
-                head = current->next;
-            }
-            else
-            {
-                prev->next = current->next;
-            }
-            struct explosion *tmp = current;
-            current = current->next;
-            utilsFree((void **)&tmp);
-        }
-        else
-        {
-            prev = current;
-            current = current->next;
+            list_del(&n->node);
+            utilsFree((void **)&n);
         }
     }
 }
@@ -165,13 +150,6 @@ explosionsDestroy(void)
 void
 helperUT_explosionResetList(void)
 {
-    while (head)
-    {
-        struct explosion *tmp = head;
-        head = head->next;
-
-        free(tmp->explosion);
-        free(tmp);
-    }
+    list_clear(&explosions, explosion_node_t, node);
 }
 #endif /* UNIT_TESTING */
