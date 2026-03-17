@@ -26,13 +26,6 @@
 #define OCTOPUS_WIDTH 12
 #define OCTOPUS_HEIGHT 8
 
-typedef enum
-{
-    SQUID,
-    CRAB,
-    OCTOPUS
-} alien_type_t;
-
 struct alien_instance_t
 {
     sprite_t sprite;
@@ -158,6 +151,20 @@ alienCreate(int x, int y, alien_type_t type)
     graphRegisterPrint(&inst->sprite);
 
     return inst;
+}
+
+void
+alienDestroy(alien_t *alien)
+{
+    if (!alien || !*alien)
+    {
+        return;
+    }
+
+    sprite_t *alien_sprite = graphGetSprite((base_t *)*alien);
+    graphUnregisterPrint(alien_sprite);
+    graphDestroyImage(alien_sprite);
+    utilsFree((void **)alien);
 }
 
 static int

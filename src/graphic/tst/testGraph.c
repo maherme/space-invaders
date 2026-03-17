@@ -121,7 +121,7 @@ __wrap_clock_gettime(clockid_t clockid, struct timespec *tp)
 }
 
 void
-testGraphCreateImageFail(void **status)
+testGraphCreateImageNullParameter(void **status)
 {
     (void)status;
 
@@ -162,6 +162,27 @@ testGraphCreateImageSuccess(void **status)
     expect_function_call(__wrap_glTexParameteri);
 
     graphCreateImage(&sprite);
+}
+
+void
+testGraphDestroyImageNullParameter(void **status)
+{
+    (void)status;
+
+    graphDestroyImage(NULL);
+}
+
+void
+testGraphDestroyImage(void **status)
+{
+    (void)status;
+    sprite_t sprite = {0};
+
+    expect_int_value(__wrap_glDeleteTextures, n, 1);
+    expect_uint_value(__wrap_glDeleteTextures, textures, (uintptr_t)&sprite.textureId);
+    expect_function_call(__wrap_glDeleteTextures);
+
+    graphDestroyImage(&sprite);
 }
 
 void
@@ -300,31 +321,4 @@ testGraphPrintImageSuccess(void **status)
     expect_function_call(__wrap_glEnd);
 
     graphPrintImage(&sprite);
-}
-
-void
-testGraphDestroyObjectNullParameter(void **status)
-{
-    (void)status;
-    base_t *ptr = NULL;
-
-    graphDestroyObject(NULL);
-    graphDestroyObject(&ptr);
-}
-
-void
-testGraphDestroyObjectSuccess(void **status)
-{
-    (void)status;
-    base_t *object = calloc(1, sizeof(base_t));
-    ;
-
-    expect_int_value(__wrap_glDeleteTextures, n, 1);
-    expect_uint_value(__wrap_glDeleteTextures, textures, (uintptr_t)&(object->sprite.textureId));
-    expect_function_call(__wrap_glDeleteTextures);
-
-    expect_uint_value(__wrap_utilsFree, ptr, (uintptr_t)&object);
-    expect_function_call(__wrap_utilsFree);
-
-    graphDestroyObject(&object);
 }

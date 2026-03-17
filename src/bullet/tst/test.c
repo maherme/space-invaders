@@ -19,6 +19,8 @@ main(void)
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(testBulletCreate),
+        cmocka_unit_test(testBulletDestroyNullParameter),
+        cmocka_unit_test(testBulletDestroy),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

@@ -9,7 +9,6 @@
 
 #include "testBullet.h"
 #include "bullet.h"
-#include "graph.h"
 #include <cmocka.h>
 #include <setjmp.h>
 #include <stdarg.h>
@@ -20,16 +19,36 @@ void
 testBulletCreate(void **status)
 {
     (void)status;
-    int x_pos = 10;
-    int y_pos = 20;
 
     expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphRegisterPrint);
 
-    bullet_t bullet = bulletCreate(x_pos, y_pos);
-    sprite_t *sprite = graphGetSprite((base_t *)bullet);
+    bullet_t bullet = bulletCreate(0, 0);
+    assert_non_null(bullet);
+}
 
-    assert_int_equal(sprite->x, x_pos);
-    assert_int_equal(sprite->y, y_pos);
+void
+testBulletDestroyNullParameter(void **status)
+{
+    (void)status;
+    bullet_t ptr = NULL;
+
+    bulletDestroy(NULL);
+    bulletDestroy(&ptr);
+}
+
+void
+testBulletDestroy(void **status)
+{
+    (void)status;
+    bullet_t bullet = (bullet_t)0xdeadbeef;
+
+    expect_function_call(__wrap_graphGetSprite);
+    expect_function_call(__wrap_graphUnregisterPrint);
+    expect_function_call(__wrap_graphDestroyImage);
+    expect_uint_value(__wrap_utilsFree, ptr, (uintptr_t)&bullet);
+    expect_function_call(__wrap_utilsFree);
+
+    bulletDestroy(&bullet);
 }

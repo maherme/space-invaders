@@ -19,6 +19,8 @@ main(void)
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(testAliensCreate),
+        cmocka_unit_test(testAlienDestroyNullParameter),
+        cmocka_unit_test(testAlienDestroy),
         cmocka_unit_test(testAliensGetAlienInstanceInvalidIndex),
     };
 

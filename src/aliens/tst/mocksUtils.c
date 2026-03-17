@@ -7,7 +7,6 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
-#include "utils.h"
 #include <cmocka.h>
 #include <setjmp.h>
 #include <stdarg.h>
@@ -21,4 +20,11 @@ __wrap_utilsCalloc(size_t nelem, size_t elsize)
     (void)nelem, (void)elsize;
     function_called();
     return calloc(nelem, elsize);
+}
+
+void
+__wrap_utilsFree(void **ptr)
+{
+    check_expected_ptr(ptr);
+    function_called();
 }

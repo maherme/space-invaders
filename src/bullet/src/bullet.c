@@ -39,3 +39,17 @@ bulletCreate(int x, int y)
 
     return inst;
 }
+
+void
+bulletDestroy(bullet_t *bullet)
+{
+    if (!bullet || !*bullet)
+    {
+        return;
+    }
+
+    sprite_t *bullet_sprite = graphGetSprite((base_t *)*bullet);
+    graphUnregisterPrint(bullet_sprite);
+    graphDestroyImage(bullet_sprite);
+    utilsFree((void **)bullet);
+}

@@ -18,6 +18,9 @@ typedef struct ufo_instance_t *ufo_t;
 ufo_t
 ufoCreate(void);
 
+void
+ufoDestroy(ufo_t *this);
+
 direction_t
 ufoGetDirection(const ufo_t this);
 

@@ -103,8 +103,12 @@ testExplosionsDestroyTimeoutTrue(void **status)
     will_return(__wrap_utilsCheckTimeout, true);
     expect_function_call(__wrap_utilsCheckTimeout);
     expect_function_call(__wrap_graphUnregisterPrint);
-    expect_function_call(__wrap_graphDestroyObject);
+    expect_function_call(__wrap_graphDestroyImage);
+    /* free explosion */
     expect_function_call(__wrap_utilsFree);
+    /* free node in list */
+    expect_function_call(__wrap_utilsFree);
+
     explosionsDestroy();
 }
 
@@ -127,7 +131,10 @@ testExplosionsDestroyTwoExplosions(void **status)
     will_return(__wrap_utilsCheckTimeout, true);
     expect_function_call(__wrap_utilsCheckTimeout);
     expect_function_call(__wrap_graphUnregisterPrint);
-    expect_function_call(__wrap_graphDestroyObject);
+    expect_function_call(__wrap_graphDestroyImage);
+    /* free explosion */
+    expect_function_call(__wrap_utilsFree);
+    /* free node in list */
     expect_function_call(__wrap_utilsFree);
 
     explosionsDestroy();

@@ -182,8 +182,10 @@ explosionTimeout(explosion_t *this)
 
     if (utilsCheckTimeout(this->creation_time, this->explosion_time))
     {
-        graphUnregisterPrint(graphGetSprite((base_t *)this));
-        graphDestroyObject((base_t **)&this);
+        sprite_t *explosion_sprite = graphGetSprite((base_t *)this);
+        graphUnregisterPrint(explosion_sprite);
+        graphDestroyImage(explosion_sprite);
+        utilsFree((void **)&this);
         return true;
     }
 
