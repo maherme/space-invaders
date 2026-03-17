@@ -11,10 +11,16 @@
 #define __TESTGRAPH_H__
 
 void
-testGraphCreateImageFail(void **status);
+testGraphCreateImageNullParameter(void **status);
 
 void
 testGraphCreateImageSuccess(void **status);
+
+void
+testGraphDestroyImageNullParameter(void **status);
+
+void
+testGraphDestroyImage(void **status);
 
 void
 testGraphGetSpriteFail(void **status);
@@ -39,11 +45,5 @@ testGraphPrintImageFail(void **status);
 
 void
 testGraphPrintImageSuccess(void **status);
-
-void
-testGraphDestroyObjectNullParameter(void **status);
-
-void
-testGraphDestroyObjectSuccess(void **status);
 
 #endif

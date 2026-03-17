@@ -14,6 +14,12 @@ void
 testAliensCreate(void **status);
 
 void
+testAlienDestroyNullParameter(void **status);
+
+void
+testAlienDestroy(void **status);
+
+void
 testAliensGetAlienInstanceInvalidIndex(void **status);
 
 #endif /* __TESTALIENS_H__ */

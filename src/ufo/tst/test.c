@@ -20,6 +20,8 @@ main(void)
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(testUfoCreateLeftDirection),
         cmocka_unit_test(testUfoCreateRightDirection),
+        cmocka_unit_test(testUfoDestroyNullParameter),
+        cmocka_unit_test(testUfoDestroy),
         cmocka_unit_test(testUfoGetDirectionNullParameter),
         cmocka_unit_test(testUfoCheckForMovingNullParameter),
         cmocka_unit_test(testUfoCheckForMovingFalse),

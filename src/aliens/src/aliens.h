@@ -10,10 +10,20 @@
 #ifndef __ALIENS_H__
 #define __ALIENS_H__
 
+typedef enum
+{
+    SQUID,
+    CRAB,
+    OCTOPUS
+} alien_type_t;
+
 typedef struct alien_instance_t *alien_t;
 
 void
 aliensCreate(void);
+
+void
+alienDestroy(alien_t *alien);
 
 int
 aliensGetNumberInitialAliens(void);

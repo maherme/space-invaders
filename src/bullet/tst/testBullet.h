@@ -13,4 +13,10 @@
 void
 testBulletCreate(void **status);
 
+void
+testBulletDestroyNullParameter(void **status);
+
+void
+testBulletDestroy(void **status);
+
 #endif

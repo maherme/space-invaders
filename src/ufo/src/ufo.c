@@ -35,33 +35,33 @@ static const char ufoImage[UFO_HEIGHT][UFO_WIDTH][NUM_RGBA_CHANNELS] = {
 };
 
 static void
-calculateDirection(ufo_t this)
+calculateDirection(ufo_t ufo)
 {
     double random = (double)rand() / RAND_MAX;
     int random_direction = (random < 0.5) ? 0 : 1;
     if (random_direction)
     {
-        this->direction = RIGHT;
+        ufo->direction = RIGHT;
     }
     else
     {
-        this->direction = LEFT;
+        ufo->direction = LEFT;
     }
 }
 
 static void
-calculateStartingCoord(ufo_t this)
+calculateStartingCoord(ufo_t ufo)
 {
-    if (this->direction == RIGHT)
+    if (ufo->direction == RIGHT)
     {
-        this->sprite.x = -UFO_WIDTH * 2;
+        ufo->sprite.x = -UFO_WIDTH * 2;
     }
     else
     {
-        this->sprite.x = WINDOW_WIDTH;
+        ufo->sprite.x = WINDOW_WIDTH;
     }
 
-    this->sprite.y = WINDOW_HEIGHT - 32;
+    ufo->sprite.y = WINDOW_HEIGHT - 32;
 }
 
 ufo_t
@@ -85,36 +85,50 @@ ufoCreate(void)
     return inst;
 }
 
-direction_t
-ufoGetDirection(const ufo_t this)
+void
+ufoDestroy(ufo_t *ufo)
 {
-    if (!this)
+    if (!ufo || !*ufo)
+    {
+        return;
+    }
+
+    sprite_t *ufo_sprite = graphGetSprite((base_t *)*ufo);
+    graphUnregisterPrint(ufo_sprite);
+    graphDestroyImage(ufo_sprite);
+    utilsFree((void **)ufo);
+}
+
+direction_t
+ufoGetDirection(const ufo_t ufo)
+{
+    if (!ufo)
     {
         return INVALID_DIR;
     }
-    return this->direction;
+    return ufo->direction;
 }
 
 bool
-ufoCheckForMoving(ufo_t this)
+ufoCheckForMoving(ufo_t ufo)
 {
-    if (!this)
+    if (!ufo)
     {
         return false;
     }
 
-    if (this->time_to_appear == 0)
+    if (ufo->time_to_appear == 0)
     {
         return true;
     }
 
-    if (!utilsCheckTimeout(this->sprite.last_update, this->time_to_appear))
+    if (!utilsCheckTimeout(ufo->sprite.last_update, ufo->time_to_appear))
     {
         return false;
     }
     else
     {
-        this->time_to_appear = 0;
+        ufo->time_to_appear = 0;
     }
 
     return true;

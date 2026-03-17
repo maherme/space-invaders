@@ -8,7 +8,6 @@
  */
 
 #include "graph.h"
-#include "utils.h"
 #include <GL/glut.h>
 #include <time.h>
 
@@ -32,6 +31,17 @@ graphCreateImage(sprite_t *sprite)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sprite->width, sprite->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, sprite->image);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
+void
+graphDestroyImage(sprite_t *sprite)
+{
+    if (!sprite)
+    {
+        return;
+    }
+
+    glDeleteTextures(1, &(sprite->textureId));
 }
 
 sprite_t *
@@ -93,14 +103,4 @@ graphPrintImage(const sprite_t *const sprite)
     glTexCoord2f(0.0, 0.0);
     glVertex2i(sprite->x, sprite->y + sprite->scaled_height);
     glEnd();
-}
-
-void
-graphDestroyObject(base_t **b)
-{
-    if (!b || !*b)
-        return;
-
-    glDeleteTextures(1, &((*b)->sprite.textureId));
-    utilsFree((void **)b);
 }

@@ -21,14 +21,21 @@ __wrap_graphCreateImage(sprite_t *sprite)
     function_called();
 }
 
+void
+__wrap_graphDestroyImage(sprite_t *sprite)
+{
+    (void)sprite;
+    function_called();
+}
+
+sprite_t dummy;
+
 sprite_t *
 __wrap_graphGetSprite(base_t *b)
 {
-    if (!b)
-    {
-        return NULL;
-    }
-    return &b->sprite;
+    (void)b;
+    function_called();
+    return &dummy;
 }
 
 void

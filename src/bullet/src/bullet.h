@@ -15,4 +15,7 @@ typedef struct bullet_instance_t *bullet_t;
 bullet_t
 bulletCreate(int x, int y);
 
+void
+bulletDestroy(bullet_t *bullet);
+
 #endif

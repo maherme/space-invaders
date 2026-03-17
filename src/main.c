@@ -30,14 +30,6 @@ bullet_t bullet = NULL;
 ufo_t ufo = NULL;
 
 static void
-bulletDestroy(void)
-{
-    sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
-    graphUnregisterPrint(bullet_sprite);
-    graphDestroyObject((base_t **)&bullet);
-}
-
-static void
 bulletActions(void)
 {
     if (!bullet)
@@ -49,7 +41,7 @@ bulletActions(void)
     if (physicCheckBorderCollision(bullet_sprite))
     {
         explosionCreate(bullet_sprite->x, bullet_sprite->y - bullet_sprite->scaled_height, EXPLOSION_BULLET);
-        bulletDestroy();
+        bulletDestroy(&bullet);
     }
     else
     {
@@ -69,14 +61,6 @@ spaceshipFire(void)
 }
 
 static void
-alienDestroy(alien_t *alien)
-{
-    sprite_t *alien_sprite = graphGetSprite((base_t *)*alien);
-    graphUnregisterPrint(alien_sprite);
-    graphDestroyObject((base_t **)alien);
-}
-
-static void
 checkCollisionsAliensBullet(void)
 {
     if (!bullet)
@@ -88,7 +72,7 @@ checkCollisionsAliensBullet(void)
         alien_t *alien = aliensGetAlienInstance(i);
         if (physicCheckSpritesBoxCollision(graphGetSprite((base_t *)*alien), graphGetSprite((base_t *)bullet)))
         {
-            bulletDestroy();
+            bulletDestroy(&bullet);
             sprite_t *alien_sprite = graphGetSprite((base_t *)*alien);
             explosionCreate(alien_sprite->x + alien_sprite->width / 2, alien_sprite->y, EXPLOSION_ALIEN);
             alienDestroy(alien);
@@ -114,17 +98,15 @@ ufoActions(void)
         }
         if (physicCheckBorderCollision(ufo_sprite))
         {
-            graphUnregisterPrint(ufo_sprite);
-            graphDestroyObject((base_t **)&ufo);
+            ufoDestroy(&ufo);
         }
         if (bullet)
         {
             if (physicCheckSpritesBoxCollision(ufo_sprite, graphGetSprite((base_t *)bullet)))
             {
+                bulletDestroy(&bullet);
                 explosionCreate(ufo_sprite->x + ufo_sprite->width / 2, ufo_sprite->y, EXPLOSION_UFO);
-                graphUnregisterPrint(ufo_sprite);
-                graphDestroyObject((base_t **)&ufo);
-                bulletDestroy();
+                ufoDestroy(&ufo);
             }
         }
     }

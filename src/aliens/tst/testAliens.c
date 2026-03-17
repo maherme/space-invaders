@@ -14,6 +14,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 void
 testAliensCreate(void **status)
@@ -34,6 +35,31 @@ testAliensCreate(void **status)
     {
         assert_non_null(aliensGetAlienInstance(i));
     }
+}
+
+void
+testAlienDestroyNullParameter(void **status)
+{
+    (void)status;
+    alien_t ptr = NULL;
+
+    alienDestroy(NULL);
+    alienDestroy(&ptr);
+}
+
+void
+testAlienDestroy(void **status)
+{
+    (void)status;
+    alien_t alien = (alien_t)0xdeadbeef;
+
+    expect_function_call(__wrap_graphGetSprite);
+    expect_function_call(__wrap_graphUnregisterPrint);
+    expect_function_call(__wrap_graphDestroyImage);
+    expect_uint_value(__wrap_utilsFree, ptr, (uintptr_t)&alien);
+    expect_function_call(__wrap_utilsFree);
+
+    alienDestroy(&alien);
 }
 
 void

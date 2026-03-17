@@ -62,6 +62,9 @@ typedef struct
 void
 graphCreateImage(sprite_t *sprite);
 
+void
+graphDestroyImage(sprite_t *sprite);
+
 sprite_t *
 graphGetSprite(base_t *b);
 
@@ -73,8 +76,5 @@ graphUpdateTimeSprite(sprite_t *sprite);
 
 void
 graphPrintImage(const sprite_t *const sprite);
-
-void
-graphDestroyObject(base_t **b);
 
 #endif

@@ -17,6 +17,12 @@ void
 testUfoCreateRightDirection(void **status);
 
 void
+testUfoDestroyNullParameter(void **status);
+
+void
+testUfoDestroy(void **status);
+
+void
 testUfoGetDirectionNullParameter(void **status);
 
 void

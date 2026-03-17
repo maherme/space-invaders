@@ -55,6 +55,31 @@ testUfoCreateRightDirection(void **status)
 }
 
 void
+testUfoDestroyNullParameter(void **status)
+{
+    (void)status;
+    ufo_t ptr = NULL;
+
+    ufoDestroy(NULL);
+    ufoDestroy(&ptr);
+}
+
+void
+testUfoDestroy(void **status)
+{
+    (void)status;
+    ufo_t ufo = (ufo_t)0xdeadbeef;
+
+    expect_function_call(__wrap_graphGetSprite);
+    expect_function_call(__wrap_graphUnregisterPrint);
+    expect_function_call(__wrap_graphDestroyImage);
+    expect_uint_value(__wrap_utilsFree, ptr, (uintptr_t)&ufo);
+    expect_function_call(__wrap_utilsFree);
+
+    ufoDestroy(&ufo);
+}
+
+void
 testUfoGetDirectionNullParameter(void **status)
 {
     (void)status;
