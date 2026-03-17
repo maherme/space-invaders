@@ -11,45 +11,244 @@
 #include "graph.h"
 #include "graphGlutCallbacks.h"
 #include "utils.h"
+#include <assert.h>
+#include <stdbool.h>
 
-#define BULLET_WIDTH 1
-#define BULLET_HEIGHT 4
+#define MAX_BULLETS 4
+#define BULLET_SPACESHIP_WIDTH 1
+#define BULLET_SPACESHIP_HEIGHT 4
+#define BULLET_ALIEN_WIDTH 3
+#define BULLET_ALIEN_HEIGHT 7
+#define BULLET_ALIEN_NUM_FRAMES 4
+#define BULLET_SPACESHIP_SLOT 0
 
-struct bullet_instance_t
+typedef enum
+{
+    CRACKLE,
+    PLASMA,
+    COIL,
+    BULLET_ALIEN_NUM_TYPES
+} bullet_alien_type_t;
+
+struct bullet_instance
 {
     sprite_t sprite;
+    bullet_type_t type;
+    bool used;
 };
 
-static const char bulletImage[BULLET_HEIGHT][BULLET_WIDTH][NUM_RGBA_CHANNELS] = {{W}, {W}, {W}, {W}};
-
-bullet_t
-bulletCreate(int x, int y)
+typedef struct
 {
-    bullet_t inst = utilsCalloc(1, sizeof(struct bullet_instance_t));
-    inst->sprite.x = x;
-    inst->sprite.y = y;
-    inst->sprite.width = BULLET_WIDTH;
-    inst->sprite.height = BULLET_HEIGHT;
-    inst->sprite.image = (const char *)bulletImage;
-    inst->sprite.pixels_to_move = 1;
-    inst->sprite.time_to_move = 2 * NS_PER_MS;
-    graphCreateImage(&inst->sprite);
-    inst->sprite.max_movement.up = WINDOW_HEIGHT - inst->sprite.scaled_height;
-    graphRegisterPrint(&inst->sprite);
+    const char *image;
+    long long time_to_move;
+    int pixels_to_move;
+} bullet_alien_t;
 
-    return inst;
+static struct bullet_instance bulletPool[MAX_BULLETS] = {0};
+
+static const char bulletSpaceshipImage[BULLET_SPACESHIP_HEIGHT][BULLET_SPACESHIP_WIDTH][NUM_RGBA_CHANNELS] = {
+    {W}, {W}, {W}, {W}};
+static const char bulletAlienImage[BULLET_ALIEN_NUM_TYPES][BULLET_ALIEN_NUM_FRAMES][BULLET_ALIEN_HEIGHT][BULLET_ALIEN_WIDTH]
+                                  [NUM_RGBA_CHANNELS] = {
+                                      /* crackle */
+                                      /* frame 1 */
+                                      {{{B, W, B}, {B, W, B}, {W, B, B}, {B, W, B}, {B, B, W}, {B, W, B}, {B, W, B}},
+                                       /* frame 2 */
+                                       {{B, W, B}, {B, W, B}, {B, W, B}, {B, W, B}, {B, W, B}, {B, W, B}, {B, W, B}},
+                                       /* frame 3 */
+                                       {{B, W, B}, {B, W, B}, {B, B, W}, {B, W, B}, {W, B, B}, {B, W, B}, {B, W, B}},
+                                       /* frame 4 */
+                                       {{B, W, B}, {B, W, B}, {B, W, B}, {B, W, B}, {B, W, B}, {B, W, B}, {B, W, B}}},
+                                      /* plasma */
+                                      /* frame 1 */
+                                      {{{B, W, B}, {B, W, B}, {B, W, B}, {B, W, B}, {B, W, B}, {W, W, W}, {W, W, W}},
+                                       /* frame 2 */
+                                       {{B, W, B}, {B, W, B}, {B, W, B}, {W, W, W}, {B, W, B}, {B, W, B}, {W, W, W}},
+                                       /* frame 3 */
+                                       {{B, W, B}, {W, W, W}, {B, W, B}, {B, W, B}, {B, W, B}, {B, W, B}, {W, W, W}},
+                                       /* frame 4 */
+                                       {{B, W, B}, {B, W, B}, {B, W, B}, {W, W, W}, {B, W, B}, {B, W, B}, {W, W, W}}},
+                                      /* coil */
+                                      /* frame 1 */
+                                      {{{B, W, W}, {B, W, B}, {W, W, B}, {B, W, B}, {B, W, W}, {B, W, B}, {W, W, B}},
+                                       /* frame 2 */
+                                       {{B, W, B}, {W, W, B}, {B, W, B}, {B, W, W}, {B, W, B}, {W, W, B}, {B, W, B}},
+                                       /* frame 3 */
+                                       {{W, W, B}, {B, W, B}, {B, W, W}, {B, W, B}, {W, W, B}, {B, W, B}, {B, W, W}},
+                                       /* frame 4 */
+                                       {{B, W, B}, {B, W, W}, {B, W, B}, {W, W, B}, {B, W, B}, {B, W, W}, {B, W, B}}}};
+
+static bullet_alien_t bulletAlien[BULLET_ALIEN_NUM_TYPES] = {
+    {.image = (const char *)&bulletAlienImage[CRACKLE], .time_to_move = 32 * NS_PER_MS, .pixels_to_move = 3},
+    {.image = (const char *)&bulletAlienImage[PLASMA], .time_to_move = 64 * NS_PER_MS, .pixels_to_move = 3},
+    {.image = (const char *)&bulletAlienImage[COIL], .time_to_move = 32 * NS_PER_MS, .pixels_to_move = 2}};
+
+static bullet_alien_type_t
+getBulletAlienType(void)
+{
+    bullet_alien_type_t result;
+    int r = rand() % 100;
+
+    if (r < 50)
+    {
+        result = CRACKLE;
+    }
+    else if (r < 80)
+    {
+        result = COIL;
+    }
+    else
+    {
+        result = PLASMA;
+    }
+
+    return result;
+}
+
+static void
+setBulletType(bullet_t bullet, bullet_type_t type)
+{
+    switch (type)
+    {
+        case BULLET_SPACESHIP:
+            bullet->sprite.width = BULLET_SPACESHIP_WIDTH;
+            bullet->sprite.height = BULLET_SPACESHIP_HEIGHT;
+            bullet->sprite.image = (const char *)bulletSpaceshipImage;
+            bullet->sprite.pixels_to_move = 1;
+            graphScaleImage(&bullet->sprite);
+            bullet->sprite.max_movement.up = WINDOW_HEIGHT - bullet->sprite.scaled_height;
+            bullet->sprite.time_to_move = 2 * NS_PER_MS;
+            break;
+        case BULLET_ALIEN:
+        {
+            bullet_alien_type_t alien_bullet_type = getBulletAlienType();
+            bullet->sprite.width = BULLET_ALIEN_WIDTH;
+            bullet->sprite.height = BULLET_ALIEN_HEIGHT;
+            bullet->sprite.image_base = bulletAlien[alien_bullet_type].image;
+            bullet->sprite.image = bullet->sprite.image_base;
+            bullet->sprite.num_frames = BULLET_ALIEN_NUM_FRAMES;
+            bullet->sprite.pixels_to_move = bulletAlien[alien_bullet_type].pixels_to_move;
+            graphScaleImage(&bullet->sprite);
+            bullet->sprite.max_movement.down = 0;
+            bullet->sprite.time_to_move = bulletAlien[alien_bullet_type].time_to_move;
+            break;
+        }
+            /* GCOVR_EXCL_START */
+        default:
+            assert(!"invalid bullet type");
+            UNREACHABLE();
+            break; /* GCOVR_EXCL_BR_SOURCE */
+                   /* GCOVR_EXCL_STOP */
+    }
+
+    bullet->type = type;
 }
 
 void
-bulletDestroy(bullet_t *bullet)
+bulletCreate(int x, int y, bullet_type_t type)
 {
-    if (!bullet || !*bullet)
+    for (int i = 0; i < MAX_BULLETS; i++)
+    {
+        if (type == BULLET_SPACESHIP && i != BULLET_SPACESHIP_SLOT)
+        {
+            continue;
+        }
+
+        if (type == BULLET_ALIEN && i == BULLET_SPACESHIP_SLOT)
+        {
+            continue;
+        }
+
+        if (!bulletPool[i].used)
+        {
+            struct bullet_instance *inst = &bulletPool[i];
+
+            setBulletType(inst, type);
+            inst->sprite.x = x;
+            inst->sprite.y = y;
+            graphCreateImage(&inst->sprite);
+            graphRegisterPrint(&inst->sprite);
+
+            inst->used = true;
+
+            return;
+        }
+    }
+}
+
+void
+bulletDestroy(bullet_t bullet)
+{
+    if (!bullet)
     {
         return;
     }
 
-    sprite_t *bullet_sprite = graphGetSprite((base_t *)*bullet);
+    sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
     graphUnregisterPrint(bullet_sprite);
     graphDestroyImage(bullet_sprite);
-    utilsFree((void **)bullet);
+    bullet->used = false;
 }
+
+bool
+bulletUsed(bullet_t bullet)
+{
+    return bullet && bullet->used;
+}
+
+int
+bulletGetType(const bullet_t bullet, bullet_type_t *type)
+{
+    if (!bullet || !type)
+    {
+        return -1;
+    }
+
+    *type = bullet->type;
+
+    return 0;
+}
+
+void
+bulletCallFunctionForEach(void (*fn)(bullet_t))
+{
+    if (!fn)
+    {
+        assert(!"pointer to fn must not be NULL");
+        return;
+    }
+
+    for (int i = 0; i < MAX_BULLETS; i++)
+    {
+        if (bulletPool[i].used)
+        {
+            fn(&bulletPool[i]);
+        }
+    }
+}
+
+#ifdef UNIT_TESTING
+void
+helperUT_bulletInitPool(void)
+{
+    memset(bulletPool, 0, sizeof(bulletPool));
+}
+
+void
+helperUT_bulletSetUsed(bullet_t bullet, bool used)
+{
+    bullet->used = used;
+}
+
+bullet_t
+helperUT_bulletInjectInPool(int index, bullet_type_t type)
+{
+    bullet_t bullet = &bulletPool[index];
+    memset(bullet, 0, sizeof(*bullet));
+
+    bulletPool[index].used = true;
+    bulletPool[index].type = type;
+
+    return bullet;
+}
+#endif /* UNIT_TESTING */

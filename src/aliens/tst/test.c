@@ -18,10 +18,16 @@ int
 main(void)
 {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test(testAliensCreate),
-        cmocka_unit_test(testAlienDestroyNullParameter),
-        cmocka_unit_test(testAlienDestroy),
-        cmocka_unit_test(testAliensGetAlienInstanceInvalidIndex),
+        cmocka_unit_test_setup(testAliensCreate, setup),
+        cmocka_unit_test_setup(testAlienAliveNullParameter, setup),
+        cmocka_unit_test_setup(testAlienAliveFalse, setup),
+        cmocka_unit_test_setup(testAlienAliveTrue, setup),
+        cmocka_unit_test_setup(testAlienDestroyNullParameter, setup),
+        cmocka_unit_test_setup(testAlienDestroy, setup),
+        cmocka_unit_test_setup(testAliensGetAlienInstanceInvalidIndex, setup),
+        cmocka_unit_test_setup(testAliensGetShooterFormationEmpty, setup),
+        cmocka_unit_test_setup(testAliensGetShooterFormationOneAlien, setup),
+        cmocka_unit_test_setup(testAliensGetShooterFirstInColumn, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

@@ -17,7 +17,7 @@
 #include <time.h>
 
 int
-setup(void **state)
+teardown(void **state)
 {
     (void)state;
     helperUT_explosionResetList();
@@ -43,16 +43,17 @@ registerExplosionBullet(void)
 
     expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_utilsCalloc);
+    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     will_return(__wrap_clock_gettime, 0); /* tv_sec */
     will_return(__wrap_clock_gettime, 0); /* tv_nsec */
     expect_function_call(__wrap_clock_gettime);
     expect_function_call(__wrap_graphRegisterPrint);
 
-    explosionCreate(x_pos, y_pos, EXPLOSION_BULLET);
+    explosionCreate(x_pos, y_pos, EXPLOSION_BULLET_SPACESHIP);
 }
 
-static explosion_type_t explosions[] = {EXPLOSION_BULLET, EXPLOSION_UFO, EXPLOSION_ALIEN};
+static explosion_type_t explosions[] = {EXPLOSION_BULLET_SPACESHIP, EXPLOSION_BULLET_ALIEN, EXPLOSION_UFO, EXPLOSION_ALIEN};
 
 void
 testExplosionCreate(void **status)
@@ -65,6 +66,7 @@ testExplosionCreate(void **status)
     {
         expect_function_call(__wrap_utilsCalloc);
         expect_function_call(__wrap_utilsCalloc);
+        expect_function_call(__wrap_graphScaleImage);
         expect_function_call(__wrap_graphCreateImage);
         will_return(__wrap_clock_gettime, 0); /* tv_sec */
         will_return(__wrap_clock_gettime, 0); /* tv_nsec */

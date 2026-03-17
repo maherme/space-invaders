@@ -93,7 +93,7 @@ list_del(struct list_head *entry)
          &pos->member != (head); \
          pos = n, n = list_entry(n->member.next, __typeof__(*n), member))
 
-#define list_clear(head, type, member) \
+#define list_clear_with_free(head, type, member) \
     do { \
         type *pos, *tmp; \
         list_for_each_entry_safe(pos, tmp, head, member) { \

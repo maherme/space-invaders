@@ -78,6 +78,6 @@ engineRun(int rate)
 void
 helperUT_engineResetRegisteredCallbacks(void)
 {
-    list_clear(&callbacks, cb_node_t, node);
+    list_clear_with_free(&callbacks, cb_node_t, node);
 }
 #endif

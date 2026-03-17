@@ -10,8 +10,20 @@
 #ifndef __TESTALIENS_H__
 #define __TESTALIENS_H__
 
+int
+setup(void **state);
+
 void
 testAliensCreate(void **status);
+
+void
+testAlienAliveNullParameter(void **status);
+
+void
+testAlienAliveFalse(void **status);
+
+void
+testAlienAliveTrue(void **status);
 
 void
 testAlienDestroyNullParameter(void **status);
@@ -21,5 +33,14 @@ testAlienDestroy(void **status);
 
 void
 testAliensGetAlienInstanceInvalidIndex(void **status);
+
+void
+testAliensGetShooterFormationEmpty(void **status);
+
+void
+testAliensGetShooterFormationOneAlien(void **status);
+
+void
+testAliensGetShooterFirstInColumn(void **status);
 
 #endif /* __TESTALIENS_H__ */

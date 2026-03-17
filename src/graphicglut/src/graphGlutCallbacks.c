@@ -91,6 +91,6 @@ graphGlutReshape(int w, int h)
 void
 helperUT_graphGlutResetRegisteredContext(void)
 {
-    list_clear(&contexts, ctx_node_t, node);
+    list_clear_with_free(&contexts, ctx_node_t, node);
 }
 #endif

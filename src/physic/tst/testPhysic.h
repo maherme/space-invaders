@@ -35,6 +35,12 @@ void
 testPhysicMoveSpriteUpMax(void **status);
 
 void
+testPhysicMoveSpriteDown(void **status);
+
+void
+testPhysicMoveSpriteDownMax(void **status);
+
+void
 testPhysicMoveSpriteTooEarlyToMove(void **status);
 
 void
@@ -42,6 +48,9 @@ testPhysicCheckBorderCollisionNullParameter(void **status);
 
 void
 testPhysicCheckBorderCollisionUpTrue(void **status);
+
+void
+testPhysicCheckBorderCollisionDownTrue(void **status);
 
 void
 testPhysicCheckBorderCollisionRightTrue(void **status);

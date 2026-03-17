@@ -165,6 +165,27 @@ testGraphCreateImageSuccess(void **status)
 }
 
 void
+testGraphScaleImageNullParameter(void **status)
+{
+    (void)status;
+
+    graphScaleImage(NULL);
+}
+
+void
+testGraphScaleImage(void **status)
+{
+    (void)status;
+
+    sprite_t sprite = {.height = 1, .width = 1, .pixels_to_move = 1};
+
+    graphScaleImage(&sprite);
+    assert_int_equal(2, sprite.scaled_height);
+    assert_int_equal(2, sprite.scaled_width);
+    assert_int_equal(2, sprite.pixels_to_move);
+}
+
+void
 testGraphDestroyImageNullParameter(void **status)
 {
     (void)status;
@@ -227,6 +248,57 @@ testGraphGetSpriteCoordinates(void **status)
     assert_int_equal(sprite.x + sprite.scaled_width, coordinates.x2);
     assert_int_equal(sprite.y, coordinates.y1);
     assert_int_equal(sprite.y + sprite.scaled_height, coordinates.y2);
+}
+
+void
+testGraphUpdateImageToPrintNullParameter(void **status)
+{
+    (void)status;
+
+    graphUpdateImageToPrint(NULL);
+}
+
+void
+testGraphUpdateImageToPrintOneFrame(void **status)
+{
+    (void)status;
+    /* Image with one frame */
+    static const char images[1][1][NUM_RGBA_CHANNELS] = {{B}};
+
+    sprite_t sprite = {.selected_image = 0,
+                       .num_frames = 1,
+                       .image_base = (const char *)images,
+                       .image = (const char *)images,
+                       .width = 1,
+                       .height = 1};
+
+    graphUpdateImageToPrint(&sprite);
+
+    assert_int_equal(sprite.selected_image, 0);
+    assert_uint_equal(sprite.image, (uintptr_t)images);
+}
+
+void
+testGraphUpdateImageToPrintMoreOneFrame(void **status)
+{
+    (void)status;
+    /* Image with two frames */
+    static const char images[2][1][1][NUM_RGBA_CHANNELS] = {/* frame 1 */
+                                                            {{B}},
+                                                            /* frame 2 */
+                                                            {{B}}};
+
+    sprite_t sprite = {.selected_image = 0,
+                       .num_frames = 2,
+                       .image_base = (const char *)images,
+                       .image = (const char *)images,
+                       .width = 1,
+                       .height = 1};
+
+    graphUpdateImageToPrint(&sprite);
+
+    assert_int_equal(sprite.selected_image, 1);
+    assert_uint_equal(sprite.image, (uintptr_t)&images[1]);
 }
 
 void

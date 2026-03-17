@@ -12,10 +12,8 @@
 #include "graphGlutCallbacks.h"
 #include "utils.h"
 #include <assert.h>
+#include <stdbool.h>
 
-#define ALIENS_ROWS 5
-#define ALIENS_COLS 11
-#define ALIENS_INITIAL_NUMBER (ALIENS_ROWS * ALIENS_COLS)
 #define ALIEN_CELL_WIDTH 32
 #define ALIEN_CELL_HEIGHT 32
 #define ALIEN_NUM_FRAMES 2
@@ -26,17 +24,20 @@
 #define OCTOPUS_WIDTH 12
 #define OCTOPUS_HEIGHT 8
 
-struct alien_instance_t
+#define INDEX_ALIENS(row, col) ((row) * ALIENS_COLS + (col))
+
+struct alien_instance
 {
     sprite_t sprite;
+    bool alive;
 };
 
-static struct aliens_instance_t
+static struct
 {
-    alien_t alien[ALIENS_INITIAL_NUMBER];
+    struct alien_instance aliens[ALIENS_INITIAL_NUMBER];
     int origin_x;
     int origin_y;
-} aliens;
+} alienPool;
 
 static alien_type_t alienTypeByRow[ALIENS_ROWS] = {
     OCTOPUS,
@@ -135,36 +136,36 @@ setAlienType(alien_t inst, alien_type_t type)
     }
 }
 
-static alien_t
-alienCreate(int x, int y, alien_type_t type)
+static void
+alienCreate(int x, int y, alien_type_t type, int index)
 {
-    alien_t inst = utilsCalloc(1, sizeof(struct alien_instance_t));
+    struct alien_instance *inst = &alienPool.aliens[index];
     setAlienType(inst, type);
     inst->sprite.x = x;
     inst->sprite.y = y;
     inst->sprite.pixels_to_move = 0;
     inst->sprite.time_to_move = 0;
+    graphScaleImage(&inst->sprite);
     graphCreateImage(&inst->sprite);
     inst->sprite.max_movement.right = 0;
     inst->sprite.max_movement.left = 0;
     graphUpdateTimeSprite(&inst->sprite);
     graphRegisterPrint(&inst->sprite);
-
-    return inst;
+    inst->alive = true;
 }
 
 void
-alienDestroy(alien_t *alien)
+alienDestroy(alien_t alien)
 {
-    if (!alien || !*alien)
+    if (!alien)
     {
         return;
     }
 
-    sprite_t *alien_sprite = graphGetSprite((base_t *)*alien);
+    sprite_t *alien_sprite = graphGetSprite((base_t *)alien);
     graphUnregisterPrint(alien_sprite);
     graphDestroyImage(alien_sprite);
-    utilsFree((void **)alien);
+    alien->alive = false;
 }
 
 static int
@@ -195,8 +196,8 @@ void
 aliensCreate(void)
 {
     int formation_width = ALIENS_COLS * ALIEN_CELL_WIDTH;
-    aliens.origin_x = (WINDOW_WIDTH - formation_width) / 2;
-    aliens.origin_y = WINDOW_HEIGHT / 2;
+    alienPool.origin_x = (WINDOW_WIDTH - formation_width) / 2;
+    alienPool.origin_y = WINDOW_HEIGHT / 2;
 
     for (int i = 0; i < ALIENS_INITIAL_NUMBER; i++)
     {
@@ -207,21 +208,74 @@ aliensCreate(void)
         int rel_x = col * ALIEN_CELL_WIDTH + (ALIEN_CELL_WIDTH - alienWidth(type)) / 2;
         int rel_y = row * ALIEN_CELL_HEIGHT;
 
-        aliens.alien[i] = alienCreate(aliens.origin_x + rel_x, aliens.origin_y + rel_y, type);
+        alienCreate(alienPool.origin_x + rel_x, alienPool.origin_y + rel_y, type, i);
     }
 }
 
-int
-aliensGetNumberInitialAliens(void)
+bool
+alienAlive(alien_t alien)
 {
-    return ALIENS_INITIAL_NUMBER;
+
+    return alien && alien->alive;
 }
 
-alien_t *
+alien_t
 aliensGetAlienInstance(int alien_index)
 {
     if (ALIENS_INITIAL_NUMBER <= alien_index)
         return NULL;
 
-    return (alien_t *)&aliens.alien[alien_index];
+    return &alienPool.aliens[alien_index];
 }
+
+alien_t
+aliensGetShooter(void)
+{
+    int start_col = rand() % ALIENS_COLS;
+
+    for (int i = 0; i < ALIENS_COLS; i++)
+    {
+        int col = (start_col + i) % ALIENS_COLS;
+
+        for (int row = 0; row < ALIENS_ROWS; row++)
+        {
+            alien_t a = &alienPool.aliens[row * ALIENS_COLS + col];
+            if (a->alive)
+            {
+                return a;
+            }
+        }
+    }
+
+    return NULL;
+}
+
+#ifdef UNIT_TESTING
+#include <string.h>
+
+void
+helperUT_alienInitPool(void)
+{
+    memset(alienPool.aliens, 0, sizeof(alienPool.aliens));
+}
+
+void
+helperUT_alienSetAlive(alien_t alien, bool alive)
+{
+    alien->alive = alive;
+}
+
+alien_t
+helperUT_alienInjectInPool(int row, int col)
+{
+    int index = INDEX_ALIENS(row, col);
+    alien_t alien = &alienPool.aliens[index];
+
+    memset(alien, 0, sizeof(*alien));
+
+    alien->alive = true;
+
+    return alien;
+}
+
+#endif /* UNIT_TESTING */

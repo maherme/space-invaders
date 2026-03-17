@@ -21,8 +21,8 @@ VPATH := $(sort $(dir $(SRC)))
 
 INCLUDES := $(VPATH:%=-I%)
 
-CFLAGS += --coverage -DUNIT_TESTING -DNDEBUG -O0
-LDFLAGS += -lgcov --coverage -lcmocka
+CFLAGS += --coverage -DUNIT_TESTING -DNDEBUG -O0 -fsanitize=address -g -fno-omit-frame-pointer
+LDFLAGS += -lgcov --coverage -lcmocka -fsanitize=address
 GCOVRFLAGS += --exclude $(CURDIR)/tst
 
 .PHONY: run-test test coverage clean-test

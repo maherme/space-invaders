@@ -11,7 +11,7 @@
 #define __TESTEXPLOSION_H__
 
 int
-setup(void **state);
+teardown(void **state);
 
 void
 testExplosionCreate(void **status);
