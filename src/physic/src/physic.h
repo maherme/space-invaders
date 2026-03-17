@@ -16,6 +16,7 @@
 typedef enum
 {
     UP,
+    DOWN,
     RIGHT,
     LEFT,
     INVALID_DIR

@@ -16,14 +16,29 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+int
+setup(void **state)
+{
+    (void)state;
+    helperUT_alienInitPool();
+    return 0;
+}
+
+int
+__wrap_rand(void)
+{
+    function_called();
+    return (int)mock();
+}
+
 void
 testAliensCreate(void **status)
 {
     (void)status;
 
-    for (int i = 0; i < aliensGetNumberInitialAliens(); i++)
+    for (int i = 0; i < ALIENS_INITIAL_NUMBER; i++)
     {
-        expect_function_call(__wrap_utilsCalloc);
+        expect_function_call(__wrap_graphScaleImage);
         expect_function_call(__wrap_graphCreateImage);
         expect_function_call(__wrap_graphUpdateTimeSprite);
         expect_function_call(__wrap_graphRegisterPrint);
@@ -31,35 +46,58 @@ testAliensCreate(void **status)
 
     aliensCreate();
 
-    for (int i = 0; i < aliensGetNumberInitialAliens(); i++)
+    for (int i = 0; i < ALIENS_INITIAL_NUMBER; i++)
     {
         assert_non_null(aliensGetAlienInstance(i));
     }
 }
 
 void
+testAlienAliveNullParameter(void **status)
+{
+    (void)status;
+
+    assert_false(alienAlive(NULL));
+}
+
+void
+testAlienAliveFalse(void **status)
+{
+    (void)status;
+    alien_t alien = helperUT_alienInjectInPool(0, 0);
+    helperUT_alienSetAlive(alien, false);
+
+    assert_false(alienAlive(alien));
+}
+
+void
+testAlienAliveTrue(void **status)
+{
+    (void)status;
+    alien_t alien = helperUT_alienInjectInPool(0, 0);
+
+    assert_true(alienAlive(alien));
+}
+
+void
 testAlienDestroyNullParameter(void **status)
 {
     (void)status;
-    alien_t ptr = NULL;
 
     alienDestroy(NULL);
-    alienDestroy(&ptr);
 }
 
 void
 testAlienDestroy(void **status)
 {
     (void)status;
-    alien_t alien = (alien_t)0xdeadbeef;
+    alien_t alien = helperUT_alienInjectInPool(0, 0);
 
     expect_function_call(__wrap_graphGetSprite);
     expect_function_call(__wrap_graphUnregisterPrint);
     expect_function_call(__wrap_graphDestroyImage);
-    expect_uint_value(__wrap_utilsFree, ptr, (uintptr_t)&alien);
-    expect_function_call(__wrap_utilsFree);
 
-    alienDestroy(&alien);
+    alienDestroy(alien);
 }
 
 void
@@ -67,5 +105,47 @@ testAliensGetAlienInstanceInvalidIndex(void **status)
 {
     (void)status;
 
-    assert_null(aliensGetAlienInstance(aliensGetNumberInitialAliens() + 1));
+    assert_null(aliensGetAlienInstance(ALIENS_INITIAL_NUMBER + 1));
+}
+
+void
+testAliensGetShooterFormationEmpty(void **status)
+{
+    (void)status;
+
+    will_return(__wrap_rand, 1);
+    expect_function_call(__wrap_rand);
+
+    assert_null(aliensGetShooter());
+}
+
+void
+testAliensGetShooterFormationOneAlien(void **status)
+{
+    (void)status;
+
+    alien_t alien = helperUT_alienInjectInPool(0, 0);
+
+    will_return(__wrap_rand, 1);
+    expect_function_call(__wrap_rand);
+
+    assert_ptr_equal(alien, aliensGetShooter());
+}
+
+void
+testAliensGetShooterFirstInColumn(void **status)
+{
+    (void)status;
+    alien_t injected[ALIENS_ROWS];
+
+    for (int i = 0; i < ALIENS_ROWS; i++)
+    {
+        injected[i] = helperUT_alienInjectInPool(i, 0);
+    }
+
+    alien_t expected = injected[0];
+
+    will_return(__wrap_rand, 1);
+    expect_function_call(__wrap_rand);
+    assert_ptr_equal(expected, aliensGetShooter());
 }

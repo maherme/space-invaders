@@ -30,12 +30,15 @@ testUfoCreateLeftDirection(void **status)
     expect_function_call(__wrap_utilsCalloc);
     will_return(__wrap_rand, 1);
     expect_function_call(__wrap_rand);
+    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphUpdateTimeSprite);
     expect_function_call(__wrap_graphRegisterPrint);
 
     ufo_t ufo = ufoCreate();
     assert_int_equal(LEFT, ufoGetDirection(ufo));
+
+    free(ufo);
 }
 
 void
@@ -46,12 +49,15 @@ testUfoCreateRightDirection(void **status)
     expect_function_call(__wrap_utilsCalloc);
     will_return(__wrap_rand, RAND_MAX);
     expect_function_call(__wrap_rand);
+    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphUpdateTimeSprite);
     expect_function_call(__wrap_graphRegisterPrint);
 
     ufo_t ufo = ufoCreate();
     assert_int_equal(RIGHT, ufoGetDirection(ufo));
+
+    free(ufo);
 }
 
 void
@@ -103,6 +109,7 @@ testUfoCheckForMovingFalse(void **status)
     expect_function_call(__wrap_utilsCalloc);
     will_return(__wrap_rand, RAND_MAX);
     expect_function_call(__wrap_rand);
+    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphUpdateTimeSprite);
     expect_function_call(__wrap_graphRegisterPrint);
@@ -113,6 +120,8 @@ testUfoCheckForMovingFalse(void **status)
     expect_function_call(__wrap_utilsCheckTimeout);
 
     assert_false(ufoCheckForMoving(ufo));
+
+    free(ufo);
 }
 
 void
@@ -123,6 +132,7 @@ testUfoCheckForMovingTrue(void **status)
     expect_function_call(__wrap_utilsCalloc);
     will_return(__wrap_rand, RAND_MAX);
     expect_function_call(__wrap_rand);
+    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphUpdateTimeSprite);
     expect_function_call(__wrap_graphRegisterPrint);
@@ -133,6 +143,8 @@ testUfoCheckForMovingTrue(void **status)
     expect_function_call(__wrap_utilsCheckTimeout);
 
     assert_true(ufoCheckForMoving(ufo));
+
+    free(ufo);
 }
 
 void
@@ -143,6 +155,7 @@ testUfoCheckForMovingTrueMoreCalls(void **status)
     expect_function_call(__wrap_utilsCalloc);
     will_return(__wrap_rand, RAND_MAX);
     expect_function_call(__wrap_rand);
+    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphUpdateTimeSprite);
     expect_function_call(__wrap_graphRegisterPrint);
@@ -155,4 +168,6 @@ testUfoCheckForMovingTrueMoreCalls(void **status)
     assert_true(ufoCheckForMoving(ufo));
     /* no more calls to utilsCheckTimeout are expected from here */
     assert_true(ufoCheckForMoving(ufo));
+
+    free(ufo);
 }

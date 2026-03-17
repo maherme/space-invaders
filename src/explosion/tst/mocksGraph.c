@@ -22,6 +22,13 @@ __wrap_graphCreateImage(sprite_t *sprite)
 }
 
 void
+__wrap_graphScaleImage(sprite_t *sprite)
+{
+    (void)sprite;
+    function_called();
+}
+
+void
 __wrap_graphDestroyImage(sprite_t *sprite)
 {
     (void)sprite;

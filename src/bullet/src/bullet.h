@@ -10,12 +10,45 @@
 #ifndef __BULLET_H__
 #define __BULLET_H__
 
-typedef struct bullet_instance_t *bullet_t;
+#include <stdbool.h>
 
-bullet_t
-bulletCreate(int x, int y);
+typedef enum
+{
+    BULLET_SPACESHIP,
+    BULLET_ALIEN
+} bullet_type_t;
+
+typedef struct bullet_instance *bullet_t;
 
 void
-bulletDestroy(bullet_t *bullet);
+bulletCreate(int x, int y, bullet_type_t type);
+
+void
+bulletDestroy(bullet_t bullet);
+
+bool
+bulletUsed(bullet_t bullet);
+
+int
+bulletGetType(const bullet_t bullet, bullet_type_t *type);
+
+void
+bulletCallFunctionForEach(void (*fn)(bullet_t));
+
+void
+bulletDestroy(bullet_t bullet);
+
+#ifdef UNIT_TESTING
+#include <string.h>
+
+void
+helperUT_bulletInitPool(void);
+
+void
+helperUT_bulletSetUsed(bullet_t bullet, bool used);
+
+bullet_t
+helperUT_bulletInjectInPool(int index, bullet_type_t type);
+#endif /* UNIT_TESTING */
 
 #endif

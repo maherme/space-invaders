@@ -10,13 +10,46 @@
 #ifndef __TESTBULLET_H__
 #define __TESTBULLET_H__
 
+int
+setup(void **state);
+
 void
 testBulletCreate(void **status);
+
+void
+testBulletCreateAllTypeBulletAlien(void **status);
+
+void
+testBulletCreateTwoBulletSpaceship(void **status);
 
 void
 testBulletDestroyNullParameter(void **status);
 
 void
 testBulletDestroy(void **status);
+
+void
+testBulletUsedNullParameter(void **status);
+
+void
+testBulletUsedFalse(void **status);
+
+void
+testBulletUsedTrue(void **status);
+
+void
+testBulletGetTypeNullParameters(void **status);
+
+void
+testBulletGetType(void **status);
+
+void
+testBulletCallFunctionForEachNullParameter(void **status);
+
+void
+testBulletCallFunctionForEachBulletPoolEmpty(void **status);
+
+void
+testBulletCallFunctionForEach(void **status);
 
 #endif

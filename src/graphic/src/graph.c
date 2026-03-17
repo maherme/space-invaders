@@ -21,16 +21,25 @@ graphCreateImage(sprite_t *sprite)
         return;
     }
 
-    sprite->scale = SCALE_IMAGE;
-    sprite->scaled_height = sprite->height * SCALE_IMAGE;
-    sprite->scaled_width = sprite->width * SCALE_IMAGE;
-    sprite->pixels_to_move = sprite->pixels_to_move * SCALE_IMAGE;
-
     glGenTextures(1, &sprite->textureId);
     glBindTexture(GL_TEXTURE_2D, sprite->textureId);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sprite->width, sprite->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, sprite->image);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
+void
+graphScaleImage(sprite_t *sprite)
+{
+    if (!sprite)
+    {
+        return;
+    }
+
+    sprite->scale = SCALE_IMAGE;
+    sprite->scaled_height = sprite->height * SCALE_IMAGE;
+    sprite->scaled_width = sprite->width * SCALE_IMAGE;
+    sprite->pixels_to_move = sprite->pixels_to_move * SCALE_IMAGE;
 }
 
 void
@@ -68,6 +77,17 @@ graphGetSpriteCoordinates(const sprite_t *const sprite, sprite_coordinates_t *co
     coordinates->y2 = sprite->y + sprite->scaled_height;
 
     return 0;
+}
+
+void
+graphUpdateImageToPrint(sprite_t *sprite)
+{
+    if (sprite && sprite->num_frames > 1)
+    {
+        sprite->selected_image = (sprite->selected_image + 1) % sprite->num_frames;
+        size_t image_offset = sprite->selected_image * sprite->height * sprite->width * NUM_RGBA_CHANNELS;
+        sprite->image = sprite->image_base + image_offset;
+    }
 }
 
 void

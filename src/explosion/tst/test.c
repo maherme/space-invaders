@@ -18,11 +18,11 @@ int
 main(void)
 {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test_setup(testExplosionCreate, setup),
-        cmocka_unit_test_setup(testExplosionsDestroyListEmpty, setup),
-        cmocka_unit_test_setup(testExplosionsDestroyTimeoutFalse, setup),
-        cmocka_unit_test_setup(testExplosionsDestroyTimeoutTrue, setup),
-        cmocka_unit_test_setup(testExplosionsDestroyTwoExplosions, setup),
+        cmocka_unit_test_teardown(testExplosionCreate, teardown),
+        cmocka_unit_test_teardown(testExplosionsDestroyListEmpty, teardown),
+        cmocka_unit_test_teardown(testExplosionsDestroyTimeoutFalse, teardown),
+        cmocka_unit_test_teardown(testExplosionsDestroyTimeoutTrue, teardown),
+        cmocka_unit_test_teardown(testExplosionsDestroyTwoExplosions, teardown),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

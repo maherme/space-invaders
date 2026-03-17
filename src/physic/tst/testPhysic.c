@@ -54,8 +54,6 @@ testPhysicMoveSpriteWrongDirection(void **status)
     sprite_t sprite = {.width = 10, .height = 20, .last_update.tv_sec = 10, .last_update.tv_nsec = 20, .time_to_move = 0};
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
-    expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
-    expect_function_call(__wrap_graphUpdateTimeSprite);
 
     physicMoveSprite(&sprite, 0xFF);
 }
@@ -79,6 +77,8 @@ testPhysicMoveSpriteRight(void **status)
     sprite_t old_sprite = sprite;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    expect_uint_value(__wrap_graphUpdateImageToPrint, sprite, (uintptr_t)&sprite);
+    expect_function_call(__wrap_graphUpdateImageToPrint);
     expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
     expect_function_call(__wrap_graphUpdateTimeSprite);
 
@@ -129,6 +129,8 @@ testPhysicMoveSpriteLeft(void **status)
     sprite_t old_sprite = sprite;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    expect_uint_value(__wrap_graphUpdateImageToPrint, sprite, (uintptr_t)&sprite);
+    expect_function_call(__wrap_graphUpdateImageToPrint);
     expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
     expect_function_call(__wrap_graphUpdateTimeSprite);
 
@@ -178,6 +180,8 @@ testPhysicMoveSpriteUp(void **status)
     sprite_t old_sprite = sprite;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    expect_uint_value(__wrap_graphUpdateImageToPrint, sprite, (uintptr_t)&sprite);
+    expect_function_call(__wrap_graphUpdateImageToPrint);
     expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
     expect_function_call(__wrap_graphUpdateTimeSprite);
 
@@ -206,6 +210,57 @@ testPhysicMoveSpriteUpMax(void **status)
 
     physicMoveSprite(&sprite, UP);
     assert_int_equal(sprite.y, WINDOW_HEIGHT - sprite.scaled_width);
+}
+
+void
+testPhysicMoveSpriteDown(void **status)
+{
+    (void)status;
+    sprite_t sprite = {
+        .x = 0,
+        .y = 100,
+        .width = 10,
+        .height = 20,
+        .last_update.tv_sec = 0,
+        .last_update.tv_nsec = 0,
+        .time_to_move = 0,
+        .pixels_to_move = 10,
+        .scaled_height = 20,
+    };
+    sprite.max_movement.down = 0;
+    sprite_t old_sprite = sprite;
+
+    checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    expect_uint_value(__wrap_graphUpdateImageToPrint, sprite, (uintptr_t)&sprite);
+    expect_function_call(__wrap_graphUpdateImageToPrint);
+    expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
+    expect_function_call(__wrap_graphUpdateTimeSprite);
+
+    physicMoveSprite(&sprite, DOWN);
+    assert_int_equal(sprite.x, old_sprite.x);
+    assert_int_equal(sprite.y, old_sprite.y - sprite.pixels_to_move);
+}
+
+void
+testPhysicMoveSpriteDownMax(void **status)
+{
+    (void)status;
+    sprite_t sprite = {
+        .x = 0,
+        .width = 10,
+        .height = 10,
+        .last_update.tv_sec = 0,
+        .last_update.tv_nsec = 0,
+        .time_to_move = 0,
+        .pixels_to_move = 10,
+    };
+    sprite.y = sprite.pixels_to_move;
+    sprite.max_movement.down = 0;
+
+    checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+
+    physicMoveSprite(&sprite, DOWN);
+    assert_int_equal(sprite.y, 0);
 }
 
 void
@@ -247,6 +302,22 @@ testPhysicCheckBorderCollisionUpTrue(void **status)
         .x = 10,
         .y = 10,
         .max_movement.up = 10,
+        .max_movement.right = 20,
+        .max_movement.left = 0,
+    };
+
+    assert_true(physicCheckBorderCollision(&sprite));
+}
+
+void
+testPhysicCheckBorderCollisionDownTrue(void **status)
+{
+    (void)status;
+    sprite_t sprite = {
+        .x = 10,
+        .y = 10,
+        .max_movement.up = 20,
+        .max_movement.down = 10,
         .max_movement.right = 20,
         .max_movement.left = 0,
     };

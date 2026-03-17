@@ -76,6 +76,7 @@ ufoCreate(void)
     inst->sprite.pixels_to_move = 1;
     inst->sprite.time_to_move = 20 * NS_PER_MS;
     inst->time_to_appear = 5 * NS_PER_S;
+    graphScaleImage(&inst->sprite);
     graphCreateImage(&inst->sprite);
     inst->sprite.max_movement.right = WINDOW_WIDTH + 1;
     inst->sprite.max_movement.left = -(inst->sprite.scaled_width + 1);

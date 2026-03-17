@@ -51,11 +51,21 @@ physicMoveSprite(sprite_t *sprite, direction_t direction)
             }
             sprite->y += sprite->pixels_to_move;
             break;
+        case DOWN:
+            if (sprite->y - sprite->pixels_to_move <= sprite->max_movement.down)
+            {
+                sprite->y = sprite->max_movement.down;
+                return;
+            }
+            sprite->y -= sprite->pixels_to_move;
+            break;
         case INVALID_DIR:
         default:
+            return;
             break;
     }
 
+    graphUpdateImageToPrint(sprite);
     graphUpdateTimeSprite(sprite);
 }
 
@@ -65,8 +75,8 @@ physicCheckBorderCollision(const sprite_t *const sprite)
     if (!sprite)
         return false;
 
-    if ((sprite->y == sprite->max_movement.up) || (sprite->x == sprite->max_movement.right) ||
-        (sprite->x == sprite->max_movement.left))
+    if ((sprite->y == sprite->max_movement.up) || (sprite->y == sprite->max_movement.down) ||
+        (sprite->x == sprite->max_movement.right) || (sprite->x == sprite->max_movement.left))
         return true;
     return false;
 }

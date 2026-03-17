@@ -14,41 +14,197 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
+
+int
+setup(void **state)
+{
+    (void)state;
+    helperUT_bulletInitPool();
+    return 0;
+}
+
+int
+__wrap_rand(void)
+{
+    function_called();
+    return (int)mock();
+}
+
+static bullet_type_t bullets[] = {BULLET_SPACESHIP, BULLET_ALIEN};
 
 void
 testBulletCreate(void **status)
 {
     (void)status;
 
-    expect_function_call(__wrap_utilsCalloc);
+    for (size_t i = 0; i < sizeof(bullets) / sizeof(bullets[0]); i++)
+    {
+        if (bullets[i] != BULLET_SPACESHIP)
+        {
+            will_return(__wrap_rand, 1);
+            expect_function_call(__wrap_rand);
+        }
+
+        expect_function_call(__wrap_graphScaleImage);
+        expect_function_call(__wrap_graphCreateImage);
+        expect_function_call(__wrap_graphRegisterPrint);
+
+        bulletCreate(0, 0, bullets[i]);
+    }
+}
+
+void
+testBulletCreateAllTypeBulletAlien(void **status)
+{
+    (void)status;
+
+    /* crackle */
+    will_return(__wrap_rand, 0);
+    expect_function_call(__wrap_rand);
+
+    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphRegisterPrint);
 
-    bullet_t bullet = bulletCreate(0, 0);
-    assert_non_null(bullet);
+    bulletCreate(0, 0, BULLET_ALIEN);
+
+    /* coil */
+    will_return(__wrap_rand, 50);
+    expect_function_call(__wrap_rand);
+
+    expect_function_call(__wrap_graphScaleImage);
+    expect_function_call(__wrap_graphCreateImage);
+    expect_function_call(__wrap_graphRegisterPrint);
+
+    bulletCreate(0, 0, BULLET_ALIEN);
+
+    /* plasma */
+    will_return(__wrap_rand, 80);
+    expect_function_call(__wrap_rand);
+
+    expect_function_call(__wrap_graphScaleImage);
+    expect_function_call(__wrap_graphCreateImage);
+    expect_function_call(__wrap_graphRegisterPrint);
+
+    bulletCreate(0, 0, BULLET_ALIEN);
+}
+
+void
+testBulletCreateTwoBulletSpaceship(void **status)
+{
+    (void)status;
+
+    expect_function_call(__wrap_graphScaleImage);
+    expect_function_call(__wrap_graphCreateImage);
+    expect_function_call(__wrap_graphRegisterPrint);
+
+    bulletCreate(0, 0, BULLET_SPACESHIP);
+    bulletCreate(0, 0, BULLET_SPACESHIP);
 }
 
 void
 testBulletDestroyNullParameter(void **status)
 {
     (void)status;
-    bullet_t ptr = NULL;
 
     bulletDestroy(NULL);
-    bulletDestroy(&ptr);
 }
 
 void
 testBulletDestroy(void **status)
 {
     (void)status;
-    bullet_t bullet = (bullet_t)0xdeadbeef;
+    bullet_t bullet = helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
 
     expect_function_call(__wrap_graphGetSprite);
     expect_function_call(__wrap_graphUnregisterPrint);
     expect_function_call(__wrap_graphDestroyImage);
-    expect_uint_value(__wrap_utilsFree, ptr, (uintptr_t)&bullet);
-    expect_function_call(__wrap_utilsFree);
 
-    bulletDestroy(&bullet);
+    bulletDestroy(bullet);
+}
+
+void
+testBulletUsedNullParameter(void **status)
+{
+    (void)status;
+
+    assert_false(bulletUsed(NULL));
+}
+
+void
+testBulletUsedFalse(void **status)
+{
+    (void)status;
+    bullet_t bullet = helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
+    helperUT_bulletSetUsed(bullet, false);
+
+    assert_false(bulletUsed(bullet));
+}
+
+void
+testBulletUsedTrue(void **status)
+{
+    (void)status;
+    bullet_t bullet = helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
+
+    assert_true(bulletUsed(bullet));
+}
+
+void
+testBulletGetTypeNullParameters(void **status)
+{
+    (void)status;
+    bullet_t bullet = (bullet_t)0xdeadbeef;
+    bullet_type_t *type = (bullet_type_t *)0xdeadbeef;
+
+    assert_int_equal(-1, bulletGetType(NULL, NULL));
+    assert_int_equal(-1, bulletGetType(bullet, NULL));
+    assert_int_equal(-1, bulletGetType(NULL, type));
+}
+
+void
+testBulletGetType(void **status)
+{
+    (void)status;
+    bullet_t bullet = helperUT_bulletInjectInPool(0, BULLET_ALIEN);
+    bullet_type_t type;
+
+    assert_int_equal(0, bulletGetType(bullet, &type));
+    assert_int_equal(BULLET_ALIEN, type);
+}
+
+void
+testBulletCallFunctionForEachNullParameter(void **status)
+{
+    (void)status;
+
+    bulletCallFunctionForEach(NULL);
+}
+
+static void
+foo(bullet_t bullet)
+{
+    (void)bullet;
+    function_called();
+}
+
+void
+testBulletCallFunctionForEachBulletPoolEmpty(void **status)
+{
+    (void)status;
+
+    bulletCallFunctionForEach(foo);
+}
+
+void
+testBulletCallFunctionForEach(void **status)
+{
+    (void)status;
+
+    helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
+
+    expect_function_call(foo);
+
+    bulletCallFunctionForEach(foo);
 }

@@ -46,7 +46,10 @@ typedef struct
     int scale;
     int scaled_width;
     int scaled_height;
+    const char *image_base;
     const char *image;
+    int selected_image;
+    int num_frames;
     GLuint textureId;
     struct timespec last_update;
     long long time_to_move;
@@ -63,6 +66,9 @@ void
 graphCreateImage(sprite_t *sprite);
 
 void
+graphScaleImage(sprite_t *sprite);
+
+void
 graphDestroyImage(sprite_t *sprite);
 
 sprite_t *
@@ -70,6 +76,9 @@ graphGetSprite(base_t *b);
 
 int
 graphGetSpriteCoordinates(const sprite_t *const sprite, sprite_coordinates_t *coordinates);
+
+void
+graphUpdateImageToPrint(sprite_t *sprite);
 
 void
 graphUpdateTimeSprite(sprite_t *sprite);

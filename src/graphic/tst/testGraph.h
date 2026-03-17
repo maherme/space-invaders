@@ -17,6 +17,12 @@ void
 testGraphCreateImageSuccess(void **status);
 
 void
+testGraphScaleImageNullParameter(void **status);
+
+void
+testGraphScaleImage(void **status);
+
+void
 testGraphDestroyImageNullParameter(void **status);
 
 void
@@ -33,6 +39,15 @@ testGraphGetSpriteCoordinatesNullParameters(void **status);
 
 void
 testGraphGetSpriteCoordinates(void **status);
+
+void
+testGraphUpdateImageToPrintNullParameter(void **status);
+
+void
+testGraphUpdateImageToPrintOneFrame(void **status);
+
+void
+testGraphUpdateImageToPrintMoreOneFrame(void **status);
 
 void
 testGraphUpdateTimeSpriteNullParameter(void **status);
