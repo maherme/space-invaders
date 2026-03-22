@@ -12,6 +12,7 @@
 #include "graphGlutCallbacks.h"
 #include "physic.h"
 #include "utils.h"
+#include <stdbool.h>
 
 #define UFO_WIDTH 16
 #define UFO_HEIGHT 8
@@ -21,7 +22,10 @@ struct ufo_instance_t
     sprite_t sprite;
     direction_t direction;
     long long time_to_appear;
+    bool alive;
 };
+
+static struct ufo_instance_t ufo;
 
 static const char ufoImage[UFO_HEIGHT][UFO_WIDTH][NUM_RGBA_CHANNELS] = {
     {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
@@ -67,7 +71,7 @@ calculateStartingCoord(ufo_t ufo)
 ufo_t
 ufoCreate(void)
 {
-    ufo_t inst = utilsCalloc(1, sizeof(struct ufo_instance_t));
+    ufo_t inst = &ufo;
     calculateDirection(inst);
     calculateStartingCoord(inst);
     inst->sprite.width = UFO_WIDTH;
@@ -82,22 +86,29 @@ ufoCreate(void)
     inst->sprite.max_movement.left = -(inst->sprite.scaled_width + 1);
     graphUpdateTimeSprite(&inst->sprite);
     graphRegisterPrint(&inst->sprite);
+    inst->alive = true;
 
     return inst;
 }
 
 void
-ufoDestroy(ufo_t *ufo)
+ufoDestroy(ufo_t ufo)
 {
-    if (!ufo || !*ufo)
+    if (!ufo)
     {
         return;
     }
 
-    sprite_t *ufo_sprite = graphGetSprite((base_t *)*ufo);
+    sprite_t *ufo_sprite = graphGetSprite((base_t *)ufo);
     graphUnregisterPrint(ufo_sprite);
     graphDestroyImage(ufo_sprite);
-    utilsFree((void **)ufo);
+    ufo->alive = false;
+}
+
+bool
+ufoAlive(ufo_t ufo)
+{
+    return ufo && ufo->alive;
 }
 
 direction_t
@@ -113,7 +124,7 @@ ufoGetDirection(const ufo_t ufo)
 bool
 ufoCheckForMoving(ufo_t ufo)
 {
-    if (!ufo)
+    if (!ufo || !ufo->alive)
     {
         return false;
     }
@@ -134,3 +145,29 @@ ufoCheckForMoving(ufo_t ufo)
 
     return true;
 }
+
+#ifdef UNIT_TESTING
+#include <string.h>
+
+ufo_t
+helperUT_ufoGetInstance(void)
+{
+    ufo_t inst = &ufo;
+    memset(inst, 0, sizeof(*inst));
+
+    inst->alive = true;
+
+    return inst;
+}
+
+void
+helperUT_ufoSetAlive(ufo_t ufo, bool alive)
+{
+    ufo->alive = alive;
+}
+void
+helperUT_ufoSetTimeToAppear(ufo_t ufo, long long time)
+{
+    ufo->time_to_appear = time;
+}
+#endif /* UNIT_TESTING */

@@ -20,6 +20,8 @@ struct spaceship_instance_t
     sprite_t sprite;
 };
 
+static struct spaceship_instance_t spaceship;
+
 static const char spaceshipImage[SPACESHIP_HEIGHT][SPACESHIP_WIDTH][NUM_RGBA_CHANNELS] = {
     {B, B, B, B, B, B, G, B, B, B, B, B, B},
     {B, B, B, B, B, G, G, G, B, B, B, B, B},
@@ -34,7 +36,7 @@ static const char spaceshipImage[SPACESHIP_HEIGHT][SPACESHIP_WIDTH][NUM_RGBA_CHA
 spaceship_t
 spaceshipCreate(int x, int y)
 {
-    spaceship_t inst = utilsCalloc(1, sizeof(struct spaceship_instance_t));
+    spaceship_t inst = &spaceship;
     inst->sprite.x = x;
     inst->sprite.y = y;
     inst->sprite.width = SPACESHIP_WIDTH;
