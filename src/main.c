@@ -156,14 +156,14 @@ checkCollisionBulletUfoSingle(bullet_t bullet)
     {
         bulletDestroy(bullet);
         explosionCreate(ufo_sprite->x + ufo_sprite->width / 2, ufo_sprite->y, EXPLOSION_UFO);
-        ufoDestroy(&ufo);
+        ufoDestroy(ufo);
     }
 }
 
 static void
 ufoActions(void)
 {
-    if (!ufo)
+    if (!ufoAlive(ufo))
     {
         ufo = ufoCreate();
         return;
@@ -177,7 +177,7 @@ ufoActions(void)
         }
         if (physicCheckBorderCollision(ufo_sprite))
         {
-            ufoDestroy(&ufo);
+            ufoDestroy(ufo);
         }
 
         bulletCallFunctionForEach(checkCollisionBulletUfoSingle);

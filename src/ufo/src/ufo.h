@@ -19,11 +19,26 @@ ufo_t
 ufoCreate(void);
 
 void
-ufoDestroy(ufo_t *this);
+ufoDestroy(ufo_t ufo);
+
+bool
+ufoAlive(ufo_t ufo);
 
 direction_t
-ufoGetDirection(const ufo_t this);
+ufoGetDirection(const ufo_t ufo);
 
-bool ufoCheckForMoving(ufo_t this);
+bool
+ufoCheckForMoving(ufo_t ufo);
+
+#ifdef UNIT_TESTING
+ufo_t
+helperUT_ufoGetInstance(void);
+
+void
+helperUT_ufoSetAlive(ufo_t ufo, bool alive);
+
+void
+helperUT_ufoSetTimeToAppear(ufo_t ufo, long long time);
+#endif /* UNIT_TESTING */
 
 #endif /* __UFO_H__ */

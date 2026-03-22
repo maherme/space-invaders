@@ -23,13 +23,25 @@ void
 testUfoDestroy(void **status);
 
 void
+testUfoAliveNullParameter(void **status);
+
+void
+testUfoAliveFalse(void **status);
+
+void
+testUfoAliveTrue(void **status);
+
+void
 testUfoGetDirectionNullParameter(void **status);
 
 void
 testUfoCheckForMovingNullParameter(void **status);
 
 void
-testUfoCheckForMovingFalse(void **status);
+testUfoCheckForMovingAliveFalse(void **status);
+
+void
+testUfoCheckForMovingTimeoutFalse(void **status);
 
 void
 testUfoCheckForMovingTrue(void **status);
