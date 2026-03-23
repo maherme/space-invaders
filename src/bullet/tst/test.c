@@ -31,6 +31,9 @@ main(void)
         cmocka_unit_test_setup(testBulletCallFunctionForEachNullParameter, setup),
         cmocka_unit_test_setup(testBulletCallFunctionForEachBulletPoolEmpty, setup),
         cmocka_unit_test_setup(testBulletCallFunctionForEach, setup),
+        cmocka_unit_test_setup(testBulletAlienInhibit, setup),
+        cmocka_unit_test_setup(testBulletNoneUsedTrue, setup),
+        cmocka_unit_test_setup(testBulletNoneUsedFalse, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

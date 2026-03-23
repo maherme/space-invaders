@@ -36,11 +36,8 @@ __wrap_clock_gettime(clockid_t clockid, struct timespec *tp)
 }
 
 static void
-registerExplosionBullet(void)
+registerExplosionBullet(void (*callback)(void))
 {
-    int x_pos = 10;
-    int y_pos = 20;
-
     expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_graphScaleImage);
@@ -50,22 +47,45 @@ registerExplosionBullet(void)
     expect_function_call(__wrap_clock_gettime);
     expect_function_call(__wrap_graphRegisterPrint);
 
-    explosionCreate(x_pos, y_pos, EXPLOSION_BULLET_SPACESHIP);
+    explosionCreate(0, 0, EXPLOSION_BULLET_SPACESHIP, callback);
 }
 
-static explosion_type_t explosions[] = {EXPLOSION_BULLET_SPACESHIP, EXPLOSION_BULLET_ALIEN, EXPLOSION_UFO, EXPLOSION_ALIEN};
+static void
+registerExplosionSpaceship(void (*callback)(void))
+{
+    expect_function_call(__wrap_utilsCalloc);
+    expect_function_call(__wrap_utilsCalloc);
+    will_return(__wrap_clock_gettime, 0); /* tv_sec */
+    will_return(__wrap_clock_gettime, 0); /* tv_nsec */
+    expect_function_call(__wrap_clock_gettime);
+    expect_function_call(__wrap_graphScaleImage);
+    expect_function_call(__wrap_graphCreateImage);
+    will_return(__wrap_clock_gettime, 0); /* tv_sec */
+    will_return(__wrap_clock_gettime, 0); /* tv_nsec */
+    expect_function_call(__wrap_clock_gettime);
+    expect_function_call(__wrap_graphRegisterPrint);
+
+    explosionCreate(0, 0, EXPLOSION_SPACESHIP, callback);
+}
+
+static explosion_type_t explosions[] = {
+    EXPLOSION_BULLET_SPACESHIP, EXPLOSION_BULLET_ALIEN, EXPLOSION_SPACESHIP, EXPLOSION_UFO, EXPLOSION_ALIEN};
 
 void
 testExplosionCreate(void **status)
 {
     (void)status;
-    int x_pos = 10;
-    int y_pos = 20;
 
     for (size_t i = 0; i < sizeof(explosions) / sizeof(explosions[0]); i++)
     {
         expect_function_call(__wrap_utilsCalloc);
         expect_function_call(__wrap_utilsCalloc);
+        if (i == EXPLOSION_SPACESHIP)
+        {
+            will_return(__wrap_clock_gettime, 0); /* tv_sec */
+            will_return(__wrap_clock_gettime, 0); /* tv_nsec */
+            expect_function_call(__wrap_clock_gettime);
+        }
         expect_function_call(__wrap_graphScaleImage);
         expect_function_call(__wrap_graphCreateImage);
         will_return(__wrap_clock_gettime, 0); /* tv_sec */
@@ -73,7 +93,7 @@ testExplosionCreate(void **status)
         expect_function_call(__wrap_clock_gettime);
         expect_function_call(__wrap_graphRegisterPrint);
 
-        explosionCreate(x_pos, y_pos, explosions[i]);
+        explosionCreate(0, 0, explosions[i], NULL);
     }
 }
 
@@ -89,7 +109,7 @@ void
 testExplosionsDestroyTimeoutFalse(void **status)
 {
     (void)status;
-    registerExplosionBullet();
+    registerExplosionBullet(NULL);
 
     will_return(__wrap_utilsCheckTimeout, false);
     expect_function_call(__wrap_utilsCheckTimeout);
@@ -100,12 +120,37 @@ void
 testExplosionsDestroyTimeoutTrue(void **status)
 {
     (void)status;
-    registerExplosionBullet();
+    registerExplosionBullet(NULL);
 
     will_return(__wrap_utilsCheckTimeout, true);
     expect_function_call(__wrap_utilsCheckTimeout);
     expect_function_call(__wrap_graphUnregisterPrint);
     expect_function_call(__wrap_graphDestroyImage);
+    /* free explosion */
+    expect_function_call(__wrap_utilsFree);
+    /* free node in list */
+    expect_function_call(__wrap_utilsFree);
+
+    explosionsDestroy();
+}
+
+static void
+foo(void)
+{
+    function_called();
+}
+
+void
+testExplosionsDestroyTimeoutCallback(void **status)
+{
+    (void)status;
+    registerExplosionBullet(foo);
+
+    will_return(__wrap_utilsCheckTimeout, true);
+    expect_function_call(__wrap_utilsCheckTimeout);
+    expect_function_call(__wrap_graphUnregisterPrint);
+    expect_function_call(__wrap_graphDestroyImage);
+    expect_function_call(foo);
     /* free explosion */
     expect_function_call(__wrap_utilsFree);
     /* free node in list */
@@ -122,7 +167,7 @@ testExplosionsDestroyTwoExplosions(void **status)
 
     for (int i = 0; i < number_explosions; i++)
     {
-        registerExplosionBullet();
+        registerExplosionBullet(NULL);
     }
 
     /* first registered explosion */
@@ -140,4 +185,57 @@ testExplosionsDestroyTwoExplosions(void **status)
     expect_function_call(__wrap_utilsFree);
 
     explosionsDestroy();
+}
+
+void
+testExplosionDestroyMoreOneFrame(void **status)
+{
+    (void)status;
+
+    /* Only EXPLOSION_SPACESHIP has more than one frame */
+    registerExplosionSpaceship(NULL);
+
+    will_return(__wrap_utilsCheckTimeout, true);
+    expect_function_call(__wrap_utilsCheckTimeout);
+    expect_function_call(__wrap_graphUpdateImageToPrint);
+    will_return(__wrap_clock_gettime, 0); /* tv_sec */
+    will_return(__wrap_clock_gettime, 0); /* tv_nsec */
+    expect_function_call(__wrap_clock_gettime);
+    will_return(__wrap_utilsCheckTimeout, false);
+    expect_function_call(__wrap_utilsCheckTimeout);
+
+    explosionsDestroy();
+}
+
+void
+testExplosionDestroyMoreOneFrameTimeoutFalse(void **status)
+{
+    (void)status;
+
+    /* Only EXPLOSION_SPACESHIP has more than one frame */
+    registerExplosionSpaceship(NULL);
+
+    will_return(__wrap_utilsCheckTimeout, false);
+    expect_function_call(__wrap_utilsCheckTimeout);
+    will_return(__wrap_utilsCheckTimeout, false);
+    expect_function_call(__wrap_utilsCheckTimeout);
+
+    explosionsDestroy();
+}
+
+void
+testExplosionAllFinishedTrue(void **status)
+{
+    (void)status;
+
+    assert_true(explosionsAllFinished());
+}
+
+void
+testExplosionAllFinishedFalse(void **status)
+{
+    (void)status;
+
+    registerExplosionBullet(NULL);
+    assert_false(explosionsAllFinished());
 }

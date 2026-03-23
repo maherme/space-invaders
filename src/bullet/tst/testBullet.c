@@ -208,3 +208,31 @@ testBulletCallFunctionForEach(void **status)
 
     bulletCallFunctionForEach(foo);
 }
+
+void
+testBulletAlienInhibit(void **status)
+{
+    (void)status;
+
+    bulletAlienInhibit(true);
+    bulletCreate(0, 0, BULLET_ALIEN);
+    assert_true(bulletNoneUsed());
+}
+
+void
+testBulletNoneUsedTrue(void **status)
+{
+    (void)status;
+
+    assert_true(bulletNoneUsed());
+}
+
+void
+testBulletNoneUsedFalse(void **status)
+{
+    (void)status;
+
+    helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
+
+    assert_false(bulletNoneUsed());
+}

@@ -52,4 +52,13 @@ testBulletCallFunctionForEachBulletPoolEmpty(void **status);
 void
 testBulletCallFunctionForEach(void **status);
 
+void
+testBulletAlienInhibit(void **status);
+
+void
+testBulletNoneUsedTrue(void **status);
+
+void
+testBulletNoneUsedFalse(void **status);
+
 #endif

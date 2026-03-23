@@ -26,6 +26,21 @@ void
 testExplosionsDestroyTimeoutTrue(void **status);
 
 void
+testExplosionsDestroyTimeoutCallback(void **status);
+
+void
 testExplosionsDestroyTwoExplosions(void **status);
+
+void
+testExplosionDestroyMoreOneFrame(void **status);
+
+void
+testExplosionDestroyMoreOneFrameTimeoutFalse(void **status);
+
+void
+testExplosionAllFinishedTrue(void **status);
+
+void
+testExplosionAllFinishedFalse(void **status);
 
 #endif

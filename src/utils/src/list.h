@@ -74,6 +74,9 @@ list_del(struct list_head *entry)
 }
 
 /* clang-format off */
+#define list_empty(head) \
+    ((head)->next == (head))
+
 #define list_entry(ptr, type, member) \
     container_of(ptr, type, member)
 

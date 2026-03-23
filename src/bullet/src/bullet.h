@@ -38,6 +38,12 @@ bulletCallFunctionForEach(void (*fn)(bullet_t));
 void
 bulletDestroy(bullet_t bullet);
 
+void
+bulletAlienInhibit(bool inhibit);
+
+bool
+bulletNoneUsed(void);
+
 #ifdef UNIT_TESTING
 #include <string.h>
 

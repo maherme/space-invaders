@@ -11,6 +11,7 @@
 #include "graph.h"
 #include "graphGlutCallbacks.h"
 #include "utils.h"
+#include <stdbool.h>
 
 #define SPACESHIP_WIDTH 13
 #define SPACESHIP_HEIGHT 8
@@ -18,6 +19,7 @@
 struct spaceship_instance_t
 {
     sprite_t sprite;
+    bool alive;
 };
 
 static struct spaceship_instance_t spaceship;
@@ -49,6 +51,48 @@ spaceshipCreate(int x, int y)
     inst->sprite.max_movement.right = WINDOW_WIDTH - inst->sprite.scaled_width;
     inst->sprite.max_movement.left = 0;
     graphRegisterPrint(&inst->sprite);
+    inst->alive = true;
 
     return inst;
 }
+
+void
+spaceshipDestroy(spaceship_t spaceship)
+{
+    if (!spaceship)
+    {
+        return;
+    }
+
+    sprite_t *spaceship_sprite = graphGetSprite((base_t *)spaceship);
+    graphUnregisterPrint(spaceship_sprite);
+    graphDestroyImage(spaceship_sprite);
+    spaceship->alive = false;
+}
+
+bool
+spaceshipAlive(spaceship_t spaceship)
+{
+    return (spaceship && spaceship->alive);
+}
+
+#ifdef UNIT_TESTING
+#include <string.h>
+
+spaceship_t
+helperUT_spaceshipGetInstance(void)
+{
+    spaceship_t inst = &spaceship;
+    memset(inst, 0, sizeof(*inst));
+
+    inst->alive = true;
+
+    return inst;
+}
+
+void
+helperUT_spaceshipSetAlive(spaceship_t spaceship, bool alive)
+{
+    spaceship->alive = alive;
+}
+#endif /* UNIT_TESTING */

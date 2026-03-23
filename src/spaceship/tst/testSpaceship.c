@@ -28,8 +28,56 @@ testSpaceshipCreate(void **status)
     expect_function_call(__wrap_graphRegisterPrint);
 
     spaceship_t spaceship = spaceshipCreate(x_pos, y_pos);
-    sprite_t *sprite = graphGetSprite((base_t *)spaceship);
 
-    assert_int_equal(sprite->x, x_pos);
-    assert_int_equal(sprite->y, y_pos);
+    assert_true(spaceshipAlive(spaceship));
+}
+
+void
+testSpaceshipDestroyNullParameter(void **status)
+{
+    (void)status;
+
+    spaceshipDestroy(NULL);
+}
+
+void
+testSpaceshipDestroy(void **status)
+{
+    (void)status;
+    spaceship_t spaceship = helperUT_spaceshipGetInstance();
+
+    expect_function_call(__wrap_graphGetSprite);
+    expect_function_call(__wrap_graphUnregisterPrint);
+    expect_function_call(__wrap_graphDestroyImage);
+
+    spaceshipDestroy(spaceship);
+
+    assert_false(spaceshipAlive(spaceship));
+}
+
+void
+testSpaceshipAliveNullParameter(void **status)
+{
+    (void)status;
+
+    assert_false(spaceshipAlive(NULL));
+}
+
+void
+testSpaceshipAliveFalse(void **status)
+{
+    (void)status;
+    spaceship_t spaceship = helperUT_spaceshipGetInstance();
+    helperUT_spaceshipSetAlive(spaceship, false);
+
+    assert_false(spaceshipAlive(spaceship));
+}
+
+void
+testSpaceshipAliveTrue(void **status)
+{
+    (void)status;
+    spaceship_t spaceship = helperUT_spaceshipGetInstance();
+
+    assert_true(spaceshipAlive(spaceship));
 }

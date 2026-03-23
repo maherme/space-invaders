@@ -25,17 +25,15 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include <stdio.h>
-
 bool gaming = true;
 spaceship_t spaceship = NULL;
 ufo_t ufo = NULL;
-struct timespec creation_time = {0};
+struct timespec timer = {0};
 
 static void
 bulletActionsSingle(bullet_t bullet)
 {
-    if (!bullet)
+    if (!bulletUsed(bullet))
     {
         return;
     }
@@ -47,11 +45,11 @@ bulletActionsSingle(bullet_t bullet)
     {
         if (type == BULLET_SPACESHIP)
         {
-            explosionCreate(bullet_sprite->x, bullet_sprite->y - bullet_sprite->scaled_height, EXPLOSION_BULLET_SPACESHIP);
+            explosionCreate(bullet_sprite->x, bullet_sprite->y - bullet_sprite->scaled_height, EXPLOSION_BULLET_SPACESHIP, NULL);
         }
         else
         {
-            explosionCreate(bullet_sprite->x, bullet_sprite->y, EXPLOSION_BULLET_ALIEN);
+            explosionCreate(bullet_sprite->x, bullet_sprite->y, EXPLOSION_BULLET_ALIEN, NULL);
         }
         bulletDestroy(bullet);
     }
@@ -69,14 +67,63 @@ bulletActionsSingle(bullet_t bullet)
 }
 
 static void
+spaceshipCreateAfterDie(void)
+{
+    if (bulletNoneUsed() && explosionsAllFinished())
+    {
+        spaceship = spaceshipCreate(WINDOW_WIDTH / 2, 0);
+        bulletAlienInhibit(false);
+        engineUnregister(spaceshipCreateAfterDie);
+    }
+}
+
+static void
+spaceshipExplosionCallback(void)
+{
+    engineRegister(spaceshipCreateAfterDie);
+}
+
+static void
+checkCollisionBulletSpaceship(bullet_t bullet)
+{
+    bullet_type_t type;
+    bulletGetType(bullet, &type);
+
+    if (!bulletUsed(bullet) || !spaceshipAlive(spaceship) || type != BULLET_ALIEN)
+    {
+        return;
+    }
+
+    sprite_t *spaceship_sprite = graphGetSprite((base_t *)spaceship);
+    sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
+
+    if (physicCheckSpritesPixelCollision(spaceship_sprite, bullet_sprite))
+    {
+        bulletAlienInhibit(true);
+        bulletDestroy(bullet);
+        explosionCreate(spaceship_sprite->x + spaceship_sprite->width / 2,
+                        spaceship_sprite->y,
+                        EXPLOSION_SPACESHIP,
+                        spaceshipExplosionCallback);
+        spaceshipDestroy(spaceship);
+    }
+}
+
+static void
 bulletActions(void)
 {
     bulletCallFunctionForEach(bulletActionsSingle);
+    bulletCallFunctionForEach(checkCollisionBulletSpaceship);
 }
 
 static void
 spaceshipFire(void)
 {
+    if (!spaceshipAlive(spaceship))
+    {
+        return;
+    }
+
     sprite_t *spaceship_sprite = graphGetSprite((base_t *)spaceship);
     bulletCreate(spaceship_sprite->x + spaceship_sprite->scaled_width / 2,
                  spaceship_sprite->y + spaceship_sprite->scaled_height,
@@ -89,7 +136,7 @@ checkCollisionsBulletAlienSingle(bullet_t bullet)
     bullet_type_t type;
     bulletGetType(bullet, &type);
 
-    if (!bullet || type != BULLET_SPACESHIP)
+    if (!bulletUsed(bullet) || type != BULLET_SPACESHIP)
     {
         return;
     }
@@ -107,10 +154,10 @@ checkCollisionsBulletAlienSingle(bullet_t bullet)
 
         sprite_t *alien_sprite = graphGetSprite((base_t *)alien);
 
-        if (physicCheckSpritesBoxCollision(alien_sprite, bullet_sprite))
+        if (physicCheckSpritesPixelCollision(alien_sprite, bullet_sprite))
         {
             bulletDestroy(bullet);
-            explosionCreate(alien_sprite->x + alien_sprite->width / 2, alien_sprite->y, EXPLOSION_ALIEN);
+            explosionCreate(alien_sprite->x + alien_sprite->width / 2, alien_sprite->y, EXPLOSION_ALIEN, NULL);
             alienDestroy(alien);
             return;
         }
@@ -126,14 +173,14 @@ checkCollisionsAliensBullet(void)
 static void
 aliensActions(void)
 {
-    if (utilsCheckTimeout(creation_time, 500 * NS_PER_MS))
+    if (utilsCheckTimeout(timer, 500 * NS_PER_MS))
     {
         alien_t alien = aliensGetShooter();
         if (alien)
         {
             sprite_t *alien_sprite = graphGetSprite((base_t *)alien);
             bulletCreate(alien_sprite->x + alien_sprite->scaled_width / 2, alien_sprite->y, BULLET_ALIEN);
-            clock_gettime(CLOCK_MONOTONIC, &creation_time);
+            clock_gettime(CLOCK_MONOTONIC, &timer);
         }
     }
 }
@@ -144,7 +191,7 @@ checkCollisionBulletUfoSingle(bullet_t bullet)
     bullet_type_t type;
     bulletGetType(bullet, &type);
 
-    if (!bullet || type != BULLET_SPACESHIP)
+    if (!bulletUsed(bullet) || type != BULLET_SPACESHIP)
     {
         return;
     }
@@ -152,10 +199,10 @@ checkCollisionBulletUfoSingle(bullet_t bullet)
     sprite_t *ufo_sprite = graphGetSprite((base_t *)ufo);
     sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
 
-    if (physicCheckSpritesBoxCollision(ufo_sprite, bullet_sprite))
+    if (physicCheckSpritesPixelCollision(ufo_sprite, bullet_sprite))
     {
         bulletDestroy(bullet);
-        explosionCreate(ufo_sprite->x + ufo_sprite->width / 2, ufo_sprite->y, EXPLOSION_UFO);
+        explosionCreate(ufo_sprite->x + ufo_sprite->width / 2, ufo_sprite->y, EXPLOSION_UFO, NULL);
         ufoDestroy(ufo);
     }
 }
@@ -228,7 +275,7 @@ main(int argc, char **argv)
     engineRegister(aliensActions);
     engineRegister(bulletActions);
 
-    clock_gettime(CLOCK_MONOTONIC, &creation_time);
+    clock_gettime(CLOCK_MONOTONIC, &timer);
 
     while (gaming)
     {

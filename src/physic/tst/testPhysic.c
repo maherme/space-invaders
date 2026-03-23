@@ -389,6 +389,127 @@ testPhysicCheckSpriteBoxCollisionFalse(void **status)
     sprite_t sprite1 = {0};
     sprite_t sprite2 = {0};
 
+    /* sprites separate in x axi (right and left) */
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)20); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)30); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    assert_false(physicCheckSpritesBoxCollision(&sprite1, &sprite2));
+
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)20); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)30); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    assert_false(physicCheckSpritesBoxCollision(&sprite1, &sprite2));
+
+    /* sprites separate in y axi above and below */
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)20); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)30); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    assert_false(physicCheckSpritesBoxCollision(&sprite1, &sprite2));
+
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)20); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)30); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    assert_false(physicCheckSpritesBoxCollision(&sprite1, &sprite2));
+
+    /* sprites separate in x and y axi */
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)20); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)30); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)20); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)30); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    assert_false(physicCheckSpritesBoxCollision(&sprite1, &sprite2));
+}
+
+void
+testPhysicCheckSpriteBoxCollisionTrue(void **status)
+{
+    (void)status;
+    sprite_t sprite1 = {0};
+    sprite_t sprite2 = {0};
+
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)10); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)5);  // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)15); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)5);  // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)15); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    assert_true(physicCheckSpritesBoxCollision(&sprite1, &sprite2));
+}
+
+void
+testPhysicCheckSpritePixelCollisionNullParameters(void **status)
+{
+    (void)status;
+    sprite_t sprite1 = {0};
+    sprite_t sprite2 = {0};
+
+    assert_false(physicCheckSpritesPixelCollision(&sprite1, NULL));
+    assert_false(physicCheckSpritesPixelCollision(NULL, &sprite2));
+    assert_false(physicCheckSpritesPixelCollision(NULL, NULL));
+}
+
+void
+testPhysicCheckSpritePixelCollisionCheckBoxesFalse(void **status)
+{
+    (void)status;
+    sprite_t sprite1 = {0};
+    sprite_t sprite2 = {0};
+
     expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
     will_return(__wrap_graphGetSpriteCoordinates, (int)0); // x1
     will_return(__wrap_graphGetSpriteCoordinates, (int)1); // x2
@@ -401,5 +522,135 @@ testPhysicCheckSpriteBoxCollisionFalse(void **status)
     will_return(__wrap_graphGetSpriteCoordinates, (int)0); // y1
     will_return(__wrap_graphGetSpriteCoordinates, (int)1); // y2
     expect_function_call(__wrap_graphGetSpriteCoordinates);
-    assert_false(physicCheckSpritesBoxCollision(&sprite1, &sprite2));
+
+    assert_false(physicCheckSpritesPixelCollision(&sprite1, &sprite2));
+}
+
+void
+testPhysicCheckSpritePixelCollisionFalseCheckBoxesTrue(void **status)
+{
+    (void)status;
+    const char image1[2][2][NUM_RGBA_CHANNELS] = {
+        {B, B},
+        {W, B},
+    };
+    sprite_t sprite1 = {
+        .image = (const char *)image1,
+        .scale = 2,
+        .width = 2,
+        .height = 2,
+    };
+    const char image2[4][4][NUM_RGBA_CHANNELS] = {
+        {B, B, B, B},
+        {B, B, W, B},
+        {B, B, B, B},
+        {B, B, B, B},
+    };
+    sprite_t sprite2 = {
+        .image = (const char *)image2,
+        .scale = 2,
+        .width = 4,
+        .height = 4,
+    };
+
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)6); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)6); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)8); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)8); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    assert_false(physicCheckSpritesPixelCollision(&sprite1, &sprite2));
+}
+
+void
+testPhysicCheckSpritePixelCollisionJustBoder(void **status)
+{
+    (void)status;
+    const char image1[2][2][NUM_RGBA_CHANNELS] = {
+        {B, B},
+        {W, B},
+    };
+    sprite_t sprite1 = {
+        .image = (const char *)image1,
+        .scale = 2,
+        .width = 2,
+        .height = 2,
+    };
+    const char image2[4][4][NUM_RGBA_CHANNELS] = {
+        {B, B, B, B},
+        {B, B, W, B},
+        {B, B, B, B},
+        {B, B, B, B},
+    };
+    sprite_t sprite2 = {
+        .image = (const char *)image2,
+        .scale = 2,
+        .width = 4,
+        .height = 4,
+    };
+
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)4); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)4); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)4);  // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)12); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0);  // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)8);  // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    assert_false(physicCheckSpritesPixelCollision(&sprite1, &sprite2));
+}
+
+void
+testPhysicCheckSpritePixelCollisionTrueCheckBoxesTrue(void **status)
+{
+    (void)status;
+    const char image1[2][2][NUM_RGBA_CHANNELS] = {
+        {W, B},
+        {B, B},
+    };
+    sprite_t sprite1 = {
+        .image = (const char *)image1,
+        .scale = 2,
+        .width = 2,
+        .height = 2,
+    };
+    const char image2[4][4][NUM_RGBA_CHANNELS] = {
+        {B, B, B, B},
+        {B, W, B, B},
+        {B, B, B, B},
+        {B, B, B, B},
+    };
+    sprite_t sprite2 = {
+        .image = (const char *)image2,
+        .scale = 2,
+        .width = 4,
+        .height = 4,
+    };
+
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)6); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)6); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)8); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)8); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    assert_true(physicCheckSpritesPixelCollision(&sprite1, &sprite2));
 }
