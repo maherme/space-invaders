@@ -19,6 +19,9 @@
 #define EXPLOSION_BULLET_SPACESHIP_HEIGHT 8
 #define EXPLOSION_BULLET_ALIEN_WIDTH 6
 #define EXPLOSION_BULLET_ALIEN_HEIGHT 8
+#define EXPLOSION_SPACESHIP_WIDTH 16
+#define EXPLOSION_SPACESHIP_HEIGHT 8
+#define EXPLOSION_SPACESHIP_NUM_FRAMES 2
 #define EXPLOSION_UFO_WIDTH 24
 #define EXPLOSION_UFO_HEIGHT 8
 #define EXPLOSION_ALIEN_NUM_IMGS 4
@@ -30,7 +33,10 @@ typedef struct explosion
     sprite_t sprite;
     struct timespec creation_time;
     long long explosion_time;
+    struct timespec update_frame_timer;
+    long long update_frame_time;
     explosion_type_t type;
+    void (*callback)(void);
 } explosion_t;
 
 typedef struct explosion_node
@@ -76,6 +82,37 @@ static const struct
                             .image_width = EXPLOSION_BULLET_ALIEN_WIDTH,
                             .image_height = EXPLOSION_BULLET_ALIEN_HEIGHT,
                             .explosion_time = 500 * NS_PER_MS};
+
+static const struct
+{
+    const char image[EXPLOSION_SPACESHIP_NUM_FRAMES][EXPLOSION_SPACESHIP_HEIGHT][EXPLOSION_SPACESHIP_WIDTH][NUM_RGBA_CHANNELS];
+    const int image_width;
+    const int image_height;
+    const long long explosion_time;
+    const long long update_frame_time;
+} explosion_spaceship = {.image =
+                             {/* frame 1 */
+                              {{B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+                               {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+                               {B, B, B, G, B, B, B, B, B, B, G, B, B, B, B, B},
+                               {B, B, B, G, B, G, B, B, B, G, G, B, G, B, B, B},
+                               {B, B, G, B, G, B, G, B, B, B, B, G, B, G, B, B},
+                               {B, B, B, G, B, G, G, B, B, G, B, G, G, B, B, B},
+                               {B, B, B, G, G, B, B, B, B, B, B, G, G, B, B, B},
+                               {B, B, G, G, G, G, B, B, B, B, G, G, G, G, B, B}},
+                              /* frame 2 */
+                              {{G, B, B, G, B, B, G, B, B, G, B, B, G, B, B, G},
+                               {B, B, G, B, G, B, B, B, B, G, B, G, B, B, G, B},
+                               {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+                               {B, B, B, B, B, B, G, B, B, G, B, B, G, B, B, B},
+                               {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+                               {B, B, B, G, B, B, B, B, B, B, B, G, B, B, B, B},
+                               {B, B, B, G, G, B, B, B, B, B, B, G, G, B, B, B},
+                               {B, B, G, G, G, G, B, B, B, B, G, G, G, G, B, B}}},
+                         .image_width = EXPLOSION_SPACESHIP_WIDTH,
+                         .image_height = EXPLOSION_SPACESHIP_HEIGHT,
+                         .explosion_time = 2000 * NS_PER_MS,
+                         .update_frame_time = 125 * NS_PER_MS};
 
 static const struct
 {
@@ -153,25 +190,35 @@ setExplosionType(explosion_t *instance, explosion_type_t type)
         case EXPLOSION_BULLET_SPACESHIP:
             instance->sprite.width = explosion_bullet_spaceship.image_width;
             instance->sprite.height = explosion_bullet_spaceship.image_height;
-            instance->sprite.image = (char *)explosion_bullet_spaceship.image;
+            instance->sprite.image = (const char *)explosion_bullet_spaceship.image;
             instance->explosion_time = explosion_bullet_spaceship.explosion_time;
             break;
         case EXPLOSION_BULLET_ALIEN:
             instance->sprite.width = explosion_bullet_alien.image_width;
             instance->sprite.height = explosion_bullet_alien.image_height;
-            instance->sprite.image = (char *)explosion_bullet_alien.image;
+            instance->sprite.image = (const char *)explosion_bullet_alien.image;
             instance->explosion_time = explosion_bullet_alien.explosion_time;
             break;
         case EXPLOSION_UFO:
             instance->sprite.width = explosion_ufo.image_width;
             instance->sprite.height = explosion_ufo.image_height;
-            instance->sprite.image = (char *)explosion_ufo.image;
+            instance->sprite.image = (const char *)explosion_ufo.image;
             instance->explosion_time = explosion_ufo.explosion_time;
+            break;
+        case EXPLOSION_SPACESHIP:
+            instance->sprite.width = explosion_spaceship.image_width;
+            instance->sprite.height = explosion_spaceship.image_height;
+            instance->sprite.image_base = (const char *)explosion_spaceship.image;
+            instance->sprite.image = instance->sprite.image_base;
+            instance->sprite.num_frames = EXPLOSION_SPACESHIP_NUM_FRAMES;
+            instance->explosion_time = explosion_spaceship.explosion_time;
+            instance->update_frame_time = explosion_spaceship.update_frame_time;
+            clock_gettime(CLOCK_MONOTONIC, &instance->update_frame_timer);
             break;
         case EXPLOSION_ALIEN:
             instance->sprite.width = explosion_alien.image_width;
             instance->sprite.height = explosion_alien.image_height;
-            instance->sprite.image = (char *)explosion_alien.image[explosion_alien_next];
+            instance->sprite.image = (const char *)explosion_alien.image[explosion_alien_next];
             explosion_alien_next = (explosion_alien_next + 1) % EXPLOSION_ALIEN_NUM_IMGS;
             instance->explosion_time = explosion_alien.explosion_time;
             break;
@@ -185,7 +232,7 @@ setExplosionType(explosion_t *instance, explosion_type_t type)
 }
 
 void
-explosionCreate(int x, int y, explosion_type_t type)
+explosionCreate(int x, int y, explosion_type_t type, void (*callback)(void))
 {
     explosion_node_t *new_node = utilsCalloc(1, sizeof(explosion_node_t));
     explosion_t *new_explosion = utilsCalloc(1, sizeof(explosion_t));
@@ -198,25 +245,42 @@ explosionCreate(int x, int y, explosion_type_t type)
     graphCreateImage(&new_explosion->sprite);
     clock_gettime(CLOCK_MONOTONIC, &new_explosion->creation_time);
     graphRegisterPrint(graphGetSprite((base_t *)new_explosion));
+    new_explosion->callback = callback;
     new_node->explosion = new_explosion;
     list_add(&new_node->node, &explosions);
 }
 
 static bool
-explosionTimeout(explosion_t *this)
+explosionTimeout(explosion_t *explosion)
 {
-    assert(this); /* GCOVR_EXCL_LINE */
+    assert(explosion); /* GCOVR_EXCL_LINE */
 
-    if (utilsCheckTimeout(this->creation_time, this->explosion_time))
+    if (utilsCheckTimeout(explosion->creation_time, explosion->explosion_time))
     {
-        sprite_t *explosion_sprite = graphGetSprite((base_t *)this);
+        sprite_t *explosion_sprite = graphGetSprite((base_t *)explosion);
         graphUnregisterPrint(explosion_sprite);
         graphDestroyImage(explosion_sprite);
-        utilsFree((void **)&this);
+        if (explosion->callback)
+        {
+            explosion->callback();
+        }
+        utilsFree((void **)&explosion);
         return true;
     }
 
     return false;
+}
+
+static void
+explosionUpdateImageToPrint(explosion_t *explosion)
+{
+    assert(explosion); /* GCOVR_EXCL_LINE */
+
+    if (explosion->sprite.num_frames > 1 && utilsCheckTimeout(explosion->update_frame_timer, explosion->update_frame_time))
+    {
+        graphUpdateImageToPrint(&explosion->sprite);
+        clock_gettime(CLOCK_MONOTONIC, &explosion->update_frame_timer);
+    }
 }
 
 void
@@ -226,12 +290,19 @@ explosionsDestroy(void)
 
     list_for_each_entry_safe(n, tmp, &explosions, node)
     {
+        explosionUpdateImageToPrint(n->explosion);
         if (explosionTimeout(n->explosion))
         {
             list_del(&n->node);
             utilsFree((void **)&n);
         }
     }
+}
+
+bool
+explosionsAllFinished(void)
+{
+    return list_empty(&explosions);
 }
 
 #ifdef UNIT_TESTING

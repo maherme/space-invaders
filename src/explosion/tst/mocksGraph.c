@@ -46,9 +46,8 @@ __wrap_graphGetSprite(base_t *b)
 }
 
 void
-__wrap_graphDestroyObject(base_t **b)
+__wrap_graphUpdateImageToPrint(sprite_t *sprite)
 {
+    (void)sprite;
     function_called();
-    free(*b);
-    *b = NULL;
 }

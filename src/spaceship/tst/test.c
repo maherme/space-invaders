@@ -19,6 +19,11 @@ main(void)
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(testSpaceshipCreate),
+        cmocka_unit_test(testSpaceshipDestroyNullParameter),
+        cmocka_unit_test(testSpaceshipDestroy),
+        cmocka_unit_test(testSpaceshipAliveNullParameter),
+        cmocka_unit_test(testSpaceshipAliveFalse),
+        cmocka_unit_test(testSpaceshipAliveTrue),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

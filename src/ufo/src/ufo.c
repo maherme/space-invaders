@@ -165,6 +165,7 @@ helperUT_ufoSetAlive(ufo_t ufo, bool alive)
 {
     ufo->alive = alive;
 }
+
 void
 helperUT_ufoSetTimeToAppear(ufo_t ufo, long long time)
 {

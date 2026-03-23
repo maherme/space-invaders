@@ -10,11 +10,13 @@
 #include "engine.h"
 #include "list.h"
 #include "utils.h"
+#include <stdbool.h>
 #include <unistd.h>
 
 typedef struct cb_node
 {
     engine_cb_t callback;
+    bool pending_remove;
     struct list_head node;
 } cb_node_t;
 
@@ -43,15 +45,14 @@ engineUnregister(engine_cb_t cb)
         return -1;
     }
 
-    cb_node_t *n, *tmp;
     int removed = 0;
+    cb_node_t *n;
 
-    list_for_each_entry_safe(n, tmp, &callbacks, node)
+    list_for_each_entry(n, &callbacks, node)
     {
         if (n->callback == cb)
         {
-            list_del(&n->node);
-            utilsFree((void **)&n);
+            n->pending_remove = true;
             removed++;
         }
     }
@@ -64,11 +65,19 @@ engineRun(int rate)
 {
     for (int i = 0; i < rate; i++)
     {
-        cb_node_t *n;
-
-        list_for_each_entry(n, &callbacks, node)
+        cb_node_t *n, *tmp;
+        list_for_each_entry_safe(n, tmp, &callbacks, node)
         {
-            n->callback();
+            if (!n->pending_remove)
+            {
+                n->callback();
+            }
+
+            if (n->pending_remove)
+            {
+                list_del(&n->node);
+                utilsFree((void **)&n);
+            }
         }
         usleep(1000);
     }

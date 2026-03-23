@@ -14,9 +14,18 @@ void
 testSpaceshipCreate(void **status);
 
 void
-testSpaceshipGetSpriteFail(void **status);
+testSpaceshipDestroyNullParameter(void **status);
 
 void
-testSpaceshipGetSpriteSuccess(void **status);
+testSpaceshipDestroy(void **status);
+
+void
+testSpaceshipAliveNullParameter(void **status);
+
+void
+testSpaceshipAliveFalse(void **status);
+
+void
+testSpaceshipAliveTrue(void **status);
 
 #endif

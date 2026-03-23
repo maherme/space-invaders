@@ -44,7 +44,11 @@ typedef struct
     int pixels_to_move;
 } bullet_alien_t;
 
-static struct bullet_instance bulletPool[MAX_BULLETS] = {0};
+static struct
+{
+    struct bullet_instance bullets[MAX_BULLETS];
+    bool inhibitBulletAlien;
+} bulletPool;
 
 static const char bulletSpaceshipImage[BULLET_SPACESHIP_HEIGHT][BULLET_SPACESHIP_WIDTH][NUM_RGBA_CHANNELS] = {
     {W}, {W}, {W}, {W}};
@@ -154,14 +158,14 @@ bulletCreate(int x, int y, bullet_type_t type)
             continue;
         }
 
-        if (type == BULLET_ALIEN && i == BULLET_SPACESHIP_SLOT)
+        if (type == BULLET_ALIEN && (i == BULLET_SPACESHIP_SLOT || bulletPool.inhibitBulletAlien))
         {
             continue;
         }
 
-        if (!bulletPool[i].used)
+        if (!bulletPool.bullets[i].used)
         {
-            struct bullet_instance *inst = &bulletPool[i];
+            struct bullet_instance *inst = &bulletPool.bullets[i];
 
             setBulletType(inst, type);
             inst->sprite.x = x;
@@ -220,18 +224,38 @@ bulletCallFunctionForEach(void (*fn)(bullet_t))
 
     for (int i = 0; i < MAX_BULLETS; i++)
     {
-        if (bulletPool[i].used)
+        if (bulletPool.bullets[i].used)
         {
-            fn(&bulletPool[i]);
+            fn(&bulletPool.bullets[i]);
         }
     }
+}
+
+void
+bulletAlienInhibit(bool inhibit)
+{
+    bulletPool.inhibitBulletAlien = inhibit;
+}
+
+bool
+bulletNoneUsed(void)
+{
+    for (int i = 0; i < MAX_BULLETS; i++)
+    {
+        if (bulletPool.bullets[i].used)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 #ifdef UNIT_TESTING
 void
 helperUT_bulletInitPool(void)
 {
-    memset(bulletPool, 0, sizeof(bulletPool));
+    memset(bulletPool.bullets, 0, sizeof(bulletPool.bullets));
 }
 
 void
@@ -243,11 +267,11 @@ helperUT_bulletSetUsed(bullet_t bullet, bool used)
 bullet_t
 helperUT_bulletInjectInPool(int index, bullet_type_t type)
 {
-    bullet_t bullet = &bulletPool[index];
+    bullet_t bullet = &bulletPool.bullets[index];
     memset(bullet, 0, sizeof(*bullet));
 
-    bulletPool[index].used = true;
-    bulletPool[index].type = type;
+    bulletPool.bullets[index].used = true;
+    bulletPool.bullets[index].type = type;
 
     return bullet;
 }

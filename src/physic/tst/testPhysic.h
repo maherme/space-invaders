@@ -67,4 +67,22 @@ testPhysicCheckSpriteBoxCollisionNullParameters(void **status);
 void
 testPhysicCheckSpriteBoxCollisionFalse(void **status);
 
+void
+testPhysicCheckSpriteBoxCollisionTrue(void **status);
+
+void
+testPhysicCheckSpritePixelCollisionNullParameters(void **status);
+
+void
+testPhysicCheckSpritePixelCollisionCheckBoxesFalse(void **status);
+
+void
+testPhysicCheckSpritePixelCollisionFalseCheckBoxesTrue(void **status);
+
+void
+testPhysicCheckSpritePixelCollisionJustBoder(void **status);
+
+void
+testPhysicCheckSpritePixelCollisionTrueCheckBoxesTrue(void **status);
+
 #endif /* __TESTPHYSIC_H__ */

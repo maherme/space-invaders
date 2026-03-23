@@ -21,3 +21,11 @@ __wrap_graphRegisterPrint(void *ctx)
     function_called();
     return 0;
 }
+
+int
+__wrap_graphUnregisterPrint(void *ctx)
+{
+    (void)ctx;
+    function_called();
+    return 0;
+}

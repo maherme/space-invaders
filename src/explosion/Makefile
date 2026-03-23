@@ -21,6 +21,7 @@ LDFLAGS += -Wl,--wrap=utilsCalloc \
 		   -Wl,--wrap=graphScaleImage \
 		   -Wl,--wrap=graphDestroyImage \
 		   -Wl,--wrap=graphGetSprite \
+		   -Wl,--wrap=graphUpdateImageToPrint \
 		   -Wl,--wrap=clock_gettime \
 		   -Wl,--wrap=graphRegisterPrint \
 		   -Wl,--wrap=graphUnregisterPrint
