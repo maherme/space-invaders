@@ -11,8 +11,6 @@
 #include <GL/glut.h>
 #include <time.h>
 
-#define SCALE_IMAGE 2
-
 void
 graphCreateImage(sprite_t *sprite)
 {

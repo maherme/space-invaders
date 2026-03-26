@@ -120,7 +120,8 @@ setBulletType(bullet_t bullet, bullet_type_t type)
             bullet->sprite.image = (const char *)bulletSpaceshipImage;
             bullet->sprite.pixels_to_move = 1;
             graphScaleImage(&bullet->sprite);
-            bullet->sprite.max_movement.up = WINDOW_HEIGHT - bullet->sprite.scaled_height;
+            bullet->sprite.max_movement.up = WINDOW_HEIGHT;
+            bullet->sprite.max_movement.down = 0;
             bullet->sprite.time_to_move = 2 * NS_PER_MS;
             break;
         case BULLET_ALIEN:
@@ -133,6 +134,7 @@ setBulletType(bullet_t bullet, bullet_type_t type)
             bullet->sprite.num_frames = BULLET_ALIEN_NUM_FRAMES;
             bullet->sprite.pixels_to_move = bulletAlien[alien_bullet_type].pixels_to_move;
             graphScaleImage(&bullet->sprite);
+            bullet->sprite.max_movement.up = WINDOW_HEIGHT;
             bullet->sprite.max_movement.down = 0;
             bullet->sprite.time_to_move = bulletAlien[alien_bullet_type].time_to_move;
             break;

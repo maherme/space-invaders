@@ -10,11 +10,16 @@
 #ifndef __ALIENS_H__
 #define __ALIENS_H__
 
+#include "graph.h"
 #include <stdbool.h>
 
 #define ALIENS_ROWS 5
 #define ALIENS_COLS 11
 #define ALIENS_INITIAL_NUMBER (ALIENS_ROWS * ALIENS_COLS)
+#define ALIENS_BASE_MOVE_DELAY 500
+#define ALIENS_MIN_MOVE_DELAY 60
+#define ALIENS_SHOOT_DELAY 500
+#define ALIENS_HEIGHT_GAME_OVER 16
 
 typedef enum
 {
@@ -26,7 +31,7 @@ typedef enum
 typedef struct alien_instance *alien_t;
 
 void
-aliensCreate(void);
+aliensCreate(void (*game_over_cb)(void));
 
 void
 alienDestroy(alien_t alien);
@@ -34,13 +39,21 @@ alienDestroy(alien_t alien);
 bool
 alienAlive(alien_t alien);
 
+unsigned int
+aliensGetAlives(void);
+
 alien_t
 aliensGetAlienInstance(int alien_index);
 
 alien_t
 aliensGetShooter(void);
 
+void
+aliensMove(void);
+
 #ifdef UNIT_TESTING
+#include "physic.h"
+
 void
 helperUT_alienInitPool(void);
 
@@ -48,7 +61,13 @@ void
 helperUT_alienSetAlive(alien_t alien, bool alive);
 
 alien_t
-helperUT_alienInjectInPool(int row, int col);
+helperUT_alienInjectInPool(int row, int col, sprite_t *sprite);
+
+void
+helperUT_alienSetCurrentDirection(direction_t dir);
+
+void
+helperUT_alienSetGameOverCallbck(void (*callback)(void));
 #endif /* UNIT_TESTING */
 
 #endif /* __ALIENS_H__ */

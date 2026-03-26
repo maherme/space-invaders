@@ -26,7 +26,7 @@ void
 physicMoveSprite(sprite_t *sprite, direction_t direction);
 
 bool
-physicCheckBorderCollision(const sprite_t *const sprite);
+physicCheckBorderCollision(const sprite_t *const sprite, direction_t direction);
 
 bool
 physicCheckSpritesBoxCollision(const sprite_t *const sprite1, const sprite_t *const sprite2);

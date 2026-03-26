@@ -30,6 +30,9 @@ explosionsDestroy(void);
 bool
 explosionsAllFinished(void);
 
+unsigned int
+explosionsGetExplosionHeight(explosion_type_t type);
+
 #ifdef UNIT_TESTING
 void
 helperUT_explosionResetList(void);

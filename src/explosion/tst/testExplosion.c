@@ -239,3 +239,22 @@ testExplosionAllFinishedFalse(void **status)
     registerExplosionBullet(NULL);
     assert_false(explosionsAllFinished());
 }
+
+static const unsigned int expected_explosion_heights[] = {
+    [EXPLOSION_BULLET_SPACESHIP] = 8,
+    [EXPLOSION_BULLET_ALIEN] = 8,
+    [EXPLOSION_SPACESHIP] = 8,
+    [EXPLOSION_UFO] = 8,
+    [EXPLOSION_ALIEN] = 8,
+};
+
+void
+testExplosionsGetExplosionHeight(void **status)
+{
+    (void)status;
+
+    for (size_t i = 0; i < sizeof(explosions) / sizeof(explosions[0]); i++)
+    {
+        assert_uint_equal(expected_explosion_heights[i], explosionsGetExplosionHeight(explosions[i]));
+    }
+}

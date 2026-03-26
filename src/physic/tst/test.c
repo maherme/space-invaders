@@ -34,7 +34,7 @@ main(void)
         cmocka_unit_test(testPhysicCheckBorderCollisionDownTrue),
         cmocka_unit_test(testPhysicCheckBorderCollisionRightTrue),
         cmocka_unit_test(testPhysicCheckBorderCollisionLeftTrue),
-        cmocka_unit_test(testPhysicCheckBorderCollisionFalse),
+        cmocka_unit_test(testPhysicCheckBorderCollisionInvalidDir),
         cmocka_unit_test(testPhysicCheckSpriteBoxCollisionNullParameters),
         cmocka_unit_test(testPhysicCheckSpriteBoxCollisionFalse),
         cmocka_unit_test(testPhysicCheckSpriteBoxCollisionTrue),
