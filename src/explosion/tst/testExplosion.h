@@ -43,4 +43,7 @@ testExplosionAllFinishedTrue(void **status);
 void
 testExplosionAllFinishedFalse(void **status);
 
+void
+testExplosionsGetExplosionHeight(void **status);
+
 #endif

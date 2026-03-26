@@ -10,6 +10,7 @@
 #include "aliens.h"
 #include "graph.h"
 #include "graphGlutCallbacks.h"
+#include "physic.h"
 #include "utils.h"
 #include <assert.h>
 #include <stdbool.h>
@@ -37,6 +38,12 @@ static struct
     struct alien_instance aliens[ALIENS_INITIAL_NUMBER];
     int origin_x;
     int origin_y;
+    direction_t current_dir;
+    bool descend_pending;
+    max_movement_t max_movement;
+    int pixels_to_move;
+    unsigned int aliens_alive;
+    void (*game_over_cb)(void);
 } alienPool;
 
 static alien_type_t alienTypeByRow[ALIENS_ROWS] = {
@@ -78,11 +85,11 @@ static const char crabImage[ALIEN_NUM_FRAMES][CRAB_HEIGHT][CRAB_WIDTH][NUM_RGBA_
      {B, B, B, W, B, B, B, W, B, B, B},
      {B, W, W, B, B, B, B, B, W, W, B}},
     /* frame 2 */
-    {{B, B, B, W, B, B, B, W, B, B, B},
+    {{B, B, B, B, W, B, W, B, B, B, B},
      {B, B, B, B, W, B, W, B, B, B, B},
      {B, B, B, W, W, W, W, W, B, B, B},
      {W, B, W, W, B, W, B, W, W, B, W},
-     {W, W, W, W, W, W, W, W, W, W, B},
+     {W, W, W, W, W, W, W, W, W, W, W},
      {B, B, W, W, W, W, W, W, W, B, B},
      {B, B, B, W, B, B, B, W, B, B, B},
      {B, B, W, W, B, B, B, W, W, B, B}}};
@@ -115,17 +122,17 @@ setAlienType(alien_t inst, alien_type_t type)
         case SQUID:
             inst->sprite.width = SQUID_WIDTH;
             inst->sprite.height = SQUID_HEIGHT;
-            inst->sprite.image = (const char *)squidImage;
+            inst->sprite.image_base = (const char *)squidImage;
             break;
         case CRAB:
             inst->sprite.width = CRAB_WIDTH;
             inst->sprite.height = CRAB_HEIGHT;
-            inst->sprite.image = (const char *)crabImage;
+            inst->sprite.image_base = (const char *)crabImage;
             break;
         case OCTOPUS:
             inst->sprite.width = OCTOPUS_WIDTH;
             inst->sprite.height = OCTOPUS_HEIGHT;
-            inst->sprite.image = (const char *)octopusImage;
+            inst->sprite.image_base = (const char *)octopusImage;
             break;
             /* GCOVR_EXCL_START */
         default:
@@ -134,6 +141,8 @@ setAlienType(alien_t inst, alien_type_t type)
             break; /* GCOVR_EXCL_BR_SOURCE */
                    /* GCOVR_EXCL_STOP */
     }
+
+    inst->sprite.image = inst->sprite.image_base;
 }
 
 static void
@@ -143,12 +152,14 @@ alienCreate(int x, int y, alien_type_t type, int index)
     setAlienType(inst, type);
     inst->sprite.x = x;
     inst->sprite.y = y;
-    inst->sprite.pixels_to_move = 0;
     inst->sprite.time_to_move = 0;
     graphScaleImage(&inst->sprite);
     graphCreateImage(&inst->sprite);
-    inst->sprite.max_movement.right = 0;
+    inst->sprite.pixels_to_move = alienPool.pixels_to_move;
+    inst->sprite.max_movement.right = WINDOW_WIDTH;
     inst->sprite.max_movement.left = 0;
+    inst->sprite.max_movement.down = 0;
+    inst->sprite.num_frames = ALIEN_NUM_FRAMES;
     graphUpdateTimeSprite(&inst->sprite);
     graphRegisterPrint(&inst->sprite);
     inst->alive = true;
@@ -166,6 +177,7 @@ alienDestroy(alien_t alien)
     graphUnregisterPrint(alien_sprite);
     graphDestroyImage(alien_sprite);
     alien->alive = false;
+    alienPool.aliens_alive--;
 }
 
 static int
@@ -193,11 +205,16 @@ alienWidth(alien_type_t type)
 }
 
 void
-aliensCreate(void)
+aliensCreate(void (*game_over_cb)(void))
 {
     int formation_width = ALIENS_COLS * ALIEN_CELL_WIDTH;
     alienPool.origin_x = (WINDOW_WIDTH - formation_width) / 2;
     alienPool.origin_y = WINDOW_HEIGHT / 2;
+    alienPool.current_dir = RIGHT;
+    alienPool.descend_pending = false;
+    alienPool.pixels_to_move = ALIEN_CELL_WIDTH / 4;
+    alienPool.aliens_alive = ALIENS_INITIAL_NUMBER;
+    alienPool.game_over_cb = game_over_cb;
 
     for (int i = 0; i < ALIENS_INITIAL_NUMBER; i++)
     {
@@ -217,6 +234,12 @@ alienAlive(alien_t alien)
 {
 
     return alien && alien->alive;
+}
+
+unsigned int
+aliensGetAlives(void)
+{
+    return alienPool.aliens_alive;
 }
 
 alien_t
@@ -249,6 +272,83 @@ aliensGetShooter(void)
 
     return NULL;
 }
+static void
+getFormationBounds(int *left, int *right, int *down)
+{
+    *left = WINDOW_WIDTH;
+    *right = 0;
+    *down = WINDOW_HEIGHT;
+
+    for (int i = 0; i < ALIENS_INITIAL_NUMBER; i++)
+    {
+        alien_t a = &alienPool.aliens[i];
+        if (!a->alive)
+        {
+            continue;
+        }
+
+        int x = a->sprite.x;
+        int w = a->sprite.scaled_width;
+        int y = a->sprite.y;
+
+        if (x < *left)
+        {
+            *left = x;
+        }
+        if (x + w > *right)
+        {
+            *right = x + w;
+        }
+        if (y < *down)
+        {
+            *down = y;
+        }
+    }
+}
+
+void
+aliensMove(void)
+{
+    int left, right, down;
+    getFormationBounds(&left, &right, &down);
+
+    if (down <= ALIENS_HEIGHT_GAME_OVER && alienPool.game_over_cb)
+    {
+        alienPool.game_over_cb();
+        return;
+    }
+
+    if (alienPool.current_dir == RIGHT && right + alienPool.pixels_to_move >= WINDOW_WIDTH)
+    {
+        alienPool.current_dir = LEFT;
+        alienPool.descend_pending = true;
+    }
+    else if (alienPool.current_dir == LEFT && left - alienPool.pixels_to_move <= 0)
+    {
+        alienPool.current_dir = RIGHT;
+        alienPool.descend_pending = true;
+    }
+
+    for (int i = 0; i < ALIENS_INITIAL_NUMBER; i++)
+    {
+        alien_t a = &alienPool.aliens[i];
+        if (!a->alive)
+        {
+            continue;
+        }
+
+        if (alienPool.descend_pending)
+        {
+            physicMoveSprite(&a->sprite, DOWN);
+        }
+        else
+        {
+            physicMoveSprite(&a->sprite, alienPool.current_dir);
+        }
+    }
+
+    alienPool.descend_pending = false;
+}
 
 #ifdef UNIT_TESTING
 #include <string.h>
@@ -256,7 +356,7 @@ aliensGetShooter(void)
 void
 helperUT_alienInitPool(void)
 {
-    memset(alienPool.aliens, 0, sizeof(alienPool.aliens));
+    memset(&alienPool, 0, sizeof(alienPool));
 }
 
 void
@@ -266,16 +366,34 @@ helperUT_alienSetAlive(alien_t alien, bool alive)
 }
 
 alien_t
-helperUT_alienInjectInPool(int row, int col)
+helperUT_alienInjectInPool(int row, int col, sprite_t *sprite)
 {
     int index = INDEX_ALIENS(row, col);
     alien_t alien = &alienPool.aliens[index];
 
     memset(alien, 0, sizeof(*alien));
 
+    if (sprite)
+    {
+        alien->sprite = *sprite;
+    }
+
     alien->alive = true;
+    alienPool.aliens_alive++;
 
     return alien;
+}
+
+void
+helperUT_alienSetCurrentDirection(direction_t dir)
+{
+    alienPool.current_dir = dir;
+}
+
+void
+helperUT_alienSetGameOverCallbck(void (*callback)(void))
+{
+    alienPool.game_over_cb = callback;
 }
 
 #endif /* UNIT_TESTING */

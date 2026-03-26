@@ -47,6 +47,17 @@ checkUtilsCheckTimeout(struct timespec actual, long long timeout, bool ret_mock)
     expect_function_call(__wrap_utilsCheckTimeout);
 }
 
+static void
+checkGraphGetSpriteCoordinates(sprite_t *sprite, int x1, int x2, int y1, int y2)
+{
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)sprite);
+    will_return(__wrap_graphGetSpriteCoordinates, x1); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, x2); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, y1); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, y2); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+}
+
 void
 testPhysicMoveSpriteWrongDirection(void **status)
 {
@@ -54,6 +65,7 @@ testPhysicMoveSpriteWrongDirection(void **status)
     sprite_t sprite = {.width = 10, .height = 20, .last_update.tv_sec = 10, .last_update.tv_nsec = 20, .time_to_move = 0};
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    checkGraphGetSpriteCoordinates(&sprite, 0, 10, 0, 20);
 
     physicMoveSprite(&sprite, 0xFF);
 }
@@ -63,20 +75,15 @@ testPhysicMoveSpriteRight(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .x = 100,
-        .y = 0,
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 99,
-        .last_update.tv_nsec = 99 * NS_PER_MS,
-        .time_to_move = 0,
+        .x = 0,
         .pixels_to_move = 10,
         .scaled_width = 20,
-        .max_movement.right = 111,
+        .max_movement.right = 31,
     };
     sprite_t old_sprite = sprite;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    checkGraphGetSpriteCoordinates(&sprite, sprite.x, sprite.x + sprite.scaled_width, 0, 0);
     expect_uint_value(__wrap_graphUpdateImageToPrint, sprite, (uintptr_t)&sprite);
     expect_function_call(__wrap_graphUpdateImageToPrint);
     expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
@@ -92,22 +99,17 @@ testPhysicMoveSpriteRightMax(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .y = 0,
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 0,
-        .last_update.tv_nsec = 0,
-        .time_to_move = 0,
         .pixels_to_move = 10,
         .scaled_width = 20,
     };
-    sprite.x = WINDOW_WIDTH - sprite.pixels_to_move;
-    sprite.max_movement.right = WINDOW_WIDTH - sprite.scaled_width;
+    sprite.x = WINDOW_WIDTH - sprite.scaled_width;
+    sprite.max_movement.right = WINDOW_WIDTH;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    checkGraphGetSpriteCoordinates(&sprite, sprite.x, sprite.x + sprite.scaled_width, 0, 0);
 
     physicMoveSprite(&sprite, RIGHT);
-    assert_int_equal(sprite.x, WINDOW_WIDTH - sprite.scaled_width);
+    assert_int_equal(sprite.x, sprite.max_movement.right - sprite.scaled_width);
 }
 
 void
@@ -115,13 +117,7 @@ testPhysicMoveSpriteLeft(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .x = 100,
-        .y = 0,
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 0,
-        .last_update.tv_nsec = 0,
-        .time_to_move = 0,
+        .x = 11,
         .pixels_to_move = 10,
         .scaled_width = 20,
         .max_movement.left = 0,
@@ -129,6 +125,7 @@ testPhysicMoveSpriteLeft(void **status)
     sprite_t old_sprite = sprite;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    checkGraphGetSpriteCoordinates(&sprite, sprite.x, sprite.x + sprite.scaled_width, 0, 0);
     expect_uint_value(__wrap_graphUpdateImageToPrint, sprite, (uintptr_t)&sprite);
     expect_function_call(__wrap_graphUpdateImageToPrint);
     expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
@@ -145,20 +142,16 @@ testPhysicMoveSpriteLeftMax(void **status)
     (void)status;
     sprite_t sprite = {
         .x = 9,
-        .y = 0,
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 0,
-        .last_update.tv_nsec = 0,
-        .time_to_move = 0,
         .pixels_to_move = 10,
+        .scaled_width = 20,
         .max_movement.left = 0,
     };
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    checkGraphGetSpriteCoordinates(&sprite, sprite.x, sprite.x + sprite.scaled_width, 0, 0);
 
     physicMoveSprite(&sprite, LEFT);
-    assert_int_equal(sprite.x, 0);
+    assert_int_equal(sprite.x, sprite.max_movement.left);
 }
 
 void
@@ -166,13 +159,7 @@ testPhysicMoveSpriteUp(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .x = 0,
-        .y = 100,
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 0,
-        .last_update.tv_nsec = 0,
-        .time_to_move = 0,
+        .y = 0,
         .pixels_to_move = 10,
         .scaled_height = 20,
     };
@@ -180,6 +167,7 @@ testPhysicMoveSpriteUp(void **status)
     sprite_t old_sprite = sprite;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    checkGraphGetSpriteCoordinates(&sprite, 0, 0, sprite.y, sprite.y + sprite.scaled_height);
     expect_uint_value(__wrap_graphUpdateImageToPrint, sprite, (uintptr_t)&sprite);
     expect_function_call(__wrap_graphUpdateImageToPrint);
     expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
@@ -195,21 +183,17 @@ testPhysicMoveSpriteUpMax(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .x = 0,
-        .width = 10,
-        .height = 10,
-        .last_update.tv_sec = 0,
-        .last_update.tv_nsec = 0,
-        .time_to_move = 0,
-        .pixels_to_move = 10,
+        .pixels_to_move = 20,
+        .scaled_height = 20,
     };
     sprite.y = WINDOW_HEIGHT - sprite.pixels_to_move;
-    sprite.max_movement.up = WINDOW_HEIGHT - sprite.scaled_height;
+    sprite.max_movement.up = WINDOW_HEIGHT;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    checkGraphGetSpriteCoordinates(&sprite, 0, 0, sprite.y, sprite.y + sprite.scaled_height);
 
     physicMoveSprite(&sprite, UP);
-    assert_int_equal(sprite.y, WINDOW_HEIGHT - sprite.scaled_width);
+    assert_int_equal(sprite.y, sprite.max_movement.up - sprite.scaled_height);
 }
 
 void
@@ -217,13 +201,7 @@ testPhysicMoveSpriteDown(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .x = 0,
         .y = 100,
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 0,
-        .last_update.tv_nsec = 0,
-        .time_to_move = 0,
         .pixels_to_move = 10,
         .scaled_height = 20,
     };
@@ -231,6 +209,7 @@ testPhysicMoveSpriteDown(void **status)
     sprite_t old_sprite = sprite;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    checkGraphGetSpriteCoordinates(&sprite, 0, 0, sprite.y, sprite.y + sprite.scaled_height);
     expect_uint_value(__wrap_graphUpdateImageToPrint, sprite, (uintptr_t)&sprite);
     expect_function_call(__wrap_graphUpdateImageToPrint);
     expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
@@ -246,18 +225,15 @@ testPhysicMoveSpriteDownMax(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .x = 0,
-        .width = 10,
-        .height = 10,
-        .last_update.tv_sec = 0,
-        .last_update.tv_nsec = 0,
         .time_to_move = 0,
         .pixels_to_move = 10,
+        .scaled_height = 10,
     };
     sprite.y = sprite.pixels_to_move;
     sprite.max_movement.down = 0;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
+    checkGraphGetSpriteCoordinates(&sprite, 0, 0, sprite.y, sprite.y + sprite.scaled_height);
 
     physicMoveSprite(&sprite, DOWN);
     assert_int_equal(sprite.y, 0);
@@ -270,11 +246,6 @@ testPhysicMoveSpriteTooEarlyToMove(void **status)
     sprite_t sprite = {
         .x = 9,
         .y = 0,
-        .width = 10,
-        .height = 20,
-        .last_update.tv_sec = 0,
-        .last_update.tv_nsec = 0,
-        .time_to_move = 0,
         .pixels_to_move = 10,
     };
     sprite_t old_sprite = sprite;
@@ -291,7 +262,7 @@ testPhysicCheckBorderCollisionNullParameter(void **status)
 {
     (void)status;
 
-    assert_false(physicCheckBorderCollision(NULL));
+    assert_false(physicCheckBorderCollision(NULL, RIGHT));
 }
 
 void
@@ -299,14 +270,11 @@ testPhysicCheckBorderCollisionUpTrue(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .x = 10,
-        .y = 10,
         .max_movement.up = 10,
-        .max_movement.right = 20,
-        .max_movement.left = 0,
     };
 
-    assert_true(physicCheckBorderCollision(&sprite));
+    checkGraphGetSpriteCoordinates(&sprite, 0, 0, 0, sprite.max_movement.up);
+    assert_true(physicCheckBorderCollision(&sprite, UP));
 }
 
 void
@@ -314,15 +282,11 @@ testPhysicCheckBorderCollisionDownTrue(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .x = 10,
-        .y = 10,
-        .max_movement.up = 20,
         .max_movement.down = 10,
-        .max_movement.right = 20,
-        .max_movement.left = 0,
     };
 
-    assert_true(physicCheckBorderCollision(&sprite));
+    checkGraphGetSpriteCoordinates(&sprite, 0, 0, sprite.max_movement.down, 0);
+    assert_true(physicCheckBorderCollision(&sprite, DOWN));
 }
 
 void
@@ -330,14 +294,11 @@ testPhysicCheckBorderCollisionRightTrue(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .x = 10,
-        .y = 10,
-        .max_movement.up = 20,
         .max_movement.right = 10,
-        .max_movement.left = 0,
     };
 
-    assert_true(physicCheckBorderCollision(&sprite));
+    checkGraphGetSpriteCoordinates(&sprite, 0, sprite.max_movement.right, 0, 0);
+    assert_true(physicCheckBorderCollision(&sprite, RIGHT));
 }
 
 void
@@ -345,29 +306,23 @@ testPhysicCheckBorderCollisionLeftTrue(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .x = 10,
-        .y = 10,
-        .max_movement.up = 20,
-        .max_movement.right = 20,
         .max_movement.left = 10,
     };
 
-    assert_true(physicCheckBorderCollision(&sprite));
+    checkGraphGetSpriteCoordinates(&sprite, sprite.max_movement.left, 0, 0, 0);
+    assert_true(physicCheckBorderCollision(&sprite, LEFT));
 }
 
 void
-testPhysicCheckBorderCollisionFalse(void **status)
+testPhysicCheckBorderCollisionInvalidDir(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .x = 10,
-        .y = 10,
-        .max_movement.up = 20,
-        .max_movement.right = 20,
-        .max_movement.left = 0,
+        .max_movement.left = 10,
     };
 
-    assert_false(physicCheckBorderCollision(&sprite));
+    checkGraphGetSpriteCoordinates(&sprite, 0, 0, 0, 0);
+    assert_false(physicCheckBorderCollision(&sprite, INVALID_DIR));
 }
 
 void

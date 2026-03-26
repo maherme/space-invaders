@@ -14,6 +14,7 @@
 
 #define WINDOW_WIDTH 448
 #define WINDOW_HEIGHT 512
+#define SCALE_IMAGE 2
 
 #define NUM_RGBA_CHANNELS 4
 #define W {(char)255, (char)255, (char)255, (char)255}

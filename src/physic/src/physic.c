@@ -25,18 +25,21 @@ physicMoveSprite(sprite_t *sprite, direction_t direction)
         return;
     }
 
+    sprite_coordinates_t coord;
+    graphGetSpriteCoordinates(sprite, &coord);
+
     switch (direction)
     {
         case RIGHT:
-            if (sprite->x + sprite->pixels_to_move >= sprite->max_movement.right)
+            if (coord.x2 + sprite->pixels_to_move >= sprite->max_movement.right)
             {
-                sprite->x = sprite->max_movement.right;
+                sprite->x = sprite->max_movement.right - sprite->scaled_width;
                 return;
             }
             sprite->x += sprite->pixels_to_move;
             break;
         case LEFT:
-            if (sprite->x - sprite->pixels_to_move <= sprite->max_movement.left)
+            if (coord.x1 - sprite->pixels_to_move <= sprite->max_movement.left)
             {
                 sprite->x = sprite->max_movement.left;
                 return;
@@ -44,15 +47,15 @@ physicMoveSprite(sprite_t *sprite, direction_t direction)
             sprite->x -= sprite->pixels_to_move;
             break;
         case UP:
-            if (sprite->y + sprite->pixels_to_move >= sprite->max_movement.up)
+            if (coord.y2 + sprite->pixels_to_move >= sprite->max_movement.up)
             {
-                sprite->y = sprite->max_movement.up;
+                sprite->y = sprite->max_movement.up - sprite->scaled_height;
                 return;
             }
             sprite->y += sprite->pixels_to_move;
             break;
         case DOWN:
-            if (sprite->y - sprite->pixels_to_move <= sprite->max_movement.down)
+            if (coord.y1 - sprite->pixels_to_move <= sprite->max_movement.down)
             {
                 sprite->y = sprite->max_movement.down;
                 return;
@@ -70,14 +73,33 @@ physicMoveSprite(sprite_t *sprite, direction_t direction)
 }
 
 bool
-physicCheckBorderCollision(const sprite_t *const sprite)
+physicCheckBorderCollision(const sprite_t *const sprite, direction_t direction)
 {
     if (!sprite)
         return false;
 
-    if ((sprite->y == sprite->max_movement.up) || (sprite->y == sprite->max_movement.down) ||
-        (sprite->x == sprite->max_movement.right) || (sprite->x == sprite->max_movement.left))
-        return true;
+    sprite_coordinates_t coord;
+    graphGetSpriteCoordinates(sprite, &coord);
+
+    switch (direction)
+    {
+        case UP:
+            return coord.y2 >= sprite->max_movement.up;
+            break;
+        case DOWN:
+            return coord.y1 <= sprite->max_movement.down;
+            break;
+        case RIGHT:
+            return coord.x2 >= sprite->max_movement.right;
+            break;
+        case LEFT:
+            return coord.x1 <= sprite->max_movement.left;
+            break;
+        case INVALID_DIR:
+        default:
+            break;
+    }
+
     return false;
 }
 

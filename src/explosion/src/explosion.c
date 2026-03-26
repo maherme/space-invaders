@@ -28,6 +28,14 @@
 #define EXPLOSION_ALIEN_WIDTH 14
 #define EXPLOSION_ALIEN_HEIGHT 8
 
+static const unsigned int explosion_heights[] = {
+    [EXPLOSION_BULLET_SPACESHIP] = EXPLOSION_BULLET_SPACESHIP_HEIGHT,
+    [EXPLOSION_BULLET_ALIEN] = EXPLOSION_BULLET_ALIEN_HEIGHT,
+    [EXPLOSION_SPACESHIP] = EXPLOSION_SPACESHIP_HEIGHT,
+    [EXPLOSION_UFO] = EXPLOSION_UFO_HEIGHT,
+    [EXPLOSION_ALIEN] = EXPLOSION_ALIEN_HEIGHT,
+};
+
 typedef struct explosion
 {
     sprite_t sprite;
@@ -303,6 +311,12 @@ bool
 explosionsAllFinished(void)
 {
     return list_empty(&explosions);
+}
+
+unsigned int
+explosionsGetExplosionHeight(explosion_type_t type)
+{
+    return explosion_heights[type];
 }
 
 #ifdef UNIT_TESTING

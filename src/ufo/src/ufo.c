@@ -58,7 +58,7 @@ calculateStartingCoord(ufo_t ufo)
 {
     if (ufo->direction == RIGHT)
     {
-        ufo->sprite.x = -UFO_WIDTH * 2;
+        ufo->sprite.x = -ufo->sprite.scaled_width;
     }
     else
     {
@@ -73,7 +73,6 @@ ufoCreate(void)
 {
     ufo_t inst = &ufo;
     calculateDirection(inst);
-    calculateStartingCoord(inst);
     inst->sprite.width = UFO_WIDTH;
     inst->sprite.height = UFO_HEIGHT;
     inst->sprite.image = (const char *)ufoImage;
@@ -81,8 +80,9 @@ ufoCreate(void)
     inst->sprite.time_to_move = 20 * NS_PER_MS;
     inst->time_to_appear = 5 * NS_PER_S;
     graphScaleImage(&inst->sprite);
+    calculateStartingCoord(inst);
     graphCreateImage(&inst->sprite);
-    inst->sprite.max_movement.right = WINDOW_WIDTH + 1;
+    inst->sprite.max_movement.right = WINDOW_WIDTH + inst->sprite.scaled_width + 1;
     inst->sprite.max_movement.left = -(inst->sprite.scaled_width + 1);
     graphUpdateTimeSprite(&inst->sprite);
     graphRegisterPrint(&inst->sprite);

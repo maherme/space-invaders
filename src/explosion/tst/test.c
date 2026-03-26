@@ -28,6 +28,7 @@ main(void)
         cmocka_unit_test_teardown(testExplosionDestroyMoreOneFrameTimeoutFalse, teardown),
         cmocka_unit_test_teardown(testExplosionAllFinishedTrue, teardown),
         cmocka_unit_test_teardown(testExplosionAllFinishedFalse, teardown),
+        cmocka_unit_test_teardown(testExplosionsGetExplosionHeight, teardown),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

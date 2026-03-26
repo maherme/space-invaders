@@ -26,7 +26,6 @@ __wrap_utilsCalloc(size_t nelem, size_t elsize)
 bool
 __wrap_utilsCheckTimeout(struct timespec time, long long timeout_ns)
 {
-    (void)time;
     check_expected_any(time);
     check_expected_int(timeout_ns);
     function_called();

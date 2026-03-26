@@ -25,9 +25,16 @@ main(void)
         cmocka_unit_test_setup(testAlienDestroyNullParameter, setup),
         cmocka_unit_test_setup(testAlienDestroy, setup),
         cmocka_unit_test_setup(testAliensGetAlienInstanceInvalidIndex, setup),
+        cmocka_unit_test_setup(testAliensGetAlives, setup),
         cmocka_unit_test_setup(testAliensGetShooterFormationEmpty, setup),
         cmocka_unit_test_setup(testAliensGetShooterFormationOneAlien, setup),
         cmocka_unit_test_setup(testAliensGetShooterFirstInColumn, setup),
+        cmocka_unit_test_setup(testAliensMoveRight, setup),
+        cmocka_unit_test_setup(testAliensMoveLeft, setup),
+        cmocka_unit_test_setup(testAliensMoveMaxLeft, setup),
+        cmocka_unit_test_setup(testAliensMoveMaxRight, setup),
+        cmocka_unit_test_setup(testAliensMoveGameOver, setup),
+        cmocka_unit_test_setup(testAliensMoveGameOverNull, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

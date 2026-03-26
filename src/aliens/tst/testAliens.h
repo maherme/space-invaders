@@ -35,6 +35,9 @@ void
 testAliensGetAlienInstanceInvalidIndex(void **status);
 
 void
+testAliensGetAlives(void **status);
+
+void
 testAliensGetShooterFormationEmpty(void **status);
 
 void
@@ -42,5 +45,23 @@ testAliensGetShooterFormationOneAlien(void **status);
 
 void
 testAliensGetShooterFirstInColumn(void **status);
+
+void
+testAliensMoveRight(void **status);
+
+void
+testAliensMoveLeft(void **status);
+
+void
+testAliensMoveMaxLeft(void **status);
+
+void
+testAliensMoveMaxRight(void **status);
+
+void
+testAliensMoveGameOver(void **status);
+
+void
+testAliensMoveGameOverNull(void **status);
 
 #endif /* __TESTALIENS_H__ */

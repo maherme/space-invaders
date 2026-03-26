@@ -28,7 +28,9 @@
 bool gaming = true;
 spaceship_t spaceship = NULL;
 ufo_t ufo = NULL;
-struct timespec timer = {0};
+struct timespec timer_get_shooter = {0};
+struct timespec timer_alien_move = {0};
+unsigned int alien_move_delay;
 
 static void
 bulletActionsSingle(bullet_t bullet)
@@ -41,11 +43,14 @@ bulletActionsSingle(bullet_t bullet)
     bullet_type_t type;
     bulletGetType(bullet, &type);
     sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
-    if (physicCheckBorderCollision(bullet_sprite))
+    if (physicCheckBorderCollision(bullet_sprite, UP) || physicCheckBorderCollision(bullet_sprite, DOWN))
     {
         if (type == BULLET_SPACESHIP)
         {
-            explosionCreate(bullet_sprite->x, bullet_sprite->y - bullet_sprite->scaled_height, EXPLOSION_BULLET_SPACESHIP, NULL);
+            explosionCreate(bullet_sprite->x,
+                            WINDOW_HEIGHT - explosionsGetExplosionHeight(EXPLOSION_BULLET_SPACESHIP) * SCALE_IMAGE,
+                            EXPLOSION_BULLET_SPACESHIP,
+                            NULL);
         }
         else
         {
@@ -173,15 +178,28 @@ checkCollisionsAliensBullet(void)
 static void
 aliensActions(void)
 {
-    if (utilsCheckTimeout(timer, 500 * NS_PER_MS))
+    unsigned int num_alive = aliensGetAlives();
+    alien_move_delay = ALIENS_BASE_MOVE_DELAY - (ALIENS_INITIAL_NUMBER - num_alive) * 8;
+    if (alien_move_delay < ALIENS_MIN_MOVE_DELAY)
+    {
+        alien_move_delay = ALIENS_MIN_MOVE_DELAY;
+    }
+
+    if (utilsCheckTimeout(timer_get_shooter, ALIENS_SHOOT_DELAY * NS_PER_MS))
     {
         alien_t alien = aliensGetShooter();
         if (alien)
         {
             sprite_t *alien_sprite = graphGetSprite((base_t *)alien);
             bulletCreate(alien_sprite->x + alien_sprite->scaled_width / 2, alien_sprite->y, BULLET_ALIEN);
-            clock_gettime(CLOCK_MONOTONIC, &timer);
+            clock_gettime(CLOCK_MONOTONIC, &timer_get_shooter);
         }
+    }
+
+    if (utilsCheckTimeout(timer_alien_move, alien_move_delay * NS_PER_MS))
+    {
+        aliensMove();
+        clock_gettime(CLOCK_MONOTONIC, &timer_alien_move);
     }
 }
 
@@ -222,7 +240,7 @@ ufoActions(void)
         {
             physicMoveSprite(ufo_sprite, ufoGetDirection(ufo));
         }
-        if (physicCheckBorderCollision(ufo_sprite))
+        if (physicCheckBorderCollision(ufo_sprite, RIGHT) || physicCheckBorderCollision(ufo_sprite, LEFT))
         {
             ufoDestroy(ufo);
         }
@@ -242,6 +260,12 @@ keyboardUpdate(void)
     {
         physicMoveSprite(graphGetSprite((base_t *)spaceship), RIGHT);
     }
+}
+
+static void
+gameOver(void)
+{
+    /* NOTE: TBD */
 }
 
 int
@@ -267,7 +291,7 @@ main(int argc, char **argv)
     keyboardInit();
 
     spaceship = spaceshipCreate(WINDOW_WIDTH / 2, 0);
-    aliensCreate();
+    aliensCreate(gameOver);
     engineRegister(keyboardUpdate);
     engineRegister(explosionsDestroy);
     engineRegister(ufoActions);
@@ -275,7 +299,8 @@ main(int argc, char **argv)
     engineRegister(aliensActions);
     engineRegister(bulletActions);
 
-    clock_gettime(CLOCK_MONOTONIC, &timer);
+    clock_gettime(CLOCK_MONOTONIC, &timer_get_shooter);
+    clock_gettime(CLOCK_MONOTONIC, &timer_alien_move);
 
     while (gaming)
     {

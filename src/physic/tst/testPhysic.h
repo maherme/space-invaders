@@ -59,7 +59,7 @@ void
 testPhysicCheckBorderCollisionLeftTrue(void **status);
 
 void
-testPhysicCheckBorderCollisionFalse(void **status);
+testPhysicCheckBorderCollisionInvalidDir(void **status);
 
 void
 testPhysicCheckSpriteBoxCollisionNullParameters(void **status);
