@@ -28,13 +28,6 @@ __wrap_graphDestroyImage(sprite_t *sprite)
     function_called();
 }
 
-void
-__wrap_graphScaleImage(sprite_t *sprite)
-{
-    (void)sprite;
-    function_called();
-}
-
 sprite_t dummy;
 
 sprite_t *

@@ -15,8 +15,7 @@ typedef struct
     int *main_argc;
     char **main_argv;
     unsigned int displayMode;
-    int windowWidth;
-    int windowHeight;
+    unsigned int scale;
     int windowPositionX;
     int windowPositionY;
     char *windowName;

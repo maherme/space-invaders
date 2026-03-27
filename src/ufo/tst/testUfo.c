@@ -29,7 +29,6 @@ testUfoCreateLeftDirection(void **status)
 
     will_return(__wrap_rand, 1);
     expect_function_call(__wrap_rand);
-    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphUpdateTimeSprite);
     expect_function_call(__wrap_graphRegisterPrint);
@@ -45,7 +44,6 @@ testUfoCreateRightDirection(void **status)
 
     will_return(__wrap_rand, RAND_MAX);
     expect_function_call(__wrap_rand);
-    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphUpdateTimeSprite);
     expect_function_call(__wrap_graphRegisterPrint);

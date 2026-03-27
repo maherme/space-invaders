@@ -40,7 +40,6 @@ registerExplosionBullet(void (*callback)(void))
 {
     expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_utilsCalloc);
-    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     will_return(__wrap_clock_gettime, 0); /* tv_sec */
     will_return(__wrap_clock_gettime, 0); /* tv_nsec */
@@ -58,7 +57,6 @@ registerExplosionSpaceship(void (*callback)(void))
     will_return(__wrap_clock_gettime, 0); /* tv_sec */
     will_return(__wrap_clock_gettime, 0); /* tv_nsec */
     expect_function_call(__wrap_clock_gettime);
-    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     will_return(__wrap_clock_gettime, 0); /* tv_sec */
     will_return(__wrap_clock_gettime, 0); /* tv_nsec */
@@ -86,7 +84,6 @@ testExplosionCreate(void **status)
             will_return(__wrap_clock_gettime, 0); /* tv_nsec */
             expect_function_call(__wrap_clock_gettime);
         }
-        expect_function_call(__wrap_graphScaleImage);
         expect_function_call(__wrap_graphCreateImage);
         will_return(__wrap_clock_gettime, 0); /* tv_sec */
         will_return(__wrap_clock_gettime, 0); /* tv_nsec */

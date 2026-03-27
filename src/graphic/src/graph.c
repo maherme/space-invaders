@@ -27,20 +27,6 @@ graphCreateImage(sprite_t *sprite)
 }
 
 void
-graphScaleImage(sprite_t *sprite)
-{
-    if (!sprite)
-    {
-        return;
-    }
-
-    sprite->scale = SCALE_IMAGE;
-    sprite->scaled_height = sprite->height * SCALE_IMAGE;
-    sprite->scaled_width = sprite->width * SCALE_IMAGE;
-    sprite->pixels_to_move = sprite->pixels_to_move * SCALE_IMAGE;
-}
-
-void
 graphDestroyImage(sprite_t *sprite)
 {
     if (!sprite)
@@ -70,9 +56,9 @@ graphGetSpriteCoordinates(const sprite_t *const sprite, sprite_coordinates_t *co
     }
 
     coordinates->x1 = sprite->x;
-    coordinates->x2 = sprite->x + sprite->scaled_width;
+    coordinates->x2 = sprite->x + sprite->width;
     coordinates->y1 = sprite->y;
-    coordinates->y2 = sprite->y + sprite->scaled_height;
+    coordinates->y2 = sprite->y + sprite->height;
 
     return 0;
 }
@@ -85,6 +71,8 @@ graphUpdateImageToPrint(sprite_t *sprite)
         sprite->selected_image = (sprite->selected_image + 1) % sprite->num_frames;
         size_t image_offset = sprite->selected_image * sprite->height * sprite->width * NUM_RGBA_CHANNELS;
         sprite->image = sprite->image_base + image_offset;
+        glBindTexture(GL_TEXTURE_2D, sprite->textureId);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sprite->width, sprite->height, GL_RGBA, GL_UNSIGNED_BYTE, sprite->image);
     }
 }
 
@@ -110,15 +98,35 @@ graphPrintImage(const sprite_t *const sprite)
     }
 
     glBindTexture(GL_TEXTURE_2D, sprite->textureId);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sprite->width, sprite->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, sprite->image);
     glBegin(GL_QUADS);
     glTexCoord2f(0.0, 1.0);
     glVertex2i(sprite->x, sprite->y);
     glTexCoord2f(1.0, 1.0);
-    glVertex2i(sprite->x + sprite->scaled_width, sprite->y);
+    glVertex2i(sprite->x + sprite->width, sprite->y);
     glTexCoord2f(1.0, 0.0);
-    glVertex2i(sprite->x + sprite->scaled_width, sprite->y + sprite->scaled_height);
+    glVertex2i(sprite->x + sprite->width, sprite->y + sprite->height);
     glTexCoord2f(0.0, 0.0);
-    glVertex2i(sprite->x, sprite->y + sprite->scaled_height);
+    glVertex2i(sprite->x, sprite->y + sprite->height);
     glEnd();
+}
+
+void
+graphPrintGameBorder(void)
+{
+    GLubyte color[NUM_RGBA_CHANNELS] = W;
+
+    glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT); // guarda color y flags
+
+    glDisable(GL_TEXTURE_2D);
+    glColor4ubv(color);
+    glLineWidth(2.0f);
+
+    glBegin(GL_LINE_LOOP);
+    glVertex2i(0, 0);
+    glVertex2i(WINDOW_WIDTH, 0);
+    glVertex2i(WINDOW_WIDTH, WINDOW_HEIGHT);
+    glVertex2i(0, WINDOW_HEIGHT);
+    glEnd();
+
+    glPopAttrib(); // restaura todo
 }

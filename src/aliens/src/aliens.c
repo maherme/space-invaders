@@ -15,8 +15,8 @@
 #include <assert.h>
 #include <stdbool.h>
 
-#define ALIEN_CELL_WIDTH 32
-#define ALIEN_CELL_HEIGHT 32
+#define ALIEN_CELL_WIDTH 16
+#define ALIEN_CELL_HEIGHT 16
 #define ALIEN_NUM_FRAMES 2
 #define SQUID_WIDTH 8
 #define SQUID_HEIGHT 8
@@ -153,7 +153,6 @@ alienCreate(int x, int y, alien_type_t type, int index)
     inst->sprite.x = x;
     inst->sprite.y = y;
     inst->sprite.time_to_move = 0;
-    graphScaleImage(&inst->sprite);
     graphCreateImage(&inst->sprite);
     inst->sprite.pixels_to_move = alienPool.pixels_to_move;
     inst->sprite.max_movement.right = WINDOW_WIDTH;
@@ -288,7 +287,7 @@ getFormationBounds(int *left, int *right, int *down)
         }
 
         int x = a->sprite.x;
-        int w = a->sprite.scaled_width;
+        int w = a->sprite.width;
         int y = a->sprite.y;
 
         if (x < *left)

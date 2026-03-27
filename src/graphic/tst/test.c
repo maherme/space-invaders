@@ -20,8 +20,6 @@ main(void)
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(testGraphCreateImageNullParameter),
         cmocka_unit_test(testGraphCreateImageSuccess),
-        cmocka_unit_test(testGraphScaleImageNullParameter),
-        cmocka_unit_test(testGraphScaleImage),
         cmocka_unit_test(testGraphDestroyImageNullParameter),
         cmocka_unit_test(testGraphDestroyImage),
         cmocka_unit_test(testGraphGetSpriteFail),
@@ -35,6 +33,7 @@ main(void)
         cmocka_unit_test(testGraphUpdateTimeSprite),
         cmocka_unit_test(testGraphPrintImageFail),
         cmocka_unit_test(testGraphPrintImageSuccess),
+        cmocka_unit_test(testGraphPrintGameBorder),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

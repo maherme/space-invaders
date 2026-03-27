@@ -27,7 +27,9 @@ main(void)
         cmocka_unit_test_setup(testGraphUnregisterPrintSuccessOneCallback, setup),
         cmocka_unit_test_setup(testGraphUnregisterPrintSuccessLastCallback, setup),
         cmocka_unit_test_setup(testGraphUnregisterPrintSuccessMiddleCallback, setup),
-        cmocka_unit_test_setup(testGraphGlutReshape, setup),
+        cmocka_unit_test_setup(testGraphGlutDisplay, setup),
+        cmocka_unit_test_setup(testGraphGlutReshapeScaleLowerThanOne, setup),
+        cmocka_unit_test_setup(testGraphGlutReshapeScaleHigherThanOne, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

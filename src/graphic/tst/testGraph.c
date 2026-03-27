@@ -56,6 +56,29 @@ __wrap_glTexImage2D(GLenum target,
 }
 
 void
+__wrap_glTexSubImage2D(GLenum target,
+                       GLint level,
+                       GLint xoffset,
+                       GLint yoffset,
+                       GLsizei width,
+                       GLsizei height,
+                       GLenum format,
+                       GLenum type,
+                       const void *pixels)
+{
+    check_expected_uint(target);
+    check_expected_int(level);
+    check_expected_int(xoffset);
+    check_expected_int(yoffset);
+    check_expected_int(width);
+    check_expected_int(height);
+    check_expected_uint(format);
+    check_expected_uint(type);
+    check_expected_ptr(pixels);
+    function_called();
+}
+
+void
 __wrap_glTexParameteri(GLenum target, GLenum pname, GLint param)
 {
     check_expected_uint(target);
@@ -98,6 +121,40 @@ __wrap_glDeleteTextures(GLsizei n, const GLuint *textures)
 {
     check_expected_int(n);
     check_expected_ptr(textures);
+    function_called();
+}
+
+void
+__wrap_glPushAttrib(GLbitfield mask)
+{
+    check_expected_uint(mask);
+    function_called();
+}
+
+void
+__wrap_glDisable(GLenum cap)
+{
+    check_expected_uint(cap);
+    function_called();
+}
+
+void
+__wrap_glColor4ubv(const GLubyte *v)
+{
+    (void)v;
+    function_called();
+}
+
+void
+__wrap_glLineWidth(GLfloat width)
+{
+    check_expected_float(width);
+    function_called();
+}
+
+void
+__wrap_glPopAttrib(void)
+{
     function_called();
 }
 
@@ -165,27 +222,6 @@ testGraphCreateImageSuccess(void **status)
 }
 
 void
-testGraphScaleImageNullParameter(void **status)
-{
-    (void)status;
-
-    graphScaleImage(NULL);
-}
-
-void
-testGraphScaleImage(void **status)
-{
-    (void)status;
-
-    sprite_t sprite = {.height = 1, .width = 1, .pixels_to_move = 1};
-
-    graphScaleImage(&sprite);
-    assert_int_equal(2, sprite.scaled_height);
-    assert_int_equal(2, sprite.scaled_width);
-    assert_int_equal(2, sprite.pixels_to_move);
-}
-
-void
 testGraphDestroyImageNullParameter(void **status)
 {
     (void)status;
@@ -240,14 +276,14 @@ void
 testGraphGetSpriteCoordinates(void **status)
 {
     (void)status;
-    sprite_t sprite = {.x = 1, .y = 2, .scaled_height = 3, .scaled_width = 4};
+    sprite_t sprite = {.x = 1, .y = 2, .height = 3, .width = 4};
     sprite_coordinates_t coordinates = {0};
 
     assert_int_equal(0, graphGetSpriteCoordinates(&sprite, &coordinates));
     assert_int_equal(sprite.x, coordinates.x1);
-    assert_int_equal(sprite.x + sprite.scaled_width, coordinates.x2);
+    assert_int_equal(sprite.x + sprite.width, coordinates.x2);
     assert_int_equal(sprite.y, coordinates.y1);
-    assert_int_equal(sprite.y + sprite.scaled_height, coordinates.y2);
+    assert_int_equal(sprite.y + sprite.height, coordinates.y2);
 }
 
 void
@@ -294,6 +330,20 @@ testGraphUpdateImageToPrintMoreOneFrame(void **status)
                        .image = (const char *)images,
                        .width = 1,
                        .height = 1};
+
+    expect_uint_value(__wrap_glBindTexture, target, GL_TEXTURE_2D);
+    expect_function_call(__wrap_glBindTexture);
+
+    expect_uint_value(__wrap_glTexSubImage2D, target, GL_TEXTURE_2D);
+    expect_int_value(__wrap_glTexSubImage2D, level, 0);
+    expect_int_value(__wrap_glTexSubImage2D, xoffset, 0);
+    expect_int_value(__wrap_glTexSubImage2D, yoffset, 0);
+    expect_int_value(__wrap_glTexSubImage2D, width, sprite.width);
+    expect_int_value(__wrap_glTexSubImage2D, height, sprite.height);
+    expect_uint_value(__wrap_glTexSubImage2D, format, GL_RGBA);
+    expect_uint_value(__wrap_glTexSubImage2D, type, GL_UNSIGNED_BYTE);
+    expect_uint_value(__wrap_glTexSubImage2D, pixels, (uintptr_t)&images[1]);
+    expect_function_call(__wrap_glTexSubImage2D);
 
     graphUpdateImageToPrint(&sprite);
 
@@ -344,17 +394,6 @@ testGraphPrintImageSuccess(void **status)
     expect_uint_value(__wrap_glBindTexture, target, GL_TEXTURE_2D);
     expect_function_call(__wrap_glBindTexture);
 
-    expect_uint_value(__wrap_glTexImage2D, target, GL_TEXTURE_2D);
-    expect_int_value(__wrap_glTexImage2D, level, 0);
-    expect_int_value(__wrap_glTexImage2D, internalformat, GL_RGBA);
-    expect_int_value(__wrap_glTexImage2D, width, sprite.width);
-    expect_int_value(__wrap_glTexImage2D, height, sprite.height);
-    expect_int_value(__wrap_glTexImage2D, border, 0);
-    expect_uint_value(__wrap_glTexImage2D, format, GL_RGBA);
-    expect_uint_value(__wrap_glTexImage2D, type, GL_UNSIGNED_BYTE);
-    expect_uint_value(__wrap_glTexImage2D, data, (uintptr_t)sprite.image);
-    expect_function_call(__wrap_glTexImage2D);
-
     expect_uint_value(__wrap_glBegin, mode, GL_QUADS);
     expect_function_call(__wrap_glBegin);
 
@@ -370,7 +409,7 @@ testGraphPrintImageSuccess(void **status)
     expect_float(__wrap_glTexCoord2f, t, 1.0, 0);
     expect_function_call(__wrap_glTexCoord2f);
 
-    expect_int_value(__wrap_glVertex2i, x, sprite.x + sprite.scale * sprite.width);
+    expect_int_value(__wrap_glVertex2i, x, sprite.x + sprite.width);
     expect_int_value(__wrap_glVertex2i, y, sprite.y);
     expect_function_call(__wrap_glVertex2i);
 
@@ -378,8 +417,8 @@ testGraphPrintImageSuccess(void **status)
     expect_float(__wrap_glTexCoord2f, t, 0.0, 0);
     expect_function_call(__wrap_glTexCoord2f);
 
-    expect_int_value(__wrap_glVertex2i, x, sprite.x + sprite.scale * sprite.width);
-    expect_int_value(__wrap_glVertex2i, y, sprite.y + sprite.scale * sprite.height);
+    expect_int_value(__wrap_glVertex2i, x, sprite.x + sprite.width);
+    expect_int_value(__wrap_glVertex2i, y, sprite.y + sprite.height);
     expect_function_call(__wrap_glVertex2i);
 
     expect_float(__wrap_glTexCoord2f, s, 0.0, 0);
@@ -387,10 +426,42 @@ testGraphPrintImageSuccess(void **status)
     expect_function_call(__wrap_glTexCoord2f);
 
     expect_int_value(__wrap_glVertex2i, x, sprite.x);
-    expect_int_value(__wrap_glVertex2i, y, sprite.y + sprite.scale * sprite.height);
+    expect_int_value(__wrap_glVertex2i, y, sprite.y + sprite.height);
     expect_function_call(__wrap_glVertex2i);
 
     expect_function_call(__wrap_glEnd);
 
     graphPrintImage(&sprite);
+}
+
+void
+testGraphPrintGameBorder(void **status)
+{
+    (void)status;
+
+    expect_uint_value(__wrap_glPushAttrib, mask, GL_CURRENT_BIT | GL_ENABLE_BIT);
+    expect_function_call(__wrap_glPushAttrib);
+    expect_uint_value(__wrap_glDisable, cap, GL_TEXTURE_2D);
+    expect_function_call(__wrap_glDisable);
+    expect_function_call(__wrap_glColor4ubv);
+    expect_float(__wrap_glLineWidth, width, 2.0, 0);
+    expect_function_call(__wrap_glLineWidth);
+    expect_uint_value(__wrap_glBegin, mode, GL_LINE_LOOP);
+    expect_function_call(__wrap_glBegin);
+    expect_int_value(__wrap_glVertex2i, x, 0);
+    expect_int_value(__wrap_glVertex2i, y, 0);
+    expect_function_call(__wrap_glVertex2i);
+    expect_int_value(__wrap_glVertex2i, x, WINDOW_WIDTH);
+    expect_int_value(__wrap_glVertex2i, y, 0);
+    expect_function_call(__wrap_glVertex2i);
+    expect_int_value(__wrap_glVertex2i, x, WINDOW_WIDTH);
+    expect_int_value(__wrap_glVertex2i, y, WINDOW_HEIGHT);
+    expect_function_call(__wrap_glVertex2i);
+    expect_int_value(__wrap_glVertex2i, x, 0);
+    expect_int_value(__wrap_glVertex2i, y, WINDOW_HEIGHT);
+    expect_function_call(__wrap_glVertex2i);
+    expect_function_call(__wrap_glEnd);
+    expect_function_call(__wrap_glPopAttrib);
+
+    graphPrintGameBorder();
 }

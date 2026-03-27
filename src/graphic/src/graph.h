@@ -12,9 +12,8 @@
 
 #include <GL/glut.h>
 
-#define WINDOW_WIDTH 448
-#define WINDOW_HEIGHT 512
-#define SCALE_IMAGE 2
+#define WINDOW_WIDTH 224
+#define WINDOW_HEIGHT 256
 
 #define NUM_RGBA_CHANNELS 4
 #define W {(char)255, (char)255, (char)255, (char)255}
@@ -44,9 +43,6 @@ typedef struct
     int y;
     int width;
     int height;
-    int scale;
-    int scaled_width;
-    int scaled_height;
     const char *image_base;
     const char *image;
     int selected_image;
@@ -67,9 +63,6 @@ void
 graphCreateImage(sprite_t *sprite);
 
 void
-graphScaleImage(sprite_t *sprite);
-
-void
 graphDestroyImage(sprite_t *sprite);
 
 sprite_t *
@@ -86,5 +79,8 @@ graphUpdateTimeSprite(sprite_t *sprite);
 
 void
 graphPrintImage(const sprite_t *const sprite);
+
+void
+graphPrintGameBorder(void);
 
 #endif

@@ -35,6 +35,12 @@ void
 testGraphUnregisterPrintSuccessMiddleCallback(void **status);
 
 void
-testGraphGlutReshape(void **status);
+testGraphGlutDisplay(void **status);
+
+void
+testGraphGlutReshapeScaleLowerThanOne(void **status);
+
+void
+testGraphGlutReshapeScaleHigherThanOne(void **status);
 
 #endif

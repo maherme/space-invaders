@@ -23,7 +23,6 @@ testSpaceshipCreate(void **status)
     int x_pos = 10;
     int y_pos = 20;
 
-    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphRegisterPrint);
 
