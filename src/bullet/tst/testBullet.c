@@ -46,7 +46,6 @@ testBulletCreate(void **status)
             expect_function_call(__wrap_rand);
         }
 
-        expect_function_call(__wrap_graphScaleImage);
         expect_function_call(__wrap_graphCreateImage);
         expect_function_call(__wrap_graphRegisterPrint);
 
@@ -63,7 +62,6 @@ testBulletCreateAllTypeBulletAlien(void **status)
     will_return(__wrap_rand, 0);
     expect_function_call(__wrap_rand);
 
-    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphRegisterPrint);
 
@@ -73,7 +71,6 @@ testBulletCreateAllTypeBulletAlien(void **status)
     will_return(__wrap_rand, 50);
     expect_function_call(__wrap_rand);
 
-    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphRegisterPrint);
 
@@ -83,7 +80,6 @@ testBulletCreateAllTypeBulletAlien(void **status)
     will_return(__wrap_rand, 80);
     expect_function_call(__wrap_rand);
 
-    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphRegisterPrint);
 
@@ -95,7 +91,6 @@ testBulletCreateTwoBulletSpaceship(void **status)
 {
     (void)status;
 
-    expect_function_call(__wrap_graphScaleImage);
     expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphRegisterPrint);
 

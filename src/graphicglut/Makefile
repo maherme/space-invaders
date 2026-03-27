@@ -28,5 +28,6 @@ LDFLAGS += -Wl,--wrap=glutInit \
 		   -Wl,--wrap=gluOrtho2D \
 		   -Wl,--wrap=glEnable \
 		   -Wl,--wrap=graphPrintImage \
+		   -Wl,--wrap=graphPrintGameBorder \
 		   -Wl,--wrap=utilsCalloc \
 		   -Wl,--wrap=utilsFree

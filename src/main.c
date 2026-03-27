@@ -48,7 +48,7 @@ bulletActionsSingle(bullet_t bullet)
         if (type == BULLET_SPACESHIP)
         {
             explosionCreate(bullet_sprite->x,
-                            WINDOW_HEIGHT - explosionsGetExplosionHeight(EXPLOSION_BULLET_SPACESHIP) * SCALE_IMAGE,
+                            WINDOW_HEIGHT - explosionsGetExplosionHeight(EXPLOSION_BULLET_SPACESHIP),
                             EXPLOSION_BULLET_SPACESHIP,
                             NULL);
         }
@@ -130,8 +130,8 @@ spaceshipFire(void)
     }
 
     sprite_t *spaceship_sprite = graphGetSprite((base_t *)spaceship);
-    bulletCreate(spaceship_sprite->x + spaceship_sprite->scaled_width / 2,
-                 spaceship_sprite->y + spaceship_sprite->scaled_height,
+    bulletCreate(spaceship_sprite->x + spaceship_sprite->width / 2,
+                 spaceship_sprite->y + spaceship_sprite->height,
                  BULLET_SPACESHIP);
 }
 
@@ -191,7 +191,7 @@ aliensActions(void)
         if (alien)
         {
             sprite_t *alien_sprite = graphGetSprite((base_t *)alien);
-            bulletCreate(alien_sprite->x + alien_sprite->scaled_width / 2, alien_sprite->y, BULLET_ALIEN);
+            bulletCreate(alien_sprite->x + alien_sprite->width / 2, alien_sprite->y, BULLET_ALIEN);
             clock_gettime(CLOCK_MONOTONIC, &timer_get_shooter);
         }
     }
@@ -275,8 +275,7 @@ main(int argc, char **argv)
         .main_argc = &argc,
         .main_argv = argv,
         .displayMode = GLUT_DOUBLE | GLUT_RGB,
-        .windowWidth = WINDOW_WIDTH,
-        .windowHeight = WINDOW_HEIGHT,
+        .scale = 2,
         .windowPositionX = 0,
         .windowPositionY = 0,
         .windowName = "Space Invaders",

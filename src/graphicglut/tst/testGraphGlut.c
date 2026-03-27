@@ -101,8 +101,7 @@ testGraphInitGlut(void **status)
         .main_argc = &argc,
         .main_argv = argv,
         .displayMode = GLUT_DOUBLE | GLUT_RGB,
-        .windowWidth = WINDOW_WIDTH,
-        .windowHeight = WINDOW_HEIGHT,
+        .scale = 2,
         .windowPositionX = 0,
         .windowPositionY = 0,
         .windowName = "Foo",
@@ -117,8 +116,8 @@ testGraphInitGlut(void **status)
     expect_uint_value(__wrap_glutInitDisplayMode, mode, GLUT_DOUBLE | GLUT_RGB);
     expect_function_call(__wrap_glutInitDisplayMode);
 
-    expect_int_value(__wrap_glutInitWindowSize, width, WINDOW_WIDTH);
-    expect_int_value(__wrap_glutInitWindowSize, height, WINDOW_HEIGHT);
+    expect_int_value(__wrap_glutInitWindowSize, width, WINDOW_WIDTH * initGlutConfig.scale);
+    expect_int_value(__wrap_glutInitWindowSize, height, WINDOW_HEIGHT * initGlutConfig.scale);
     expect_function_call(__wrap_glutInitWindowSize);
 
     expect_int_value(__wrap_glutInitWindowPosition, x, 0);

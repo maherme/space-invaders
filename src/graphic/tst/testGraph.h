@@ -17,12 +17,6 @@ void
 testGraphCreateImageSuccess(void **status);
 
 void
-testGraphScaleImageNullParameter(void **status);
-
-void
-testGraphScaleImage(void **status);
-
-void
 testGraphDestroyImageNullParameter(void **status);
 
 void
@@ -60,5 +54,8 @@ testGraphPrintImageFail(void **status);
 
 void
 testGraphPrintImageSuccess(void **status);
+
+void
+testGraphPrintGameBorder(void **status);
 
 #endif

@@ -25,6 +25,12 @@ graphGlutReshape(int w, int h);
 #ifdef UNIT_TESTING
 void
 helperUT_graphGlutResetRegisteredContext(void);
+
+bool
+helperUT_graphGlutContextIsRegistered(void *ctx);
+
+void
+helperUT_graphGlutInjectContext(void *ctx);
 #endif
 
 #endif

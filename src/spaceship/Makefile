@@ -16,7 +16,6 @@ INCLUDES += -I../graphic/src \
 
 LDFLAGS += -Wl,--wrap=graphCreateImage \
 		   -Wl,--wrap=graphDestroyImage \
-		   -Wl,--wrap=graphScaleImage \
 		   -Wl,--wrap=graphGetSprite \
 		   -Wl,--wrap=graphRegisterPrint \
 		   -Wl,--wrap=graphUnregisterPrint

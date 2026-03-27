@@ -19,7 +19,6 @@ LDFLAGS += -Wl,--wrap=utilsCalloc \
 		   -Wl,--wrap=utilsFree \
 		   -Wl,--wrap=utilsCheckTimeout \
 		   -Wl,--wrap=graphCreateImage \
-		   -Wl,--wrap=graphScaleImage \
 		   -Wl,--wrap=graphDestroyImage \
 		   -Wl,--wrap=graphGetSprite \
 		   -Wl,--wrap=graphUpdateTimeSprite \

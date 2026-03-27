@@ -14,6 +14,7 @@ INCLUDES += -I../utils/src
 
 LDFLAGS += -Wl,--wrap=glGenTextures \
 		   -Wl,--wrap=glTexImage2D \
+		   -Wl,--wrap=glTexSubImage2D \
 		   -Wl,--wrap=glTexParameteri \
 		   -Wl,--wrap=glBegin \
 		   -Wl,--wrap=glTexCoord2f \
@@ -21,6 +22,11 @@ LDFLAGS += -Wl,--wrap=glGenTextures \
 		   -Wl,--wrap=glEnd \
 		   -Wl,--wrap=glBindTexture \
 		   -Wl,--wrap=glDeleteTextures \
+		   -Wl,--wrap=glPushAttrib \
+		   -Wl,--wrap=glDisable \
+		   -Wl,--wrap=glColor4ubv \
+		   -Wl,--wrap=glLineWidth \
+		   -Wl,--wrap=glPopAttrib \
 		   -Wl,--wrap=gettimeofday \
 		   -Wl,--wrap=utilsFree \
 		   -Wl,--wrap=clock_gettime

@@ -33,7 +33,7 @@ physicMoveSprite(sprite_t *sprite, direction_t direction)
         case RIGHT:
             if (coord.x2 + sprite->pixels_to_move >= sprite->max_movement.right)
             {
-                sprite->x = sprite->max_movement.right - sprite->scaled_width;
+                sprite->x = sprite->max_movement.right - sprite->width;
                 return;
             }
             sprite->x += sprite->pixels_to_move;
@@ -49,7 +49,7 @@ physicMoveSprite(sprite_t *sprite, direction_t direction)
         case UP:
             if (coord.y2 + sprite->pixels_to_move >= sprite->max_movement.up)
             {
-                sprite->y = sprite->max_movement.up - sprite->scaled_height;
+                sprite->y = sprite->max_movement.up - sprite->height;
                 return;
             }
             sprite->y += sprite->pixels_to_move;
@@ -154,12 +154,12 @@ checkPixelsCollision(const sprite_t *const sprite1,
         for (int x = overlap_left; x < overlap_right; x++)
         {
             // Local coords in sprite1
-            int x1 = (x - coord1->x1) / sprite1->scale;
-            int y1 = (y - coord1->y1) / sprite1->scale;
+            int x1 = x - coord1->x1;
+            int y1 = y - coord1->y1;
 
             // Local coords in sprite2
-            int x2 = (x - coord2->x1) / sprite2->scale;
-            int y2 = (y - coord2->y1) / sprite2->scale;
+            int x2 = x - coord2->x1;
+            int y2 = y - coord2->y1;
 
             // RGBA buffer index
             int idx1 = (y1 * sprite1->width + x1) * NUM_RGBA_CHANNELS;

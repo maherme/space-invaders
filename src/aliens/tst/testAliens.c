@@ -45,7 +45,6 @@ testAliensCreate(void **status)
 
     for (int i = 0; i < ALIENS_INITIAL_NUMBER; i++)
     {
-        expect_function_call(__wrap_graphScaleImage);
         expect_function_call(__wrap_graphCreateImage);
         expect_function_call(__wrap_graphUpdateTimeSprite);
         expect_function_call(__wrap_graphRegisterPrint);
@@ -181,13 +180,11 @@ testAliensMoveRight(void **status)
     sprite_t sprite_alien1 = {
         .x = 64,
         .y = 100,
-        .scaled_width = 1,
     };
 
     sprite_t sprite_alien2 = {
         .x = 32,
         .y = 132,
-        .scaled_width = 1,
     };
 
     helperUT_alienSetCurrentDirection(RIGHT);
@@ -210,7 +207,6 @@ testAliensMoveLeft(void **status)
     sprite_t sprite = {
         .x = 100,
         .y = 100,
-        .scaled_width = 1,
     };
 
     helperUT_alienSetCurrentDirection(LEFT);
@@ -229,7 +225,6 @@ testAliensMoveMaxLeft(void **status)
     sprite_t sprite = {
         .x = 0,
         .y = 100,
-        .scaled_width = 1,
     };
 
     helperUT_alienSetCurrentDirection(LEFT);
@@ -248,7 +243,6 @@ testAliensMoveMaxRight(void **status)
     sprite_t sprite = {
         .x = WINDOW_WIDTH,
         .y = 100,
-        .scaled_width = 1,
     };
 
     helperUT_alienSetCurrentDirection(RIGHT);
@@ -266,7 +260,6 @@ testAliensMoveGameOver(void **status)
     (void)status;
     sprite_t sprite = {
         .x = 0,
-        .scaled_width = 1,
         .y = 16,
     };
 
@@ -284,7 +277,6 @@ testAliensMoveGameOverNull(void **status)
     (void)status;
     sprite_t sprite = {
         .x = 0,
-        .scaled_width = 1,
         .y = 16,
     };
 
