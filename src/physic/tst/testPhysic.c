@@ -84,8 +84,8 @@ testPhysicMoveSpriteRight(void **status)
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
     checkGraphGetSpriteCoordinates(&sprite, sprite.x, sprite.x + sprite.width, 0, 0);
-    expect_uint_value(__wrap_graphUpdateImageToPrint, sprite, (uintptr_t)&sprite);
-    expect_function_call(__wrap_graphUpdateImageToPrint);
+    expect_uint_value(__wrap_graphNextImageToPrint, sprite, (uintptr_t)&sprite);
+    expect_function_call(__wrap_graphNextImageToPrint);
     expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
     expect_function_call(__wrap_graphUpdateTimeSprite);
 
@@ -124,8 +124,8 @@ testPhysicMoveSpriteLeft(void **status)
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
     checkGraphGetSpriteCoordinates(&sprite, sprite.x, sprite.x + sprite.width, 0, 0);
-    expect_uint_value(__wrap_graphUpdateImageToPrint, sprite, (uintptr_t)&sprite);
-    expect_function_call(__wrap_graphUpdateImageToPrint);
+    expect_uint_value(__wrap_graphNextImageToPrint, sprite, (uintptr_t)&sprite);
+    expect_function_call(__wrap_graphNextImageToPrint);
     expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
     expect_function_call(__wrap_graphUpdateTimeSprite);
 
@@ -164,8 +164,8 @@ testPhysicMoveSpriteUp(void **status)
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
     checkGraphGetSpriteCoordinates(&sprite, 0, 0, sprite.y, sprite.y + sprite.height);
-    expect_uint_value(__wrap_graphUpdateImageToPrint, sprite, (uintptr_t)&sprite);
-    expect_function_call(__wrap_graphUpdateImageToPrint);
+    expect_uint_value(__wrap_graphNextImageToPrint, sprite, (uintptr_t)&sprite);
+    expect_function_call(__wrap_graphNextImageToPrint);
     expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
     expect_function_call(__wrap_graphUpdateTimeSprite);
 
@@ -204,8 +204,8 @@ testPhysicMoveSpriteDown(void **status)
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
     checkGraphGetSpriteCoordinates(&sprite, 0, 0, sprite.y, sprite.y + sprite.height);
-    expect_uint_value(__wrap_graphUpdateImageToPrint, sprite, (uintptr_t)&sprite);
-    expect_function_call(__wrap_graphUpdateImageToPrint);
+    expect_uint_value(__wrap_graphNextImageToPrint, sprite, (uintptr_t)&sprite);
+    expect_function_call(__wrap_graphNextImageToPrint);
     expect_uint_value(__wrap_graphUpdateTimeSprite, sprite, (uintptr_t)&sprite);
     expect_function_call(__wrap_graphUpdateTimeSprite);
 

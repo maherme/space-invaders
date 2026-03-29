@@ -292,7 +292,7 @@ testGraphUpdateImageToPrintNullParameter(void **status)
 {
     (void)status;
 
-    graphUpdateImageToPrint(NULL);
+    graphNextImageToPrint(NULL);
 }
 
 void
@@ -309,7 +309,7 @@ testGraphUpdateImageToPrintOneFrame(void **status)
                        .width = 1,
                        .height = 1};
 
-    graphUpdateImageToPrint(&sprite);
+    graphNextImageToPrint(&sprite);
 
     assert_int_equal(sprite.selected_image, 0);
     assert_uint_equal(sprite.image, (uintptr_t)images);
@@ -347,7 +347,7 @@ testGraphUpdateImageToPrintMoreOneFrame(void **status)
     expect_uint_value(__wrap_glTexSubImage2D, pixels, (uintptr_t)&images[1]);
     expect_function_call(__wrap_glTexSubImage2D);
 
-    graphUpdateImageToPrint(&sprite);
+    graphNextImageToPrint(&sprite);
 
     assert_int_equal(sprite.selected_image, 1);
     assert_uint_equal(sprite.image, (uintptr_t)&images[1]);

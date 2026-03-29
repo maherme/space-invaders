@@ -34,7 +34,7 @@ __wrap_graphGetSpriteCoordinates(const sprite_t *const sprite, sprite_coordinate
 }
 
 void
-__wrap_graphUpdateImageToPrint(sprite_t *sprite)
+__wrap_graphNextImageToPrint(sprite_t *sprite)
 {
     check_expected_ptr(sprite);
     function_called();

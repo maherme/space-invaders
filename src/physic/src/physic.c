@@ -68,7 +68,7 @@ physicMoveSprite(sprite_t *sprite, direction_t direction)
             break;
     }
 
-    graphUpdateImageToPrint(sprite);
+    graphNextImageToPrint(sprite);
     graphUpdateTimeSprite(sprite);
 }
 

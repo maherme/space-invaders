@@ -39,7 +39,7 @@ __wrap_graphGetSprite(base_t *b)
 }
 
 void
-__wrap_graphUpdateImageToPrint(sprite_t *sprite)
+__wrap_graphNextImageToPrint(sprite_t *sprite)
 {
     (void)sprite;
     function_called();
