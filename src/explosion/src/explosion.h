@@ -21,7 +21,9 @@ typedef enum
     EXPLOSION_ALIEN,
 } explosion_type_t;
 
-void
+typedef struct explosion_instance *explosion_t;
+
+explosion_t
 explosionCreate(int x, int y, explosion_type_t type, void (*callback)(void));
 
 void

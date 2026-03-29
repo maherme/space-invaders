@@ -61,3 +61,18 @@ bunkersCreate(void)
         graphRegisterPrint(&bunker->sprite);
     }
 }
+
+void
+bunkersCallFunctionForEach(void (*fn)(bunker_t, void *ctx), void *ctx)
+{
+    if (!fn)
+    {
+        assert(!"pointer to fn must not be NULL");
+        return;
+    }
+
+    for (int i = 0; i < NUM_BUNKERS; i++)
+    {
+        fn(&bunkerPool[i], ctx);
+    }
+}

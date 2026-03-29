@@ -29,3 +29,34 @@ testBunkersCreate(void **status)
 
     bunkersCreate();
 }
+
+void
+testBunkersCallFunctionForEachNullParameter(void **status)
+{
+    (void)status;
+
+    bunkersCallFunctionForEach(NULL, NULL);
+}
+
+static void
+foo(bunker_t bunker, void *ctx)
+{
+    (void)bunker;
+    check_expected_ptr(ctx);
+    function_called();
+}
+
+void
+testBunkersCallFunctionForEach(void **status)
+{
+    (void)status;
+    void *expected_ctx = (void *)0xdeadbeef;
+
+    for (int i = 0; i < 4; i++)
+    {
+        expect_uint_value(foo, ctx, (uintptr_t)expected_ctx);
+        expect_function_call(foo);
+    }
+
+    bunkersCallFunctionForEach(foo, expected_ctx);
+}

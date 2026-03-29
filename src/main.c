@@ -251,6 +251,51 @@ ufoActions(void)
 }
 
 static void
+checkCollisionsBulletSingleBunkerSingle(bunker_t bunker, void *ctx)
+{
+    sprite_t *bunker_sprite = graphGetSprite((base_t *)bunker);
+    bullet_t bullet = (bullet_t)ctx;
+    sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
+
+    if (physicCheckSpritesPixelCollision(bunker_sprite, bullet_sprite))
+    {
+        bullet_type_t type;
+        bulletGetType(bullet, &type);
+
+        if (!bulletUsed(bullet) || type == BULLET_SPACESHIP)
+        {
+            explosionCreate(bullet_sprite->x, bullet_sprite->y, EXPLOSION_BULLET_SPACESHIP, NULL);
+        }
+        else
+        {
+            explosionCreate(bullet_sprite->x, bullet_sprite->y - bullet_sprite->height / 2, EXPLOSION_BULLET_ALIEN, NULL);
+        }
+
+        bulletDestroy(bullet);
+    }
+}
+
+static void
+checkCollisionsBulletSingleBunkers(bullet_t bullet)
+{
+    bullet_type_t type;
+    bulletGetType(bullet, &type);
+
+    if (!bulletUsed(bullet))
+    {
+        return;
+    }
+
+    bunkersCallFunctionForEach(checkCollisionsBulletSingleBunkerSingle, bullet);
+}
+
+static void
+checkCollisionsBulletsBunkers(void)
+{
+    bulletCallFunctionForEach(checkCollisionsBulletSingleBunkers);
+}
+
+static void
 keyboardUpdate(void)
 {
     if (keyboardGetSpecialKeyState(SPECIAL_KEY_LEFT))
@@ -300,6 +345,7 @@ main(int argc, char **argv)
     engineRegister(checkCollisionsAliensBullet);
     engineRegister(aliensActions);
     engineRegister(bulletActions);
+    engineRegister(checkCollisionsBulletsBunkers);
 
     clock_gettime(CLOCK_MONOTONIC, &timer_get_shooter);
     clock_gettime(CLOCK_MONOTONIC, &timer_alien_move);

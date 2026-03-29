@@ -19,6 +19,8 @@ main(void)
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(testBunkersCreate),
+        cmocka_unit_test(testBunkersCallFunctionForEachNullParameter),
+        cmocka_unit_test(testBunkersCallFunctionForEach),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
