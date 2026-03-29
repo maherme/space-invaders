@@ -249,6 +249,7 @@ explosionCreate(int x, int y, explosion_type_t type, void (*callback)(void))
     new_explosion->sprite.y = y;
     new_explosion->sprite.pixels_to_move = 0;
     new_explosion->sprite.time_to_move = 0;
+    new_explosion->sprite.layer = LAYER_EFFECTS;
     graphCreateImage(&new_explosion->sprite);
     clock_gettime(CLOCK_MONOTONIC, &new_explosion->creation_time);
     graphRegisterPrint(graphGetSprite((base_t *)new_explosion));

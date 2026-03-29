@@ -170,6 +170,7 @@ bulletCreate(int x, int y, bullet_type_t type)
             setBulletType(inst, type);
             inst->sprite.x = x;
             inst->sprite.y = y;
+            inst->sprite.layer = LAYER_GAME_OBJECTS;
             graphCreateImage(&inst->sprite);
             graphRegisterPrint(&inst->sprite);
 

@@ -10,6 +10,7 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
 
+#include "graphGlutCallbacks.h"
 #include <GL/glut.h>
 
 #define WINDOW_WIDTH 224
@@ -45,6 +46,7 @@ typedef struct sprite
     int height;
     const char *image_base;
     const char *image;
+    render_layer_t layer;
     int selected_image;
     int num_frames;
     GLuint textureId;

@@ -10,11 +10,25 @@
 #ifndef __GRAPHGLUTCALLBACKS_H__
 #define __GRAPHGLUTCALLBACKS_H__
 
-int
-graphRegisterPrint(void *ctx);
+struct sprite;
+typedef struct sprite sprite_t;
+
+typedef enum
+{
+    LAYER_BACKGROUND = 0,
+    LAYER_GAME_OBJECTS,
+    LAYER_EFFECTS,
+    NUM_RENDER_LAYERS,
+} render_layer_t;
+
+void
+graphRegisterPrintInit(void);
 
 int
-graphUnregisterPrint(void *ctx);
+graphRegisterPrint(sprite_t *sprite);
+
+int
+graphUnregisterPrint(sprite_t *sprite);
 
 void
 graphGlutDisplay(void);
@@ -24,13 +38,13 @@ graphGlutReshape(int w, int h);
 
 #ifdef UNIT_TESTING
 void
-helperUT_graphGlutResetRegisteredContext(void);
+helperUT_graphGlutResetRegisteredSprites(void);
 
 bool
-helperUT_graphGlutContextIsRegistered(void *ctx);
+helperUT_graphGlutSpriteIsRegistered(sprite_t *sprite);
 
 void
-helperUT_graphGlutInjectContext(void *ctx);
+helperUT_graphGlutInjectSprite(sprite_t *sprite);
 #endif
 
 #endif

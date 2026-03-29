@@ -10,7 +10,8 @@
 include ../../toolchain.mk
 include ../common.mk
 
-INCLUDES += -I../utils/src
+INCLUDES += -I../utils/src \
+			-I../graphicglut/src
 
 LDFLAGS += -Wl,--wrap=glGenTextures \
 		   -Wl,--wrap=glTexImage2D \

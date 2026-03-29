@@ -56,6 +56,7 @@ bunkersCreate(void)
         bunker->sprite.height = BUNKER_HEIGHT;
         memcpy(bunker->image, bunker_image, sizeof(bunker_image));
         bunker->sprite.image = (char *)bunker->image;
+        bunker->sprite.layer = LAYER_BACKGROUND;
         graphCreateImage(&bunker->sprite);
         graphRegisterPrint(&bunker->sprite);
     }
