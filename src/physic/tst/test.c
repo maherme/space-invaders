@@ -40,8 +40,8 @@ main(void)
         cmocka_unit_test(testPhysicCheckSpriteBoxCollisionTrue),
         cmocka_unit_test(testPhysicCheckSpritePixelCollisionNullParameters),
         cmocka_unit_test(testPhysicCheckSpritePixelCollisionCheckBoxesFalse),
-        cmocka_unit_test(testPhysicCheckSpritePixelCollisionFalseCheckBoxesTrue),
         cmocka_unit_test(testPhysicCheckSpritePixelCollisionJustBoder),
+        cmocka_unit_test(testPhysicCheckSpritePixelCollisionFalseCheckBoxesTrue),
         cmocka_unit_test(testPhysicCheckSpritePixelCollisionTrueCheckBoxesTrue),
     };
 

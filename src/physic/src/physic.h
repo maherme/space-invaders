@@ -10,8 +10,10 @@
 #ifndef __PHYSIC_H__
 #define __PHYSIC_H__
 
-#include "graph.h"
 #include <stdbool.h>
+
+struct sprite;
+typedef struct sprite sprite_t;
 
 typedef enum
 {

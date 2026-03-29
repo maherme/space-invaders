@@ -37,7 +37,7 @@ typedef struct
     int y2;
 } sprite_coordinates_t;
 
-typedef struct
+typedef struct sprite
 {
     int x;
     int y;
