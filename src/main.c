@@ -9,6 +9,7 @@
 
 #include "aliens.h"
 #include "bullet.h"
+#include "bunkers.h"
 #include "engine.h"
 #include "explosion.h"
 #include "graph.h"
@@ -291,6 +292,7 @@ main(int argc, char **argv)
 
     spaceship = spaceshipCreate(WINDOW_WIDTH / 2, 0);
     aliensCreate(gameOver);
+    bunkersCreate();
     engineRegister(keyboardUpdate);
     engineRegister(explosionsDestroy);
     engineRegister(ufoActions);
