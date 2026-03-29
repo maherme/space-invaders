@@ -83,9 +83,9 @@ static const char bulletAlienImage[BULLET_ALIEN_NUM_TYPES][BULLET_ALIEN_NUM_FRAM
                                        {{B, W, B}, {B, W, W}, {B, W, B}, {W, W, B}, {B, W, B}, {B, W, W}, {B, W, B}}}};
 
 static bullet_alien_t bulletAlien[BULLET_ALIEN_NUM_TYPES] = {
-    {.image = (const char *)&bulletAlienImage[CRACKLE], .time_to_move = 32 * NS_PER_MS, .pixels_to_move = 3},
-    {.image = (const char *)&bulletAlienImage[PLASMA], .time_to_move = 64 * NS_PER_MS, .pixels_to_move = 3},
-    {.image = (const char *)&bulletAlienImage[COIL], .time_to_move = 32 * NS_PER_MS, .pixels_to_move = 2}};
+    {.image = (const char *)&bulletAlienImage[CRACKLE], .time_to_move = 1000 / 60 * NS_PER_MS, .pixels_to_move = 1},
+    {.image = (const char *)&bulletAlienImage[PLASMA], .time_to_move = 2000 / 60 * NS_PER_MS, .pixels_to_move = 1},
+    {.image = (const char *)&bulletAlienImage[COIL], .time_to_move = 1000 / 60 * NS_PER_MS, .pixels_to_move = 1}};
 
 static bullet_alien_type_t
 getBulletAlienType(void)
