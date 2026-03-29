@@ -79,6 +79,24 @@ __wrap_glEnable(GLenum cap)
     function_called();
 }
 
+void
+__wrap_glBlendFunc(GLenum sfactor, GLenum dfactor)
+{
+    check_expected_uint(sfactor);
+    check_expected_uint(dfactor);
+    function_called();
+}
+
+void
+__wrap_glClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+{
+    check_expected_float(red);
+    check_expected_float(green);
+    check_expected_float(blue);
+    check_expected_float(alpha);
+    function_called();
+}
+
 static void
 fooDisplay(void)
 {
@@ -136,6 +154,19 @@ testGraphInitGlut(void **status)
 
     expect_uint_value(__wrap_glEnable, cap, GL_TEXTURE_2D);
     expect_function_call(__wrap_glEnable);
+
+    expect_uint_value(__wrap_glEnable, cap, GL_BLEND);
+    expect_function_call(__wrap_glEnable);
+
+    expect_uint_value(__wrap_glBlendFunc, sfactor, GL_SRC_ALPHA);
+    expect_uint_value(__wrap_glBlendFunc, dfactor, GL_ONE_MINUS_SRC_ALPHA);
+    expect_function_call(__wrap_glBlendFunc);
+
+    expect_float(__wrap_glClearColor, red, 0.0, 0);
+    expect_float(__wrap_glClearColor, green, 0.0, 0);
+    expect_float(__wrap_glClearColor, blue, 0.0, 0);
+    expect_float(__wrap_glClearColor, alpha, 0.0, 0);
+    expect_function_call(__wrap_glClearColor);
 
     graphInitGlut(&initGlutConfig);
 }
