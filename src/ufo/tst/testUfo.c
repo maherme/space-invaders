@@ -14,6 +14,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 int
 __wrap_rand(void)

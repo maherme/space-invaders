@@ -77,10 +77,10 @@ void
 testPhysicCheckSpritePixelCollisionCheckBoxesFalse(void **status);
 
 void
-testPhysicCheckSpritePixelCollisionFalseCheckBoxesTrue(void **status);
+testPhysicCheckSpritePixelCollisionJustBoder(void **status);
 
 void
-testPhysicCheckSpritePixelCollisionJustBoder(void **status);
+testPhysicCheckSpritePixelCollisionFalseCheckBoxesTrue(void **status);
 
 void
 testPhysicCheckSpritePixelCollisionTrueCheckBoxesTrue(void **status);

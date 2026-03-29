@@ -138,12 +138,7 @@ checkPixelsCollision(const sprite_t *const sprite1,
     int overlap_bottom = coord1->y1 > coord2->y1 ? coord1->y1 : coord2->y1;
     int overlap_top = coord1->y2 < coord2->y2 ? coord1->y2 : coord2->y2;
 
-    /* NOTE:
-     * overlap_bottom >= overlap_top is unreachable when called through
-     * physicCheckSpritesPixelCollision(), because checkBoxesCollison()
-     * guarantees overlap in both axes.
-     */
-    if (overlap_left >= overlap_right || overlap_bottom >= overlap_top) /* GCOVR_EXCL_BR_WITHOUT_HIT: 1/4 */
+    if (overlap_left >= overlap_right || overlap_bottom >= overlap_top)
         return false;
 
     const uint8_t *img1 = (const uint8_t *)sprite1->image;
@@ -155,11 +150,11 @@ checkPixelsCollision(const sprite_t *const sprite1,
         {
             // Local coords in sprite1
             int x1 = x - coord1->x1;
-            int y1 = y - coord1->y1;
+            int y1 = (sprite1->height - 1) - (y - coord1->y1);
 
             // Local coords in sprite2
             int x2 = x - coord2->x1;
-            int y2 = y - coord2->y1;
+            int y2 = (sprite2->height - 1) - (y - coord2->y1);
 
             // RGBA buffer index
             int idx1 = (y1 * sprite1->width + x1) * NUM_RGBA_CHANNELS;
