@@ -13,6 +13,7 @@
 #include "physic.h"
 #include "utils.h"
 #include <stdbool.h>
+#include <stdlib.h>
 
 #define UFO_WIDTH 16
 #define UFO_HEIGHT 8
