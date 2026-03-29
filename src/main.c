@@ -261,16 +261,20 @@ checkCollisionsBulletSingleBunkerSingle(bunker_t bunker, void *ctx)
     {
         bullet_type_t type;
         bulletGetType(bullet, &type);
+        explosion_t explosion;
 
         if (!bulletUsed(bullet) || type == BULLET_SPACESHIP)
         {
-            explosionCreate(bullet_sprite->x, bullet_sprite->y, EXPLOSION_BULLET_SPACESHIP, NULL);
+            explosion = explosionCreate(bullet_sprite->x, bullet_sprite->y, EXPLOSION_BULLET_SPACESHIP, NULL);
         }
         else
         {
-            explosionCreate(bullet_sprite->x, bullet_sprite->y - bullet_sprite->height / 2, EXPLOSION_BULLET_ALIEN, NULL);
+            explosion =
+                explosionCreate(bullet_sprite->x, bullet_sprite->y - bullet_sprite->height / 2, EXPLOSION_BULLET_ALIEN, NULL);
         }
 
+        physicMakeFootprintSprite(bunker_sprite, graphGetSprite((base_t *)explosion));
+        graphUpdateSprite(bunker_sprite);
         bulletDestroy(bullet);
     }
 }

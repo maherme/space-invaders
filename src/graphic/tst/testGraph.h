@@ -56,6 +56,12 @@ void
 testGraphPrintImageSuccess(void **status);
 
 void
+testGraphUpdateSpriteNullParameter(void **status);
+
+void
+testGraphUpdateSprite(void **status);
+
+void
 testGraphPrintGameBorder(void **status);
 
 #endif

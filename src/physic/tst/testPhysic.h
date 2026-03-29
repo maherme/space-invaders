@@ -85,4 +85,16 @@ testPhysicCheckSpritePixelCollisionFalseCheckBoxesTrue(void **status);
 void
 testPhysicCheckSpritePixelCollisionTrueCheckBoxesTrue(void **status);
 
+void
+testPhysicMakeFootprintSpriteNoOverlap(void **status);
+
+void
+testPhysicMakeFootprintSpriteNoOverlapJustBorder(void **status);
+
+void
+testPhysicMakeFootprintSpriteOverlapPixelsMatch(void **status);
+
+void
+testPhysicMakeFootprintSpriteOverlapPixelsUnmatch(void **status);
+
 #endif /* __TESTPHYSIC_H__ */

@@ -36,4 +36,7 @@ physicCheckSpritesBoxCollision(const sprite_t *const sprite1, const sprite_t *co
 bool
 physicCheckSpritesPixelCollision(const sprite_t *const sprite1, const sprite_t *const sprite2);
 
+void
+physicMakeFootprintSprite(const sprite_t *const sprite1, const sprite_t *const sprite2);
+
 #endif

@@ -111,6 +111,18 @@ graphPrintImage(const sprite_t *const sprite)
 }
 
 void
+graphUpdateSprite(const sprite_t *const sprite)
+{
+    if (!sprite)
+    {
+        return;
+    }
+
+    glBindTexture(GL_TEXTURE_2D, sprite->textureId);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sprite->width, sprite->height, GL_RGBA, GL_UNSIGNED_BYTE, sprite->image);
+}
+
+void
 graphPrintGameBorder(void)
 {
     GLubyte color[NUM_RGBA_CHANNELS] = W;

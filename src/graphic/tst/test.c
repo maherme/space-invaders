@@ -33,6 +33,8 @@ main(void)
         cmocka_unit_test(testGraphUpdateTimeSprite),
         cmocka_unit_test(testGraphPrintImageFail),
         cmocka_unit_test(testGraphPrintImageSuccess),
+        cmocka_unit_test(testGraphUpdateSpriteNullParameter),
+        cmocka_unit_test(testGraphUpdateSprite),
         cmocka_unit_test(testGraphPrintGameBorder),
     };
 
