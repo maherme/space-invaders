@@ -9,6 +9,7 @@
 
 #include "testAliens.h"
 #include "aliens.h"
+#include "graph.h"
 #include "physic.h"
 #include <cmocka.h>
 #include <setjmp.h>

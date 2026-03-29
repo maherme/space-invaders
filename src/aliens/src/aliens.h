@@ -10,7 +10,6 @@
 #ifndef __ALIENS_H__
 #define __ALIENS_H__
 
-#include "graph.h"
 #include <stdbool.h>
 
 #define ALIENS_ROWS 5
