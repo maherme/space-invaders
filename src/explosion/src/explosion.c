@@ -36,7 +36,7 @@ static const unsigned int explosion_heights[] = {
     [EXPLOSION_ALIEN] = EXPLOSION_ALIEN_HEIGHT,
 };
 
-typedef struct explosion
+struct explosion_instance
 {
     sprite_t sprite;
     struct timespec creation_time;
@@ -45,11 +45,11 @@ typedef struct explosion
     long long update_frame_time;
     explosion_type_t type;
     void (*callback)(void);
-} explosion_t;
+};
 
 typedef struct explosion_node
 {
-    explosion_t *explosion;
+    explosion_t explosion;
     struct list_head node;
 } explosion_node_t;
 
@@ -188,7 +188,7 @@ static const struct
                      .explosion_time = 500 * NS_PER_MS};
 
 static void
-setExplosionType(explosion_t *instance, explosion_type_t type)
+setExplosionType(explosion_t instance, explosion_type_t type)
 {
     static int explosion_alien_next = 0;
 
@@ -239,11 +239,11 @@ setExplosionType(explosion_t *instance, explosion_type_t type)
     }
 }
 
-void
+explosion_t
 explosionCreate(int x, int y, explosion_type_t type, void (*callback)(void))
 {
     explosion_node_t *new_node = utilsCalloc(1, sizeof(explosion_node_t));
-    explosion_t *new_explosion = utilsCalloc(1, sizeof(explosion_t));
+    explosion_t new_explosion = utilsCalloc(1, sizeof(struct explosion_instance));
     setExplosionType(new_explosion, type);
     new_explosion->sprite.x = x - new_explosion->sprite.width / 2;
     new_explosion->sprite.y = y;
@@ -256,10 +256,12 @@ explosionCreate(int x, int y, explosion_type_t type, void (*callback)(void))
     new_explosion->callback = callback;
     new_node->explosion = new_explosion;
     list_add(&new_node->node, &explosions);
+
+    return new_explosion;
 }
 
 static bool
-explosionTimeout(explosion_t *explosion)
+explosionTimeout(explosion_t explosion)
 {
     assert(explosion); /* GCOVR_EXCL_LINE */
 
@@ -280,7 +282,7 @@ explosionTimeout(explosion_t *explosion)
 }
 
 static void
-explosionUpdateImageToPrint(explosion_t *explosion)
+explosionUpdateImageToPrint(explosion_t explosion)
 {
     assert(explosion); /* GCOVR_EXCL_LINE */
 

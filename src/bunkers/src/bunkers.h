@@ -15,4 +15,7 @@ typedef struct bunker_instance_t *bunker_t;
 void
 bunkersCreate(void);
 
+void
+bunkersCallFunctionForEach(void (*fn)(bunker_t, void *ctx), void *ctx);
+
 #endif /* __BUNKERS__H__ */

@@ -13,4 +13,10 @@
 void
 testBunkersCreate(void **status);
 
+void
+testBunkersCallFunctionForEachNullParameter(void **status);
+
+void
+testBunkersCallFunctionForEach(void **status);
+
 #endif /* __TESTBUNKERS_H__ */
