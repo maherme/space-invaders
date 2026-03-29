@@ -27,6 +27,8 @@ LDFLAGS += -Wl,--wrap=glutInit \
 		   -Wl,--wrap=glLoadIdentity \
 		   -Wl,--wrap=gluOrtho2D \
 		   -Wl,--wrap=glEnable \
+		   -Wl,--wrap=glBlendFunc \
+		   -Wl,--wrap=glClearColor \
 		   -Wl,--wrap=graphPrintImage \
 		   -Wl,--wrap=graphPrintGameBorder \
 		   -Wl,--wrap=utilsCalloc \
