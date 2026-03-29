@@ -13,6 +13,9 @@
 int
 setup(void **state);
 
+int
+teardown(void **state);
+
 void
 testGraphRegisterPrintFailNullParameter(void **status);
 

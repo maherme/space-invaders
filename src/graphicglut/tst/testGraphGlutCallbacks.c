@@ -81,7 +81,16 @@ int
 setup(void **state)
 {
     (void)state;
-    helperUT_graphGlutResetRegisteredContext();
+    graphRegisterPrintInit();
+    helperUT_graphGlutResetRegisteredSprites();
+    return 0;
+}
+
+int
+teardown(void **state)
+{
+    (void)state;
+    helperUT_graphGlutResetRegisteredSprites();
     return 0;
 }
 
@@ -95,12 +104,12 @@ testGraphRegisterPrintFailNullParameter(void **status)
 }
 
 static void
-register_ctxs(void **ctx, int n)
+register_sprites(sprite_t **sprite, int n)
 {
     for (int i = 0; i < n; i++)
     {
         expect_function_call(__wrap_utilsCalloc);
-        int result = graphRegisterPrint(ctx[i]);
+        int result = graphRegisterPrint(sprite[i]);
         assert_int_equal(result, 0);
     }
 }
@@ -109,11 +118,12 @@ void
 testGraphRegisterPrintSuccess(void **status)
 {
     (void)status;
+    sprite_t sprite = {0};
+    sprite.layer = LAYER_BACKGROUND;
+    sprite_t *expected_sprites[] = {&sprite};
 
-    void *expected_ctx[] = {(void *)0xdeadbeef};
-    register_ctxs(expected_ctx, ARRAY_SIZE(expected_ctx));
-
-    assert_true(helperUT_graphGlutContextIsRegistered(*expected_ctx));
+    register_sprites(expected_sprites, ARRAY_SIZE(expected_sprites));
+    assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[0]));
 }
 
 void
@@ -129,78 +139,89 @@ void
 testGraphUnregisterPrintNoCallbacksFound(void **status)
 {
     (void)status;
-    void *expected_ctx = (void *)0xdeadbeef;
+    sprite_t sprite = {0};
+    sprite.layer = LAYER_BACKGROUND;
 
-    int result = graphUnregisterPrint(expected_ctx);
+    int result = graphUnregisterPrint(&sprite);
     assert_int_equal(result, 0);
-    assert_false(helperUT_graphGlutContextIsRegistered(expected_ctx));
+    assert_false(helperUT_graphGlutSpriteIsRegistered(&sprite));
 }
 
 void
 testGraphUnregisterPrintSuccessOneCallback(void **status)
 {
     (void)status;
+    sprite_t sprite = {0};
+    sprite.layer = LAYER_BACKGROUND;
+    sprite_t *expected_sprites[] = {&sprite};
 
-    void *expected_ctx[] = {(void *)0xdeadbeef};
-    register_ctxs(expected_ctx, ARRAY_SIZE(expected_ctx));
-    assert_true(helperUT_graphGlutContextIsRegistered(*expected_ctx));
+    register_sprites(expected_sprites, ARRAY_SIZE(expected_sprites));
+    assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[0]));
 
     expect_function_call(__wrap_utilsFree);
-    int result = graphUnregisterPrint(expected_ctx[0]);
+    int result = graphUnregisterPrint(expected_sprites[0]);
     assert_int_equal(result, 1);
-    assert_false(helperUT_graphGlutContextIsRegistered(*expected_ctx));
+    assert_false(helperUT_graphGlutSpriteIsRegistered(expected_sprites[0]));
 }
 
 void
 testGraphUnregisterPrintSuccessLastCallback(void **status)
 {
     (void)status;
-    void *expected_ctx[] = {(void *)0xdeadbeef, (void *)0xbeefdead};
+    sprite_t sprite1 = {0}, sprite2 = {0};
+    sprite1.layer = LAYER_BACKGROUND;
+    sprite2.layer = LAYER_BACKGROUND;
+    sprite_t *expected_sprites[] = {&sprite1, &sprite2};
 
-    register_ctxs(expected_ctx, ARRAY_SIZE(expected_ctx));
-    assert_true(helperUT_graphGlutContextIsRegistered(expected_ctx[0]));
-    assert_true(helperUT_graphGlutContextIsRegistered(expected_ctx[1]));
+    register_sprites(expected_sprites, ARRAY_SIZE(expected_sprites));
+    assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[0]));
+    assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[1]));
 
     expect_function_call(__wrap_utilsFree);
-    int result = graphUnregisterPrint(expected_ctx[1]);
+    int result = graphUnregisterPrint(expected_sprites[1]);
     assert_int_equal(result, 1);
-    assert_true(helperUT_graphGlutContextIsRegistered(expected_ctx[0]));
-    assert_false(helperUT_graphGlutContextIsRegistered(expected_ctx[1]));
+    assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[0]));
+    assert_false(helperUT_graphGlutSpriteIsRegistered(expected_sprites[1]));
 }
 
 void
 testGraphUnregisterPrintSuccessMiddleCallback(void **status)
 {
     (void)status;
-    void *expected_ctx[] = {(void *)0x1, (void *)0x2, (void *)0x3};
+    sprite_t sprite1 = {0}, sprite2 = {0}, sprite3 = {0};
+    sprite1.layer = LAYER_BACKGROUND;
+    sprite2.layer = LAYER_BACKGROUND;
+    sprite3.layer = LAYER_BACKGROUND;
+    sprite_t *expected_sprites[] = {&sprite1, &sprite2, &sprite3};
 
-    register_ctxs(expected_ctx, ARRAY_SIZE(expected_ctx));
-    assert_true(helperUT_graphGlutContextIsRegistered(expected_ctx[0]));
-    assert_true(helperUT_graphGlutContextIsRegistered(expected_ctx[1]));
-    assert_true(helperUT_graphGlutContextIsRegistered(expected_ctx[2]));
+    register_sprites(expected_sprites, ARRAY_SIZE(expected_sprites));
+    assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[0]));
+    assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[1]));
+    assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[2]));
 
     expect_function_call(__wrap_utilsFree);
 
-    int result = graphUnregisterPrint(expected_ctx[1]);
+    int result = graphUnregisterPrint(expected_sprites[1]);
     assert_int_equal(result, 1);
-    assert_true(helperUT_graphGlutContextIsRegistered(expected_ctx[0]));
-    assert_false(helperUT_graphGlutContextIsRegistered(expected_ctx[1]));
-    assert_true(helperUT_graphGlutContextIsRegistered(expected_ctx[2]));
+    assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[0]));
+    assert_false(helperUT_graphGlutSpriteIsRegistered(expected_sprites[1]));
+    assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[2]));
 }
 
 void
 testGraphGlutDisplay(void **status)
 {
     (void)status;
-
-    void *expected_ctx = (void *)0xdeadbeef;
+    sprite_t sprite = {0};
+    sprite.layer = LAYER_BACKGROUND;
+    sprite_t *expected_sprites[] = {&sprite};
 
     expect_function_call(__wrap_utilsCalloc);
-    helperUT_graphGlutInjectContext(expected_ctx);
+    helperUT_graphGlutInjectSprite(expected_sprites[0]);
 
     expect_uint_value(__wrap_glClear, mask, GL_COLOR_BUFFER_BIT);
     expect_function_call(__wrap_glClear);
-    expect_uint_value(__wrap_graphPrintImage, sprite, (uintptr_t)expected_ctx);
+    expect_uint_value(__wrap_graphPrintImage, sprite, (uintptr_t)expected_sprites[0]);
     expect_function_call(__wrap_graphPrintImage);
     expect_function_call(__wrap_graphPrintGameBorder);
     expect_function_call(__wrap_glutSwapBuffers);

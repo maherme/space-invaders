@@ -159,6 +159,7 @@ alienCreate(int x, int y, alien_type_t type, int index)
     inst->sprite.max_movement.left = 0;
     inst->sprite.max_movement.down = 0;
     inst->sprite.num_frames = ALIEN_NUM_FRAMES;
+    inst->sprite.layer = LAYER_GAME_OBJECTS;
     graphUpdateTimeSprite(&inst->sprite);
     graphRegisterPrint(&inst->sprite);
     inst->alive = true;

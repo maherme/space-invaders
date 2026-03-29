@@ -15,45 +15,58 @@
 
 typedef struct ctx_node
 {
-    void *context;
+    sprite_t *sprite;
     struct list_head node;
 } ctx_node_t;
 
-static LIST_HEAD(contexts);
+struct list_head render_layers[NUM_RENDER_LAYERS];
+
+void
+graphRegisterPrintInit(void)
+{
+    for (int i = 0; i < NUM_RENDER_LAYERS; i++)
+    {
+        init_list_head(&render_layers[i]);
+    }
+}
 
 int
-graphRegisterPrint(void *ctx)
+graphRegisterPrint(sprite_t *sprite)
 {
-    if (!ctx)
+    if (!sprite)
     {
         return -1;
     }
 
     ctx_node_t *n = utilsCalloc(1, sizeof(*n));
-    n->context = ctx;
-    list_add(&n->node, &contexts);
+    n->sprite = sprite;
+    list_add_tail(&n->node, &render_layers[sprite->layer]);
 
     return 0;
 }
 
 int
-graphUnregisterPrint(void *ctx)
+graphUnregisterPrint(sprite_t *sprite)
 {
-    if (!ctx)
+    if (!sprite)
     {
         return -1;
     }
 
-    ctx_node_t *n, *tmp;
     int removed = 0;
 
-    list_for_each_entry_safe(n, tmp, &contexts, node)
+    for (int i = 0; i < NUM_RENDER_LAYERS; i++)
     {
-        if (n->context == ctx)
+        ctx_node_t *n, *tmp;
+
+        list_for_each_entry_safe(n, tmp, &render_layers[i], node)
         {
-            list_del(&n->node);
-            utilsFree((void **)&n);
-            removed++;
+            if (n->sprite == sprite)
+            {
+                list_del(&n->node);
+                utilsFree((void **)&n);
+                removed++;
+            }
         }
     }
 
@@ -66,11 +79,14 @@ graphGlutDisplay(void)
 
     glClear(GL_COLOR_BUFFER_BIT);
 
-    ctx_node_t *n;
-
-    list_for_each_entry(n, &contexts, node)
+    for (int i = 0; i < NUM_RENDER_LAYERS; i++)
     {
-        graphPrintImage(n->context);
+        ctx_node_t *n;
+
+        list_for_each_entry(n, &render_layers[i], node)
+        {
+            graphPrintImage(n->sprite);
+        }
     }
 
     graphPrintGameBorder();
@@ -110,21 +126,26 @@ graphGlutReshape(int w, int h)
 
 #ifdef UNIT_TESTING
 void
-helperUT_graphGlutResetRegisteredContext(void)
+helperUT_graphGlutResetRegisteredSprites(void)
 {
-    list_clear_with_free(&contexts, ctx_node_t, node);
+    for (int i = 0; i < NUM_RENDER_LAYERS; i++)
+    {
+        list_clear_with_free(&render_layers[i], ctx_node_t, node);
+    }
 }
 
 bool
-helperUT_graphGlutContextIsRegistered(void *ctx)
+helperUT_graphGlutSpriteIsRegistered(sprite_t *sprite)
 {
-    ctx_node_t *n;
-
-    list_for_each_entry(n, &contexts, node)
+    for (int i = 0; i < NUM_RENDER_LAYERS; i++)
     {
-        if (n->context == ctx)
+        ctx_node_t *n;
+        list_for_each_entry(n, &render_layers[i], node)
         {
-            return true;
+            if (n->sprite == sprite)
+            {
+                return true;
+            }
         }
     }
 
@@ -132,10 +153,10 @@ helperUT_graphGlutContextIsRegistered(void *ctx)
 }
 
 void
-helperUT_graphGlutInjectContext(void *ctx)
+helperUT_graphGlutInjectSprite(sprite_t *sprite)
 {
     ctx_node_t *n = utilsCalloc(1, sizeof(*n));
-    n->context = ctx;
-    list_add(&n->node, &contexts);
+    n->sprite = sprite;
+    list_add(&n->node, &render_layers[sprite->layer]);
 }
 #endif

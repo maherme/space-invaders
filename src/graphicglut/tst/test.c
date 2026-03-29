@@ -19,17 +19,17 @@ int
 main(void)
 {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test_setup(testGraphInitGlut, setup),
-        cmocka_unit_test_setup(testGraphRegisterPrintFailNullParameter, setup),
-        cmocka_unit_test_setup(testGraphRegisterPrintSuccess, setup),
-        cmocka_unit_test_setup(testGraphUnregisterPrintFailNullParameter, setup),
-        cmocka_unit_test_setup(testGraphUnregisterPrintNoCallbacksFound, setup),
-        cmocka_unit_test_setup(testGraphUnregisterPrintSuccessOneCallback, setup),
-        cmocka_unit_test_setup(testGraphUnregisterPrintSuccessLastCallback, setup),
-        cmocka_unit_test_setup(testGraphUnregisterPrintSuccessMiddleCallback, setup),
-        cmocka_unit_test_setup(testGraphGlutDisplay, setup),
-        cmocka_unit_test_setup(testGraphGlutReshapeScaleLowerThanOne, setup),
-        cmocka_unit_test_setup(testGraphGlutReshapeScaleHigherThanOne, setup),
+        cmocka_unit_test(testGraphInitGlut),
+        cmocka_unit_test_setup_teardown(testGraphRegisterPrintFailNullParameter, setup, teardown),
+        cmocka_unit_test_setup_teardown(testGraphRegisterPrintSuccess, setup, teardown),
+        cmocka_unit_test_setup_teardown(testGraphUnregisterPrintFailNullParameter, setup, teardown),
+        cmocka_unit_test_setup_teardown(testGraphUnregisterPrintNoCallbacksFound, setup, teardown),
+        cmocka_unit_test_setup_teardown(testGraphUnregisterPrintSuccessOneCallback, setup, teardown),
+        cmocka_unit_test_setup_teardown(testGraphUnregisterPrintSuccessLastCallback, setup, teardown),
+        cmocka_unit_test_setup_teardown(testGraphUnregisterPrintSuccessMiddleCallback, setup, teardown),
+        cmocka_unit_test_setup_teardown(testGraphGlutDisplay, setup, teardown),
+        cmocka_unit_test(testGraphGlutReshapeScaleLowerThanOne),
+        cmocka_unit_test(testGraphGlutReshapeScaleHigherThanOne),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
