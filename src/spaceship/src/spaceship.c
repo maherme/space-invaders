@@ -44,7 +44,7 @@ spaceshipCreate(int x, int y)
     inst->sprite.width = SPACESHIP_WIDTH;
     inst->sprite.height = SPACESHIP_HEIGHT;
     inst->sprite.image = (const char *)spaceshipImage;
-    inst->sprite.pixels_to_move = SPACESHIP_WIDTH / 4;
+    inst->sprite.pixels_to_move = 1;
     inst->sprite.time_to_move = 1000 / 60 * NS_PER_MS;
     graphCreateImage(&inst->sprite);
     inst->sprite.max_movement.right = WINDOW_WIDTH;

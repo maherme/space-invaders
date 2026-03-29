@@ -78,7 +78,7 @@ ufoCreate(void)
     inst->sprite.height = UFO_HEIGHT;
     inst->sprite.image = (const char *)ufoImage;
     inst->sprite.pixels_to_move = 1;
-    inst->sprite.time_to_move = 20 * NS_PER_MS;
+    inst->sprite.time_to_move = 1000 / 60 * NS_PER_MS;
     inst->time_to_appear = 5 * NS_PER_S;
     calculateStartingCoord(inst);
     graphCreateImage(&inst->sprite);
