@@ -17,4 +17,4 @@ INCLUDES += -I../graphic/src \
 LDFLAGS += -Wl,--wrap=utilsCheckTimeout \
 		   -Wl,--wrap=graphUpdateTimeSprite \
 		   -Wl,--wrap=graphGetSpriteCoordinates \
-		   -Wl,--wrap=graphUpdateImageToPrint
+		   -Wl,--wrap=graphNextImageToPrint

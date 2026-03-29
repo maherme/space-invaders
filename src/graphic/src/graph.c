@@ -64,7 +64,7 @@ graphGetSpriteCoordinates(const sprite_t *const sprite, sprite_coordinates_t *co
 }
 
 void
-graphUpdateImageToPrint(sprite_t *sprite)
+graphNextImageToPrint(sprite_t *sprite)
 {
     if (sprite && sprite->num_frames > 1)
     {

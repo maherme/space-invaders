@@ -74,7 +74,7 @@ int
 graphGetSpriteCoordinates(const sprite_t *const sprite, sprite_coordinates_t *coordinates);
 
 void
-graphUpdateImageToPrint(sprite_t *sprite);
+graphNextImageToPrint(sprite_t *sprite);
 
 void
 graphUpdateTimeSprite(sprite_t *sprite);

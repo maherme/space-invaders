@@ -288,7 +288,7 @@ explosionUpdateImageToPrint(explosion_t explosion)
 
     if (explosion->sprite.num_frames > 1 && utilsCheckTimeout(explosion->update_frame_timer, explosion->update_frame_time))
     {
-        graphUpdateImageToPrint(&explosion->sprite);
+        graphNextImageToPrint(&explosion->sprite);
         clock_gettime(CLOCK_MONOTONIC, &explosion->update_frame_timer);
     }
 }

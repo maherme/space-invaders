@@ -194,7 +194,7 @@ testExplosionDestroyMoreOneFrame(void **status)
 
     will_return(__wrap_utilsCheckTimeout, true);
     expect_function_call(__wrap_utilsCheckTimeout);
-    expect_function_call(__wrap_graphUpdateImageToPrint);
+    expect_function_call(__wrap_graphNextImageToPrint);
     will_return(__wrap_clock_gettime, 0); /* tv_sec */
     will_return(__wrap_clock_gettime, 0); /* tv_nsec */
     expect_function_call(__wrap_clock_gettime);
