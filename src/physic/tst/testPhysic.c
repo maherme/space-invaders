@@ -627,3 +627,183 @@ testPhysicCheckSpritePixelCollisionTrueCheckBoxesTrue(void **status)
 
     assert_true(physicCheckSpritesPixelCollision(&sprite1, &sprite2));
 }
+
+void
+testPhysicMakeFootprintSpriteNoOverlap(void **status)
+{
+    (void)status;
+    const char image1[2][2][NUM_RGBA_CHANNELS] = {
+        {B, B},
+        {W, B},
+    };
+    sprite_t sprite1 = {
+        .image = (const char *)image1,
+        .width = 2,
+        .height = 2,
+    };
+    const char image2[4][4][NUM_RGBA_CHANNELS] = {
+        {B, B, B, B},
+        {B, B, W, B},
+        {B, B, B, B},
+        {B, B, B, B},
+    };
+    sprite_t sprite2 = {
+        .image = (const char *)image2,
+        .width = 4,
+        .height = 4,
+    };
+
+    /*
+     * Test branch if (overlap_left >= overlap_right || overlap_bottom >= overlap_top)
+     * true || true
+     */
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)6); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)6); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    physicMakeFootprintSprite(&sprite1, &sprite2);
+}
+
+void
+testPhysicMakeFootprintSpriteNoOverlapJustBorder(void **status)
+{
+    (void)status;
+    const char image1[2][2][NUM_RGBA_CHANNELS] = {
+        {B, B},
+        {W, B},
+    };
+    sprite_t sprite1 = {
+        .image = (const char *)image1,
+        .width = 2,
+        .height = 2,
+    };
+    const char image2[4][4][NUM_RGBA_CHANNELS] = {
+        {B, B, B, B},
+        {B, B, W, B},
+        {B, B, B, B},
+        {B, B, B, B},
+    };
+    sprite_t sprite2 = {
+        .image = (const char *)image2,
+        .width = 4,
+        .height = 4,
+    };
+
+    /*
+     * Test branch if (overlap_left >= overlap_right || overlap_bottom >= overlap_top)
+     * false || true
+     */
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)4); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)6); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    physicMakeFootprintSprite(&sprite1, &sprite2);
+}
+
+void
+testPhysicMakeFootprintSpriteOverlapPixelsMatch(void **status)
+{
+    (void)status;
+    const char image1[2][2][NUM_RGBA_CHANNELS] = {
+        {W, B},
+        {B, B},
+    };
+    sprite_t sprite1 = {
+        .image = (const char *)image1,
+        .width = 2,
+        .height = 2,
+    };
+    const char image2[4][4][NUM_RGBA_CHANNELS] = {
+        {B, B, W, B},
+        {B, B, B, B},
+        {B, B, B, B},
+        {B, B, B, B},
+    };
+    sprite_t sprite2 = {
+        .image = (const char *)image2,
+        .width = 4,
+        .height = 4,
+    };
+
+    /*
+     * Test branch if (overlap_left >= overlap_right || overlap_bottom >= overlap_top)
+     * false || false
+     */
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)4); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)4); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)4); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)4); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    physicMakeFootprintSprite(&sprite1, &sprite2);
+}
+
+void
+testPhysicMakeFootprintSpriteOverlapPixelsUnmatch(void **status)
+{
+    (void)status;
+    const char image1[2][2][NUM_RGBA_CHANNELS] = {
+        {B, W},
+        {B, B},
+    };
+    sprite_t sprite1 = {
+        .image = (const char *)image1,
+        .width = 2,
+        .height = 2,
+    };
+    const char image2[4][4][NUM_RGBA_CHANNELS] = {
+        {B, B, W, B},
+        {B, B, B, B},
+        {B, B, B, B},
+        {B, B, B, B},
+    };
+    sprite_t sprite2 = {
+        .image = (const char *)image2,
+        .width = 4,
+        .height = 4,
+    };
+
+    /*
+     * Test branch if (overlap_left >= overlap_right || overlap_bottom >= overlap_top)
+     * false || false
+     */
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite1);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)4); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)2); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)4); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+    expect_uint_value(__wrap_graphGetSpriteCoordinates, sprite, (uintptr_t)&sprite2);
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // x1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)4); // x2
+    will_return(__wrap_graphGetSpriteCoordinates, (int)0); // y1
+    will_return(__wrap_graphGetSpriteCoordinates, (int)4); // y2
+    expect_function_call(__wrap_graphGetSpriteCoordinates);
+
+    physicMakeFootprintSprite(&sprite1, &sprite2);
+}

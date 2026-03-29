@@ -83,6 +83,9 @@ void
 graphPrintImage(const sprite_t *const sprite);
 
 void
+graphUpdateSprite(const sprite_t *const sprite);
+
+void
 graphPrintGameBorder(void);
 
 #endif

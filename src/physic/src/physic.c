@@ -190,3 +190,43 @@ physicCheckSpritesPixelCollision(const sprite_t *const sprite1, const sprite_t *
 
     return false;
 }
+
+void
+physicMakeFootprintSprite(const sprite_t *const sprite1, const sprite_t *const sprite2)
+{
+    sprite_coordinates_t coord1, coord2;
+    graphGetSpriteCoordinates(sprite1, &coord1);
+    graphGetSpriteCoordinates(sprite2, &coord2);
+
+    int overlap_left = (coord1.x1 > coord2.x1) ? coord1.x1 : coord2.x1;
+    int overlap_right = (coord1.x2 < coord2.x2) ? coord1.x2 : coord2.x2;
+    int overlap_top = (coord1.y2 < coord2.y2) ? coord1.y2 : coord2.y2;
+    int overlap_bottom = (coord1.y1 > coord2.y1) ? coord1.y1 : coord2.y1;
+
+    if (overlap_left >= overlap_right || overlap_bottom >= overlap_top)
+        return;
+
+    uint32_t *img1 = (uint32_t *)sprite1->image;
+    const uint32_t *img2 = (const uint32_t *)sprite2->image;
+
+    for (int y = overlap_bottom; y < overlap_top; y++)
+    {
+        for (int x = overlap_left; x < overlap_right; x++)
+        {
+            int x1 = x - coord1.x1;
+            int y1 = (sprite1->height - 1) - (y - coord1.y1);
+
+            int x2 = x - coord2.x1;
+            int y2 = (sprite2->height - 1) - (y - coord2.y1);
+
+            uint32_t *pixel1 = &img1[y1 * sprite1->width + x1];
+            uint32_t pixel2 = img2[y2 * sprite2->width + x2];
+
+            /* (alpha != 0) */
+            if ((*pixel1 & 0xFF000000) && (pixel2 & 0xFF000000))
+            {
+                *pixel1 = 0;
+            }
+        }
+    }
+}

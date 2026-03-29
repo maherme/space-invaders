@@ -43,6 +43,10 @@ main(void)
         cmocka_unit_test(testPhysicCheckSpritePixelCollisionJustBoder),
         cmocka_unit_test(testPhysicCheckSpritePixelCollisionFalseCheckBoxesTrue),
         cmocka_unit_test(testPhysicCheckSpritePixelCollisionTrueCheckBoxesTrue),
+        cmocka_unit_test(testPhysicMakeFootprintSpriteNoOverlap),
+        cmocka_unit_test(testPhysicMakeFootprintSpriteNoOverlapJustBorder),
+        cmocka_unit_test(testPhysicMakeFootprintSpriteOverlapPixelsMatch),
+        cmocka_unit_test(testPhysicMakeFootprintSpriteOverlapPixelsUnmatch),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
