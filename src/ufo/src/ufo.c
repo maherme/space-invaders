@@ -81,7 +81,6 @@ ufoCreate(void)
     inst->sprite.time_to_move = 1000 / 60 * NS_PER_MS;
     inst->time_to_appear = 5 * NS_PER_S;
     calculateStartingCoord(inst);
-    graphCreateImage(&inst->sprite);
     inst->sprite.max_movement.right = WINDOW_WIDTH + inst->sprite.width + 1;
     inst->sprite.max_movement.left = -(inst->sprite.width + 1);
     inst->sprite.layer = LAYER_GAME_OBJECTS;
@@ -102,7 +101,6 @@ ufoDestroy(ufo_t ufo)
 
     sprite_t *ufo_sprite = graphGetSprite((base_t *)ufo);
     graphUnregisterPrint(ufo_sprite);
-    graphDestroyImage(ufo_sprite);
     ufo->alive = false;
 }
 

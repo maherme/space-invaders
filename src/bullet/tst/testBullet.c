@@ -46,7 +46,6 @@ testBulletCreate(void **status)
             expect_function_call(__wrap_rand);
         }
 
-        expect_function_call(__wrap_graphCreateImage);
         expect_function_call(__wrap_graphRegisterPrint);
 
         bulletCreate(0, 0, bullets[i]);
@@ -62,7 +61,6 @@ testBulletCreateAllTypeBulletAlien(void **status)
     will_return(__wrap_rand, 0);
     expect_function_call(__wrap_rand);
 
-    expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphRegisterPrint);
 
     bulletCreate(0, 0, BULLET_ALIEN);
@@ -71,7 +69,6 @@ testBulletCreateAllTypeBulletAlien(void **status)
     will_return(__wrap_rand, 50);
     expect_function_call(__wrap_rand);
 
-    expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphRegisterPrint);
 
     bulletCreate(0, 0, BULLET_ALIEN);
@@ -80,7 +77,6 @@ testBulletCreateAllTypeBulletAlien(void **status)
     will_return(__wrap_rand, 80);
     expect_function_call(__wrap_rand);
 
-    expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphRegisterPrint);
 
     bulletCreate(0, 0, BULLET_ALIEN);
@@ -91,7 +87,6 @@ testBulletCreateTwoBulletSpaceship(void **status)
 {
     (void)status;
 
-    expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphRegisterPrint);
 
     bulletCreate(0, 0, BULLET_SPACESHIP);
@@ -114,7 +109,6 @@ testBulletDestroy(void **status)
 
     expect_function_call(__wrap_graphGetSprite);
     expect_function_call(__wrap_graphUnregisterPrint);
-    expect_function_call(__wrap_graphDestroyImage);
 
     bulletDestroy(bullet);
 }
@@ -273,7 +267,6 @@ testBulletSpaceshipHitBulletAliensCmpTrue(void **status)
     /* Called bulletDestroy expected */
     expect_function_call(__wrap_graphGetSprite);
     expect_function_call(__wrap_graphUnregisterPrint);
-    expect_function_call(__wrap_graphDestroyImage);
 
     helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
     helperUT_bulletInjectInPool(1, BULLET_ALIEN);

@@ -23,7 +23,6 @@ testBunkersCreate(void **status)
     /* Shall be 4 bunkers */
     for (int i = 0; i < 4; i++)
     {
-        expect_function_call(__wrap_graphCreateImage);
         expect_function_call(__wrap_graphRegisterPrint);
     }
 

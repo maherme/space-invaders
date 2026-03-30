@@ -30,6 +30,8 @@ LDFLAGS += -Wl,--wrap=glutInit \
 		   -Wl,--wrap=glBlendFunc \
 		   -Wl,--wrap=glClearColor \
 		   -Wl,--wrap=graphPrintImage \
+		   -Wl,--wrap=graphCreateImage \
+		   -Wl,--wrap=graphDestroyImage \
 		   -Wl,--wrap=graphPrintGameBorder \
 		   -Wl,--wrap=utilsCalloc \
 		   -Wl,--wrap=utilsFree

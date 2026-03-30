@@ -46,7 +46,6 @@ spaceshipCreate(int x, int y)
     inst->sprite.image = (const char *)spaceshipImage;
     inst->sprite.pixels_to_move = 1;
     inst->sprite.time_to_move = 1000 / 60 * NS_PER_MS;
-    graphCreateImage(&inst->sprite);
     inst->sprite.max_movement.right = WINDOW_WIDTH;
     inst->sprite.max_movement.left = 0;
     inst->sprite.layer = LAYER_GAME_OBJECTS;
@@ -66,7 +65,6 @@ spaceshipDestroy(spaceship_t spaceship)
 
     sprite_t *spaceship_sprite = graphGetSprite((base_t *)spaceship);
     graphUnregisterPrint(spaceship_sprite);
-    graphDestroyImage(spaceship_sprite);
     spaceship->alive = false;
 }
 

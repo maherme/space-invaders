@@ -23,7 +23,6 @@ testSpaceshipCreate(void **status)
     int x_pos = 10;
     int y_pos = 20;
 
-    expect_function_call(__wrap_graphCreateImage);
     expect_function_call(__wrap_graphRegisterPrint);
 
     spaceship_t spaceship = spaceshipCreate(x_pos, y_pos);
@@ -47,7 +46,6 @@ testSpaceshipDestroy(void **status)
 
     expect_function_call(__wrap_graphGetSprite);
     expect_function_call(__wrap_graphUnregisterPrint);
-    expect_function_call(__wrap_graphDestroyImage);
 
     spaceshipDestroy(spaceship);
 

@@ -172,7 +172,6 @@ bulletCreate(int x, int y, bullet_type_t type)
             inst->sprite.x = x;
             inst->sprite.y = y;
             inst->sprite.layer = LAYER_GAME_OBJECTS;
-            graphCreateImage(&inst->sprite);
             graphRegisterPrint(&inst->sprite);
 
             inst->used = true;
@@ -192,7 +191,6 @@ bulletDestroy(bullet_t bullet)
 
     sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
     graphUnregisterPrint(bullet_sprite);
-    graphDestroyImage(bullet_sprite);
     bullet->used = false;
 }
 
