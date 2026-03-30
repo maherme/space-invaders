@@ -14,20 +14,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-void
-__wrap_graphCreateImage(sprite_t *sprite)
-{
-    (void)sprite;
-    function_called();
-}
-
-void
-__wrap_graphDestroyImage(sprite_t *sprite)
-{
-    (void)sprite;
-    function_called();
-}
-
 sprite_t dummy;
 
 sprite_t *

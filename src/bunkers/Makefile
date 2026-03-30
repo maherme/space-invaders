@@ -13,6 +13,5 @@ include ../common.mk
 INCLUDES += -I../graphic/src \
 			-I../graphicglut/src
 
-LDFLAGS += -Wl,--wrap=graphCreateImage \
-		   -Wl,--wrap=graphRegisterPrint 
+LDFLAGS += -Wl,--wrap=graphRegisterPrint 
 	

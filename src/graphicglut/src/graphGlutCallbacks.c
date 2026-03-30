@@ -41,6 +41,7 @@ graphRegisterPrint(sprite_t *sprite)
     ctx_node_t *n = utilsCalloc(1, sizeof(*n));
     n->sprite = sprite;
     list_add_tail(&n->node, &render_layers[sprite->layer]);
+    graphCreateImage(sprite);
 
     return 0;
 }
@@ -63,6 +64,7 @@ graphUnregisterPrint(sprite_t *sprite)
         {
             if (n->sprite == sprite)
             {
+                graphDestroyImage(n->sprite);
                 list_del(&n->node);
                 utilsFree((void **)&n);
                 removed++;

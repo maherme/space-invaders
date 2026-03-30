@@ -109,6 +109,7 @@ register_sprites(sprite_t **sprite, int n)
     for (int i = 0; i < n; i++)
     {
         expect_function_call(__wrap_utilsCalloc);
+        expect_function_call(__wrap_graphCreateImage);
         int result = graphRegisterPrint(sprite[i]);
         assert_int_equal(result, 0);
     }
@@ -158,6 +159,7 @@ testGraphUnregisterPrintSuccessOneCallback(void **status)
     register_sprites(expected_sprites, ARRAY_SIZE(expected_sprites));
     assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[0]));
 
+    expect_function_call(__wrap_graphDestroyImage);
     expect_function_call(__wrap_utilsFree);
     int result = graphUnregisterPrint(expected_sprites[0]);
     assert_int_equal(result, 1);
@@ -177,6 +179,7 @@ testGraphUnregisterPrintSuccessLastCallback(void **status)
     assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[0]));
     assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[1]));
 
+    expect_function_call(__wrap_graphDestroyImage);
     expect_function_call(__wrap_utilsFree);
     int result = graphUnregisterPrint(expected_sprites[1]);
     assert_int_equal(result, 1);
@@ -199,6 +202,7 @@ testGraphUnregisterPrintSuccessMiddleCallback(void **status)
     assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[1]));
     assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[2]));
 
+    expect_function_call(__wrap_graphDestroyImage);
     expect_function_call(__wrap_utilsFree);
 
     int result = graphUnregisterPrint(expected_sprites[1]);

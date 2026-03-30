@@ -40,7 +40,6 @@ registerExplosionBullet(void (*callback)(void))
 {
     expect_function_call(__wrap_utilsCalloc);
     expect_function_call(__wrap_utilsCalloc);
-    expect_function_call(__wrap_graphCreateImage);
     will_return(__wrap_clock_gettime, 0); /* tv_sec */
     will_return(__wrap_clock_gettime, 0); /* tv_nsec */
     expect_function_call(__wrap_clock_gettime);
@@ -57,7 +56,6 @@ registerExplosionSpaceship(void (*callback)(void))
     will_return(__wrap_clock_gettime, 0); /* tv_sec */
     will_return(__wrap_clock_gettime, 0); /* tv_nsec */
     expect_function_call(__wrap_clock_gettime);
-    expect_function_call(__wrap_graphCreateImage);
     will_return(__wrap_clock_gettime, 0); /* tv_sec */
     will_return(__wrap_clock_gettime, 0); /* tv_nsec */
     expect_function_call(__wrap_clock_gettime);
@@ -84,7 +82,6 @@ testExplosionCreate(void **status)
             will_return(__wrap_clock_gettime, 0); /* tv_nsec */
             expect_function_call(__wrap_clock_gettime);
         }
-        expect_function_call(__wrap_graphCreateImage);
         will_return(__wrap_clock_gettime, 0); /* tv_sec */
         will_return(__wrap_clock_gettime, 0); /* tv_nsec */
         expect_function_call(__wrap_clock_gettime);
@@ -122,7 +119,6 @@ testExplosionsDestroyTimeoutTrue(void **status)
     will_return(__wrap_utilsCheckTimeout, true);
     expect_function_call(__wrap_utilsCheckTimeout);
     expect_function_call(__wrap_graphUnregisterPrint);
-    expect_function_call(__wrap_graphDestroyImage);
     /* free explosion */
     expect_function_call(__wrap_utilsFree);
     /* free node in list */
@@ -146,7 +142,6 @@ testExplosionsDestroyTimeoutCallback(void **status)
     will_return(__wrap_utilsCheckTimeout, true);
     expect_function_call(__wrap_utilsCheckTimeout);
     expect_function_call(__wrap_graphUnregisterPrint);
-    expect_function_call(__wrap_graphDestroyImage);
     expect_function_call(foo);
     /* free explosion */
     expect_function_call(__wrap_utilsFree);
@@ -175,7 +170,6 @@ testExplosionsDestroyTwoExplosions(void **status)
     will_return(__wrap_utilsCheckTimeout, true);
     expect_function_call(__wrap_utilsCheckTimeout);
     expect_function_call(__wrap_graphUnregisterPrint);
-    expect_function_call(__wrap_graphDestroyImage);
     /* free explosion */
     expect_function_call(__wrap_utilsFree);
     /* free node in list */

@@ -57,7 +57,6 @@ bunkersCreate(void)
         memcpy(bunker->image, bunker_image, sizeof(bunker_image));
         bunker->sprite.image = (char *)bunker->image;
         bunker->sprite.layer = LAYER_BACKGROUND;
-        graphCreateImage(&bunker->sprite);
         graphRegisterPrint(&bunker->sprite);
     }
 }

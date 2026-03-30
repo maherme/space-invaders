@@ -46,7 +46,6 @@ testAliensCreate(void **status)
 
     for (int i = 0; i < ALIENS_INITIAL_NUMBER; i++)
     {
-        expect_function_call(__wrap_graphCreateImage);
         expect_function_call(__wrap_graphUpdateTimeSprite);
         expect_function_call(__wrap_graphRegisterPrint);
     }
@@ -102,7 +101,6 @@ testAlienDestroy(void **status)
 
     expect_function_call(__wrap_graphGetSprite);
     expect_function_call(__wrap_graphUnregisterPrint);
-    expect_function_call(__wrap_graphDestroyImage);
 
     alienDestroy(alien);
 }

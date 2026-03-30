@@ -153,7 +153,6 @@ alienCreate(int x, int y, alien_type_t type, int index)
     inst->sprite.x = x;
     inst->sprite.y = y;
     inst->sprite.time_to_move = 0;
-    graphCreateImage(&inst->sprite);
     inst->sprite.pixels_to_move = alienPool.pixels_to_move;
     inst->sprite.max_movement.right = WINDOW_WIDTH;
     inst->sprite.max_movement.left = 0;
@@ -175,7 +174,6 @@ alienDestroy(alien_t alien)
 
     sprite_t *alien_sprite = graphGetSprite((base_t *)alien);
     graphUnregisterPrint(alien_sprite);
-    graphDestroyImage(alien_sprite);
     alien->alive = false;
     alienPool.aliens_alive--;
 }
