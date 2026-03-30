@@ -12,6 +12,9 @@
 
 #include <stdbool.h>
 
+struct sprite;
+typedef struct sprite sprite_t;
+
 typedef enum
 {
     BULLET_SPACESHIP,
@@ -43,6 +46,9 @@ bulletAlienInhibit(bool inhibit);
 
 bool
 bulletNoneUsed(void);
+
+bool
+bulletSpaceshipHitBulletAliens(bool (*fn)(const sprite_t *const sprite1, const sprite_t *const sprite2));
 
 #ifdef UNIT_TESTING
 #include <string.h>

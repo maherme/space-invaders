@@ -21,6 +21,7 @@
 #define BULLET_ALIEN_HEIGHT 7
 #define BULLET_ALIEN_NUM_FRAMES 4
 #define BULLET_SPACESHIP_SLOT 0
+#define BULLET_ALIEN_SLOT 1
 
 typedef enum
 {
@@ -250,6 +251,24 @@ bulletNoneUsed(void)
     }
 
     return true;
+}
+
+bool
+bulletSpaceshipHitBulletAliens(bool (*fn)(const sprite_t *const sprite1, const sprite_t *const sprite2))
+{
+    for (int i = BULLET_ALIEN_SLOT; i < MAX_BULLETS; i++)
+    {
+        if (bulletPool.bullets[i].used)
+        {
+            if (fn(&bulletPool.bullets[BULLET_SPACESHIP_SLOT].sprite, &bulletPool.bullets[i].sprite))
+            {
+                bulletDestroy(&bulletPool.bullets[i]);
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 #ifdef UNIT_TESTING
