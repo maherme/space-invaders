@@ -34,6 +34,9 @@ main(void)
         cmocka_unit_test_setup(testBulletAlienInhibit, setup),
         cmocka_unit_test_setup(testBulletNoneUsedTrue, setup),
         cmocka_unit_test_setup(testBulletNoneUsedFalse, setup),
+        cmocka_unit_test_setup(testBulletSpaceshipHitBulletAliensNoBullets, setup),
+        cmocka_unit_test_setup(testBulletSpaceshipHitBulletAliensCmpFalse, setup),
+        cmocka_unit_test_setup(testBulletSpaceshipHitBulletAliensCmpTrue, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

@@ -231,3 +231,52 @@ testBulletNoneUsedFalse(void **status)
 
     assert_false(bulletNoneUsed());
 }
+
+static bool
+cmp_foo(const sprite_t *const sprite1, const sprite_t *const sprite2)
+{
+    (void)sprite1, (void)sprite2;
+    function_called();
+    return (bool)mock();
+}
+
+void
+testBulletSpaceshipHitBulletAliensNoBullets(void **status)
+{
+    (void)status;
+
+    assert_false(bulletSpaceshipHitBulletAliens(cmp_foo));
+}
+
+void
+testBulletSpaceshipHitBulletAliensCmpFalse(void **status)
+{
+    (void)status;
+
+    will_return(cmp_foo, false);
+    expect_function_call(cmp_foo);
+
+    helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
+    helperUT_bulletInjectInPool(1, BULLET_ALIEN);
+
+    assert_false(bulletSpaceshipHitBulletAliens(cmp_foo));
+}
+
+void
+testBulletSpaceshipHitBulletAliensCmpTrue(void **status)
+{
+    (void)status;
+
+    will_return(cmp_foo, true);
+    expect_function_call(cmp_foo);
+
+    /* Called bulletDestroy expected */
+    expect_function_call(__wrap_graphGetSprite);
+    expect_function_call(__wrap_graphUnregisterPrint);
+    expect_function_call(__wrap_graphDestroyImage);
+
+    helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
+    helperUT_bulletInjectInPool(1, BULLET_ALIEN);
+
+    assert_true(bulletSpaceshipHitBulletAliens(cmp_foo));
+}

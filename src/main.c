@@ -116,10 +116,32 @@ checkCollisionBulletSpaceship(bullet_t bullet)
 }
 
 static void
+checkCollisionBulletSpaceshipBulletAliens(bullet_t bullet)
+{
+    bullet_type_t type;
+    bulletGetType(bullet, &type);
+
+    if (!bulletUsed(bullet) || type != BULLET_SPACESHIP)
+    {
+        return;
+    }
+
+    if (bulletSpaceshipHitBulletAliens(physicCheckSpritesPixelCollision))
+    {
+        sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
+        explosionCreate(bullet_sprite->x, bullet_sprite->y, EXPLOSION_BULLET_SPACESHIP, NULL);
+        explosionCreate(bullet_sprite->x, bullet_sprite->y, EXPLOSION_BULLET_ALIEN, NULL);
+        bulletDestroy(bullet);
+        return;
+    }
+}
+
+static void
 bulletActions(void)
 {
     bulletCallFunctionForEach(bulletActionsSingle);
     bulletCallFunctionForEach(checkCollisionBulletSpaceship);
+    bulletCallFunctionForEach(checkCollisionBulletSpaceshipBulletAliens);
 }
 
 static void

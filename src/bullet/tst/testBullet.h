@@ -61,4 +61,13 @@ testBulletNoneUsedTrue(void **status);
 void
 testBulletNoneUsedFalse(void **status);
 
+void
+testBulletSpaceshipHitBulletAliensNoBullets(void **status);
+
+void
+testBulletSpaceshipHitBulletAliensCmpFalse(void **status);
+
+void
+testBulletSpaceshipHitBulletAliensCmpTrue(void **status);
+
 #endif
