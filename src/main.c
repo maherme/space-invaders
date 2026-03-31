@@ -49,7 +49,7 @@ bulletActionsSingle(bullet_t bullet)
         if (type == BULLET_SPACESHIP)
         {
             explosionCreate(bullet_sprite->x,
-                            WINDOW_HEIGHT - explosionsGetExplosionHeight(EXPLOSION_BULLET_SPACESHIP),
+                            GAME_HEIGHT - explosionsGetExplosionHeight(EXPLOSION_BULLET_SPACESHIP),
                             EXPLOSION_BULLET_SPACESHIP,
                             NULL);
         }
@@ -77,7 +77,7 @@ spaceshipCreateAfterDie(void)
 {
     if (bulletNoneUsed() && explosionsAllFinished())
     {
-        spaceship = spaceshipCreate(WINDOW_WIDTH / 2, 0);
+        spaceship = spaceshipCreate(GAME_WIDTH / 2, 0);
         bulletAlienInhibit(false);
         engineUnregister(spaceshipCreateAfterDie);
     }
@@ -362,7 +362,7 @@ main(int argc, char **argv)
     keyboardRegisterAction(spaceshipFire, ACTION_KEY_DOWN, ' ');
     keyboardInit();
 
-    spaceship = spaceshipCreate(WINDOW_WIDTH / 2, 0);
+    spaceship = spaceshipCreate(GAME_WIDTH / 2, 0);
     aliensCreate(gameOver);
     bunkersCreate();
     engineRegister(keyboardUpdate);

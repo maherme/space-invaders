@@ -134,8 +134,8 @@ testGraphInitGlut(void **status)
     expect_uint_value(__wrap_glutInitDisplayMode, mode, GLUT_DOUBLE | GLUT_RGB);
     expect_function_call(__wrap_glutInitDisplayMode);
 
-    expect_int_value(__wrap_glutInitWindowSize, width, WINDOW_WIDTH * initGlutConfig.scale);
-    expect_int_value(__wrap_glutInitWindowSize, height, WINDOW_HEIGHT * initGlutConfig.scale);
+    expect_int_value(__wrap_glutInitWindowSize, width, GAME_WIDTH * initGlutConfig.scale);
+    expect_int_value(__wrap_glutInitWindowSize, height, GAME_HEIGHT * initGlutConfig.scale);
     expect_function_call(__wrap_glutInitWindowSize);
 
     expect_int_value(__wrap_glutInitWindowPosition, x, 0);

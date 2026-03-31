@@ -120,7 +120,7 @@ setBulletType(bullet_t bullet, bullet_type_t type)
             bullet->sprite.height = BULLET_SPACESHIP_HEIGHT;
             bullet->sprite.image = (const char *)bulletSpaceshipImage;
             bullet->sprite.pixels_to_move = 1;
-            bullet->sprite.max_movement.up = WINDOW_HEIGHT;
+            bullet->sprite.max_movement.up = GAME_HEIGHT;
             bullet->sprite.max_movement.down = 0;
             bullet->sprite.time_to_move = 2 * NS_PER_MS;
             break;
@@ -133,7 +133,7 @@ setBulletType(bullet_t bullet, bullet_type_t type)
             bullet->sprite.image = bullet->sprite.image_base;
             bullet->sprite.num_frames = BULLET_ALIEN_NUM_FRAMES;
             bullet->sprite.pixels_to_move = bulletAlien[alien_bullet_type].pixels_to_move;
-            bullet->sprite.max_movement.up = WINDOW_HEIGHT;
+            bullet->sprite.max_movement.up = GAME_HEIGHT;
             bullet->sprite.max_movement.down = 0;
             bullet->sprite.time_to_move = bulletAlien[alien_bullet_type].time_to_move;
             break;

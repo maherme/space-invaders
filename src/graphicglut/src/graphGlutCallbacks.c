@@ -21,6 +21,20 @@ typedef struct ctx_node
 
 struct list_head render_layers[NUM_RENDER_LAYERS];
 
+typedef struct viewport
+{
+    int x, y;
+    int w, h;
+} viewport_t;
+
+static struct
+{
+    int width;
+    int height;
+    viewport_t game_vp;
+    viewport_t hud_vp;
+} window;
+
 void
 graphRegisterPrintInit(void)
 {
@@ -75,55 +89,98 @@ graphUnregisterPrint(sprite_t *sprite)
     return removed;
 }
 
-void
-graphGlutDisplay(void)
+static void
+drawLayers(int first, int last)
 {
-
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    for (int i = 0; i < NUM_RENDER_LAYERS; i++)
+    for (int i = first; i <= last; i++)
     {
         ctx_node_t *n;
-
         list_for_each_entry(n, &render_layers[i], node)
         {
             graphPrintImage(n->sprite);
         }
     }
+}
 
-    graphPrintGameBorder();
+static void
+setupGameViewport(void)
+{
+    glViewport(window.game_vp.x, window.game_vp.y, window.game_vp.w, window.game_vp.h);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, GAME_WIDTH, 0, GAME_HEIGHT);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+static void
+setupHudViewport(void)
+{
+    glViewport(window.hud_vp.x, window.hud_vp.y, window.hud_vp.w, window.hud_vp.h);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, GAME_WIDTH, 0, HUD_HEIGHT);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+void
+graphGlutDisplay(void)
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    setupGameViewport();
+    drawLayers(LAYER_BACKGROUND, LAYER_EFFECTS);
+    graphPrintBorder(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+    setupHudViewport();
+    drawLayers(LAYER_HUD, LAYER_HUD);
+    graphPrintBorder(0, 0, GAME_WIDTH, HUD_HEIGHT);
 
     glutSwapBuffers();
 }
 
-void
-graphGlutReshape(int w, int h)
+static void
+calculateViewports(void)
 {
-    const int game_w = WINDOW_WIDTH;
-    const int game_h = WINDOW_HEIGHT;
-
-    int scale_x = w / game_w;
-    int scale_y = h / game_h;
+    int scale_x = window.width / GAME_WIDTH;
+    int scale_y = window.height / (GAME_HEIGHT + HUD_HEIGHT);
     int scale = scale_x < scale_y ? scale_x : scale_y;
     if (scale < 1)
     {
         scale = 1;
     }
 
-    int vp_w = game_w * scale;
-    int vp_h = game_h * scale;
+    int game_width = GAME_WIDTH * scale;
+    int game_height = GAME_HEIGHT * scale;
+    int hud_width = game_width;
+    int hud_height = HUD_HEIGHT * scale;
 
-    int vp_x = (w - vp_w) / 2;
-    int vp_y = (h - vp_h) / 2;
+    int vp_x = (window.width - game_width) / 2;
+    int vp_y = (window.height - (game_height + hud_height)) / 2;
 
-    glViewport(vp_x, vp_y, vp_w, vp_h);
+    window.game_vp.x = vp_x;
+    window.game_vp.y = hud_height + vp_y;
+    window.game_vp.w = game_width;
+    window.game_vp.h = game_height;
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0, game_w, 0, game_h);
+    window.hud_vp.x = vp_x;
+    window.hud_vp.y = vp_y;
+    window.hud_vp.w = hud_width;
+    window.hud_vp.h = hud_height;
+}
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+void
+graphGlutReshape(int w, int h)
+{
+    window.width = w;
+    window.height = h;
+
+    calculateViewports();
 }
 
 #ifdef UNIT_TESTING
@@ -160,5 +217,29 @@ helperUT_graphGlutInjectSprite(sprite_t *sprite)
     ctx_node_t *n = utilsCalloc(1, sizeof(*n));
     n->sprite = sprite;
     list_add(&n->node, &render_layers[sprite->layer]);
+}
+
+void
+helperUT_graphGlutSetGameViewport(void *game_vp)
+{
+    window.game_vp = *(viewport_t *)game_vp;
+}
+
+void
+helperUT_graphGlutSetHudViewport(void *hud_vp)
+{
+    window.hud_vp = *(viewport_t *)hud_vp;
+}
+
+void *
+helperUT_graphGlutGetGameViewport(void)
+{
+    return &window.game_vp;
+}
+
+void *
+helperUT_graphGlutGetHudViewport(void)
+{
+    return &window.hud_vp;
 }
 #endif

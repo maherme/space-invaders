@@ -63,10 +63,10 @@ calculateStartingCoord(ufo_t ufo)
     }
     else
     {
-        ufo->sprite.x = WINDOW_WIDTH;
+        ufo->sprite.x = GAME_WIDTH;
     }
 
-    ufo->sprite.y = WINDOW_HEIGHT - 16;
+    ufo->sprite.y = GAME_HEIGHT - 16;
 }
 
 ufo_t
@@ -81,7 +81,7 @@ ufoCreate(void)
     inst->sprite.time_to_move = 1000 / 60 * NS_PER_MS;
     inst->time_to_appear = 5 * NS_PER_S;
     calculateStartingCoord(inst);
-    inst->sprite.max_movement.right = WINDOW_WIDTH + inst->sprite.width + 1;
+    inst->sprite.max_movement.right = GAME_WIDTH + inst->sprite.width + 1;
     inst->sprite.max_movement.left = -(inst->sprite.width + 1);
     inst->sprite.layer = LAYER_GAME_OBJECTS;
     graphUpdateTimeSprite(&inst->sprite);

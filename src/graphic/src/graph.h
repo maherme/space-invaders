@@ -13,8 +13,9 @@
 #include "graphGlutCallbacks.h"
 #include <GL/glut.h>
 
-#define WINDOW_WIDTH 224
-#define WINDOW_HEIGHT 256
+#define GAME_WIDTH 224
+#define GAME_HEIGHT 256
+#define HUD_HEIGHT 16
 
 #define NUM_RGBA_CHANNELS 4
 #define W {(char)255, (char)255, (char)255, (char)255}
@@ -86,6 +87,6 @@ void
 graphUpdateSprite(const sprite_t *const sprite);
 
 void
-graphPrintGameBorder(void);
+graphPrintBorder(int x, int y, int w, int h);
 
 #endif

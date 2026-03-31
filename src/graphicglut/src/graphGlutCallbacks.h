@@ -18,6 +18,7 @@ typedef enum
     LAYER_BACKGROUND = 0,
     LAYER_GAME_OBJECTS,
     LAYER_EFFECTS,
+    LAYER_HUD,
     NUM_RENDER_LAYERS,
 } render_layer_t;
 
@@ -45,6 +46,18 @@ helperUT_graphGlutSpriteIsRegistered(sprite_t *sprite);
 
 void
 helperUT_graphGlutInjectSprite(sprite_t *sprite);
+
+void
+helperUT_graphGlutSetGameViewport(void *game_vp);
+
+void
+helperUT_graphGlutSetHudViewport(void *hud_vp);
+
+void *
+helperUT_graphGlutGetGameViewport(void);
+
+void *
+helperUT_graphGlutGetHudViewport(void);
 #endif
 
 #endif

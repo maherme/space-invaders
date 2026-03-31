@@ -240,7 +240,7 @@ testAliensMoveMaxRight(void **status)
 {
     (void)status;
     sprite_t sprite = {
-        .x = WINDOW_WIDTH,
+        .x = GAME_WIDTH,
         .y = 100,
     };
 

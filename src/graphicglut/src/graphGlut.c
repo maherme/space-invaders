@@ -16,7 +16,7 @@ graphInitGlut(graphInitGlutConfig_t *config)
 {
     glutInit(config->main_argc, config->main_argv);
     glutInitDisplayMode(config->displayMode);
-    glutInitWindowSize(WINDOW_WIDTH * config->scale, WINDOW_HEIGHT * config->scale);
+    glutInitWindowSize(GAME_WIDTH * config->scale, GAME_HEIGHT * config->scale);
     glutInitWindowPosition(config->windowPositionX, config->windowPositionY);
     (void)glutCreateWindow(config->windowName);
     glutDisplayFunc(config->displayFunc);

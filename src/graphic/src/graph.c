@@ -123,21 +123,21 @@ graphUpdateSprite(const sprite_t *const sprite)
 }
 
 void
-graphPrintGameBorder(void)
+graphPrintBorder(int x, int y, int w, int h)
 {
     GLubyte color[NUM_RGBA_CHANNELS] = W;
 
-    glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT); // guarda color y flags
+    glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
 
     glDisable(GL_TEXTURE_2D);
     glColor4ubv(color);
     glLineWidth(2.0f);
 
     glBegin(GL_LINE_LOOP);
-    glVertex2i(0, 0);
-    glVertex2i(WINDOW_WIDTH, 0);
-    glVertex2i(WINDOW_WIDTH, WINDOW_HEIGHT);
-    glVertex2i(0, WINDOW_HEIGHT);
+    glVertex2i(x, y);
+    glVertex2i(x + w, y);
+    glVertex2i(x + w, y + h);
+    glVertex2i(x, y + h);
     glEnd();
 
     glPopAttrib(); // restaura todo
