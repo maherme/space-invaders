@@ -16,6 +16,7 @@
 #include "graphGlut.h"
 #include "graphGlutCallbacks.h"
 #include "keyboard.h"
+#include "lives.h"
 #include "physic.h"
 #include "spaceship.h"
 #include "ufo.h"
@@ -86,6 +87,7 @@ spaceshipCreateAfterDie(void)
 static void
 spaceshipExplosionCallback(void)
 {
+    livesRemove();
     engineRegister(spaceshipCreateAfterDie);
 }
 
@@ -365,6 +367,7 @@ main(int argc, char **argv)
     spaceship = spaceshipCreate(GAME_WIDTH / 2, 0);
     aliensCreate(gameOver);
     bunkersCreate();
+    livesCreate(gameOver);
     engineRegister(keyboardUpdate);
     engineRegister(explosionsDestroy);
     engineRegister(ufoActions);

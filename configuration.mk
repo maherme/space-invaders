@@ -35,4 +35,5 @@ DIR_MAKES := $(PROJECT_ROOT)/src/utils \
 			 $(PROJECT_ROOT)/src/explosion \
 			 $(PROJECT_ROOT)/src/ufo \
 			 $(PROJECT_ROOT)/src/aliens \
-			 $(PROJECT_ROOT)/src/bunkers
+			 $(PROJECT_ROOT)/src/bunkers \
+			 $(PROJECT_ROOT)/src/lives
