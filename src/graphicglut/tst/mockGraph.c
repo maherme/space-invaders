@@ -27,3 +27,13 @@ __wrap_graphDestroyImage(sprite_t *sprite)
     (void)sprite;
     function_called();
 }
+
+void
+__wrap_graphPrintBorder(int x, int y, int w, int h)
+{
+    check_expected_int(x);
+    check_expected_int(y);
+    check_expected_int(w);
+    check_expected_int(h);
+    function_called();
+}

@@ -486,17 +486,17 @@ testGraphPrintGameBorder(void **status)
     expect_int_value(__wrap_glVertex2i, x, 0);
     expect_int_value(__wrap_glVertex2i, y, 0);
     expect_function_call(__wrap_glVertex2i);
-    expect_int_value(__wrap_glVertex2i, x, WINDOW_WIDTH);
+    expect_int_value(__wrap_glVertex2i, x, GAME_WIDTH);
     expect_int_value(__wrap_glVertex2i, y, 0);
     expect_function_call(__wrap_glVertex2i);
-    expect_int_value(__wrap_glVertex2i, x, WINDOW_WIDTH);
-    expect_int_value(__wrap_glVertex2i, y, WINDOW_HEIGHT);
+    expect_int_value(__wrap_glVertex2i, x, GAME_WIDTH);
+    expect_int_value(__wrap_glVertex2i, y, GAME_HEIGHT);
     expect_function_call(__wrap_glVertex2i);
     expect_int_value(__wrap_glVertex2i, x, 0);
-    expect_int_value(__wrap_glVertex2i, y, WINDOW_HEIGHT);
+    expect_int_value(__wrap_glVertex2i, y, GAME_HEIGHT);
     expect_function_call(__wrap_glVertex2i);
     expect_function_call(__wrap_glEnd);
     expect_function_call(__wrap_glPopAttrib);
 
-    graphPrintGameBorder();
+    graphPrintBorder(0, 0, GAME_WIDTH, GAME_HEIGHT);
 }

@@ -32,6 +32,6 @@ LDFLAGS += -Wl,--wrap=glutInit \
 		   -Wl,--wrap=graphPrintImage \
 		   -Wl,--wrap=graphCreateImage \
 		   -Wl,--wrap=graphDestroyImage \
-		   -Wl,--wrap=graphPrintGameBorder \
+		   -Wl,--wrap=graphPrintBorder \
 		   -Wl,--wrap=utilsCalloc \
 		   -Wl,--wrap=utilsFree

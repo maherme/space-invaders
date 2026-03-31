@@ -16,7 +16,7 @@
 #define BUNKER_WIDTH 22
 #define BUNKER_HEIGHT 16
 #define NUM_BUNKERS 4
-#define BUNKER_SPACING ((WINDOW_WIDTH - BUNKER_WIDTH * NUM_BUNKERS) / (NUM_BUNKERS + 1))
+#define BUNKER_SPACING ((GAME_WIDTH - BUNKER_WIDTH * NUM_BUNKERS) / (NUM_BUNKERS + 1))
 
 static const char bunker_image[BUNKER_HEIGHT][BUNKER_WIDTH][NUM_RGBA_CHANNELS] = {
     {B, B, B, B, G, G, G, G, G, G, G, G, G, G, G, G, G, G, B, B, B, B},
@@ -51,7 +51,7 @@ bunkersCreate(void)
     {
         bunker_t bunker = &bunkerPool[i];
         bunker->sprite.x = BUNKER_SPACING * (i + 1) + BUNKER_WIDTH * i;
-        bunker->sprite.y = WINDOW_HEIGHT / 16;
+        bunker->sprite.y = GAME_HEIGHT / 16;
         bunker->sprite.width = BUNKER_WIDTH;
         bunker->sprite.height = BUNKER_HEIGHT;
         memcpy(bunker->image, bunker_image, sizeof(bunker_image));

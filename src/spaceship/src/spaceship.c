@@ -46,7 +46,7 @@ spaceshipCreate(int x, int y)
     inst->sprite.image = (const char *)spaceshipImage;
     inst->sprite.pixels_to_move = 1;
     inst->sprite.time_to_move = 1000 / 60 * NS_PER_MS;
-    inst->sprite.max_movement.right = WINDOW_WIDTH;
+    inst->sprite.max_movement.right = GAME_WIDTH;
     inst->sprite.max_movement.left = 0;
     inst->sprite.layer = LAYER_GAME_OBJECTS;
     graphRegisterPrint(&inst->sprite);

@@ -101,8 +101,8 @@ testPhysicMoveSpriteRightMax(void **status)
     sprite_t sprite = {
         .pixels_to_move = 10,
     };
-    sprite.x = WINDOW_WIDTH - sprite.width;
-    sprite.max_movement.right = WINDOW_WIDTH;
+    sprite.x = GAME_WIDTH - sprite.width;
+    sprite.max_movement.right = GAME_WIDTH;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
     checkGraphGetSpriteCoordinates(&sprite, sprite.x, sprite.x + sprite.width, 0, 0);
@@ -159,7 +159,7 @@ testPhysicMoveSpriteUp(void **status)
         .y = 0,
         .pixels_to_move = 10,
     };
-    sprite.max_movement.up = WINDOW_HEIGHT - sprite.height;
+    sprite.max_movement.up = GAME_HEIGHT - sprite.height;
     sprite_t old_sprite = sprite;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
@@ -181,8 +181,8 @@ testPhysicMoveSpriteUpMax(void **status)
     sprite_t sprite = {
         .pixels_to_move = 20,
     };
-    sprite.y = WINDOW_HEIGHT - sprite.pixels_to_move;
-    sprite.max_movement.up = WINDOW_HEIGHT;
+    sprite.y = GAME_HEIGHT - sprite.pixels_to_move;
+    sprite.max_movement.up = GAME_HEIGHT;
 
     checkUtilsCheckTimeout(sprite.last_update, sprite.time_to_move, true);
     checkGraphGetSpriteCoordinates(&sprite, 0, 0, sprite.y, sprite.y + sprite.height);

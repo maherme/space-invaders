@@ -154,7 +154,7 @@ alienCreate(int x, int y, alien_type_t type, int index)
     inst->sprite.y = y;
     inst->sprite.time_to_move = 0;
     inst->sprite.pixels_to_move = alienPool.pixels_to_move;
-    inst->sprite.max_movement.right = WINDOW_WIDTH;
+    inst->sprite.max_movement.right = GAME_WIDTH;
     inst->sprite.max_movement.left = 0;
     inst->sprite.max_movement.down = 0;
     inst->sprite.num_frames = ALIEN_NUM_FRAMES;
@@ -206,8 +206,8 @@ void
 aliensCreate(void (*game_over_cb)(void))
 {
     int formation_width = ALIENS_COLS * ALIEN_CELL_WIDTH;
-    alienPool.origin_x = (WINDOW_WIDTH - formation_width) / 2;
-    alienPool.origin_y = WINDOW_HEIGHT / 2;
+    alienPool.origin_x = (GAME_WIDTH - formation_width) / 2;
+    alienPool.origin_y = GAME_HEIGHT / 2;
     alienPool.current_dir = RIGHT;
     alienPool.descend_pending = false;
     alienPool.pixels_to_move = ALIEN_CELL_WIDTH / 4;
@@ -273,9 +273,9 @@ aliensGetShooter(void)
 static void
 getFormationBounds(int *left, int *right, int *down)
 {
-    *left = WINDOW_WIDTH;
+    *left = GAME_WIDTH;
     *right = 0;
-    *down = WINDOW_HEIGHT;
+    *down = GAME_HEIGHT;
 
     for (int i = 0; i < ALIENS_INITIAL_NUMBER; i++)
     {
@@ -316,7 +316,7 @@ aliensMove(void)
         return;
     }
 
-    if (alienPool.current_dir == RIGHT && right + alienPool.pixels_to_move >= WINDOW_WIDTH)
+    if (alienPool.current_dir == RIGHT && right + alienPool.pixels_to_move >= GAME_WIDTH)
     {
         alienPool.current_dir = LEFT;
         alienPool.descend_pending = true;
