@@ -254,7 +254,7 @@ testAliensMoveMaxRight(void **status)
 }
 
 void
-testAliensMoveGameOver(void **status)
+testAliensReachBottom(void **status)
 {
     (void)status;
     sprite_t sprite = {
@@ -262,7 +262,7 @@ testAliensMoveGameOver(void **status)
         .y = 16,
     };
 
-    helperUT_alienSetGameOverCallbck(foo_cb);
+    helperUT_alienInjectReachBottomCb(foo_cb);
     helperUT_alienInjectInPool(0, 0, &sprite);
 
     expect_function_call(foo_cb);
@@ -271,7 +271,7 @@ testAliensMoveGameOver(void **status)
 }
 
 void
-testAliensMoveGameOverNull(void **status)
+testAliensReachBottomCallbackNull(void **status)
 {
     (void)status;
     sprite_t sprite = {
@@ -279,7 +279,7 @@ testAliensMoveGameOverNull(void **status)
         .y = 16,
     };
 
-    helperUT_alienSetGameOverCallbck(NULL);
+    helperUT_alienInjectReachBottomCb(NULL);
     helperUT_alienSetCurrentDirection(RIGHT);
     helperUT_alienInjectInPool(0, 0, &sprite);
 

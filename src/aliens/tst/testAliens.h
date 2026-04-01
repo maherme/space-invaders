@@ -59,9 +59,9 @@ void
 testAliensMoveMaxRight(void **status);
 
 void
-testAliensMoveGameOver(void **status);
+testAliensReachBottom(void **status);
 
 void
-testAliensMoveGameOverNull(void **status);
+testAliensReachBottomCallbackNull(void **status);
 
 #endif /* __TESTALIENS_H__ */

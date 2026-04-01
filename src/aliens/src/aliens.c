@@ -43,7 +43,7 @@ static struct
     max_movement_t max_movement;
     int pixels_to_move;
     unsigned int aliens_alive;
-    void (*game_over_cb)(void);
+    void (*reachBottomCallback)(void);
 } alienPool;
 
 static alien_type_t alienTypeByRow[ALIENS_ROWS] = {
@@ -203,7 +203,7 @@ alienWidth(alien_type_t type)
 }
 
 void
-aliensCreate(void (*game_over_cb)(void))
+aliensCreate(void (*reachBottomCallback)(void))
 {
     int formation_width = ALIENS_COLS * ALIEN_CELL_WIDTH;
     alienPool.origin_x = (GAME_WIDTH - formation_width) / 2;
@@ -212,7 +212,7 @@ aliensCreate(void (*game_over_cb)(void))
     alienPool.descend_pending = false;
     alienPool.pixels_to_move = ALIEN_CELL_WIDTH / 4;
     alienPool.aliens_alive = ALIENS_INITIAL_NUMBER;
-    alienPool.game_over_cb = game_over_cb;
+    alienPool.reachBottomCallback = reachBottomCallback;
 
     for (int i = 0; i < ALIENS_INITIAL_NUMBER; i++)
     {
@@ -310,9 +310,9 @@ aliensMove(void)
     int left, right, down;
     getFormationBounds(&left, &right, &down);
 
-    if (down <= ALIENS_HEIGHT_GAME_OVER && alienPool.game_over_cb)
+    if (down <= ALIENS_HEIGHT_GAME_OVER && alienPool.reachBottomCallback)
     {
-        alienPool.game_over_cb();
+        alienPool.reachBottomCallback();
         return;
     }
 
@@ -389,9 +389,9 @@ helperUT_alienSetCurrentDirection(direction_t dir)
 }
 
 void
-helperUT_alienSetGameOverCallbck(void (*callback)(void))
+helperUT_alienInjectReachBottomCb(void (*cb)(void))
 {
-    alienPool.game_over_cb = callback;
+    alienPool.reachBottomCallback = cb;
 }
 
 #endif /* UNIT_TESTING */
