@@ -53,6 +53,18 @@ testLivesRemoveLastLive(void **status)
 }
 
 void
+testLivesRemoveLastLiveNullCallback(void **status)
+{
+    (void)status;
+
+    helperUT_livesSetNumLives(1);
+    helperUT_livesInjectLivesDepletedCb(NULL);
+
+    livesRemove();
+    assert_int_equal(0, helperUT_livesGetNumLives());
+}
+
+void
 testLivesRemovePenultimateLive(void **status)
 {
     (void)status;
@@ -79,6 +91,17 @@ testLivesRemoveMaxLivesPrinted(void **status)
 }
 
 void
+testLivesRemoveZeroLives(void **status)
+{
+    (void)status;
+
+    helperUT_livesSetNumLives(0);
+
+    livesRemove();
+    assert_int_equal(0, helperUT_livesGetNumLives());
+}
+
+void
 testLivesAdd(void **status)
 {
     (void)status;
@@ -102,4 +125,15 @@ testLivesAddMaxLivesPrinted(void **status)
 
     livesAdd();
     assert_int_equal(num_lives + 1, helperUT_livesGetNumLives());
+}
+
+void
+testLivesAddZeroLives(void **status)
+{
+    (void)status;
+
+    helperUT_livesSetNumLives(0);
+
+    livesAdd();
+    assert_int_equal(0, helperUT_livesGetNumLives());
 }

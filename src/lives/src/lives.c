@@ -69,27 +69,42 @@ livesCreate(void (*livesDepletedCallback)(void))
 void
 livesRemove(void)
 {
+    if (livePool.num_lives == 0)
+    {
+        return;
+    }
+
     livePool.num_lives--;
 
-    if (livePool.num_lives < 1)
+    int sprite_index = livePool.num_lives - 1;
+
+    if (sprite_index >= 0 && sprite_index < MAX_LIVES_TO_PRINT)
+    {
+        graphUnregisterPrint(&livePool.lives[sprite_index].sprite);
+    }
+
+    if (livePool.num_lives == 0 && livePool.livesDepletedCallback)
     {
         livePool.livesDepletedCallback();
-    }
-    else if (livePool.num_lives <= MAX_LIVES_TO_PRINT)
-    {
-        graphUnregisterPrint(&livePool.lives[livePool.num_lives - 1].sprite);
     }
 }
 
 void
 livesAdd(void)
 {
-    if (livePool.num_lives <= MAX_LIVES_TO_PRINT)
+    if (livePool.num_lives == 0)
     {
-        graphRegisterPrint(&livePool.lives[livePool.num_lives - 1].sprite);
+        return;
     }
 
+    int sprite_index = livePool.num_lives - 1;
+
     livePool.num_lives++;
+
+    if (sprite_index < MAX_LIVES_TO_PRINT)
+    {
+        graphRegisterPrint(&livePool.lives[sprite_index].sprite);
+    }
 }
 
 #ifdef UNIT_TESTING
