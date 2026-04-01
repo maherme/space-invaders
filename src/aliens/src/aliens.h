@@ -30,7 +30,7 @@ typedef enum
 typedef struct alien_instance *alien_t;
 
 void
-aliensCreate(void (*game_over_cb)(void));
+aliensCreate(void (*reachBottomCallback)(void));
 
 void
 alienDestroy(alien_t alien);
@@ -66,7 +66,7 @@ void
 helperUT_alienSetCurrentDirection(direction_t dir);
 
 void
-helperUT_alienSetGameOverCallbck(void (*callback)(void));
+helperUT_alienInjectReachBottomCb(void (*cb)(void));
 #endif /* UNIT_TESTING */
 
 #endif /* __ALIENS_H__ */
