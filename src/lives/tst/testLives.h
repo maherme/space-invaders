@@ -17,15 +17,24 @@ void
 testLivesRemoveLastLive(void **status);
 
 void
+testLivesRemoveLastLiveNullCallback(void **status);
+
+void
 testLivesRemovePenultimateLive(void **status);
 
 void
 testLivesRemoveMaxLivesPrinted(void **status);
 
 void
+testLivesRemoveZeroLives(void **status);
+
+void
 testLivesAdd(void **status);
 
 void
 testLivesAddMaxLivesPrinted(void **status);
+
+void
+testLivesAddZeroLives(void **status);
 
 #endif /* __TESTLIVES_H__ */
