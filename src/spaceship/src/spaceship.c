@@ -49,6 +49,7 @@ spaceshipCreate(int x, int y)
     inst->sprite.max_movement.right = GAME_WIDTH;
     inst->sprite.max_movement.left = 0;
     inst->sprite.layer = LAYER_GAME_OBJECTS;
+    inst->sprite.visible = true;
     graphRegisterPrint(&inst->sprite);
     inst->alive = true;
 

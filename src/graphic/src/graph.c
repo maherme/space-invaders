@@ -92,7 +92,7 @@ graphUpdateTimeSprite(sprite_t *sprite)
 void
 graphPrintImage(const sprite_t *const sprite)
 {
-    if (!sprite)
+    if (!sprite || !sprite->visible)
     {
         return;
     }

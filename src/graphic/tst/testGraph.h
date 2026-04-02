@@ -50,7 +50,10 @@ void
 testGraphUpdateTimeSprite(void **status);
 
 void
-testGraphPrintImageFail(void **status);
+testGraphPrintImageNullParameter(void **status);
+
+void
+testGraphPrintImageVisibleFalse(void **status);
 
 void
 testGraphPrintImageSuccess(void **status);

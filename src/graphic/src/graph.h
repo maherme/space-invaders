@@ -12,6 +12,7 @@
 
 #include "graphGlutCallbacks.h"
 #include <GL/glut.h>
+#include <stdbool.h>
 
 #define GAME_WIDTH 224
 #define GAME_HEIGHT 256
@@ -55,6 +56,7 @@ typedef struct sprite
     long long time_to_move;
     int pixels_to_move;
     max_movement_t max_movement;
+    bool visible;
 } sprite_t;
 
 typedef struct
