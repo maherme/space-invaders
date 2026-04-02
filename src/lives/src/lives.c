@@ -55,6 +55,7 @@ livesCreate(int x, int y, void (*livesDepletedCallback)(void))
         live->sprite.height = LIVE_HEIGHT;
         live->sprite.image = (const char *)liveImage;
         live->sprite.layer = LAYER_HUD;
+        live->sprite.visible = true;
 
         if (i < LIVE_INITIAL_NUM - 1)
         {

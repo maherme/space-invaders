@@ -84,6 +84,7 @@ ufoCreate(void)
     inst->sprite.max_movement.right = GAME_WIDTH + inst->sprite.width + 1;
     inst->sprite.max_movement.left = -(inst->sprite.width + 1);
     inst->sprite.layer = LAYER_GAME_OBJECTS;
+    inst->sprite.visible = true;
     graphUpdateTimeSprite(&inst->sprite);
     graphRegisterPrint(&inst->sprite);
     inst->alive = true;

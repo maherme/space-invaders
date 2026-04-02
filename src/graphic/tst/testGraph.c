@@ -377,11 +377,22 @@ testGraphUpdateTimeSprite(void **status)
 }
 
 void
-testGraphPrintImageFail(void **status)
+testGraphPrintImageNullParameter(void **status)
 {
     (void)status;
 
     graphPrintImage(NULL);
+}
+
+void
+testGraphPrintImageVisibleFalse(void **status)
+{
+    (void)status;
+    sprite_t sprite = {
+        .visible = false,
+    };
+
+    graphPrintImage(&sprite);
 }
 
 void
@@ -391,6 +402,7 @@ testGraphPrintImageSuccess(void **status)
     sprite_t sprite = {
         .width = 10,
         .height = 20,
+        .visible = true,
     };
 
     expect_uint_value(__wrap_glBindTexture, target, GL_TEXTURE_2D);
