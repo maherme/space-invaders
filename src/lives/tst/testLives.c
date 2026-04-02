@@ -8,6 +8,7 @@
  */
 
 #include "testLives.h"
+#include "graph.h"
 #include "lives.h"
 #include <cmocka.h>
 #include <setjmp.h>
@@ -27,6 +28,10 @@ testLivesCreate(void **status)
     (void)status;
     int expected_printed_lives = 2;
     int expected_num_lives = 3;
+    int x = 1, y = 2;
+    int expected_x_sprite1 = x;
+    int expected_x_sprite2 = 18;
+    int expected_y_sprites = y;
 
     for (int i = 0; i < expected_printed_lives; i++)
     {
@@ -34,8 +39,14 @@ testLivesCreate(void **status)
         expect_function_call(__wrap_graphRegisterPrint);
     }
 
-    livesCreate(foo_cb);
+    livesCreate(x, y, foo_cb);
     assert_int_equal(expected_num_lives, helperUT_livesGetNumLives());
+    sprite_t *sprite1 = helperUT_livesGetSpriteByInstanceIndex(0);
+    assert_int_equal(expected_x_sprite1, sprite1->x);
+    assert_int_equal(expected_y_sprites, sprite1->y);
+    sprite_t *sprite2 = helperUT_livesGetSpriteByInstanceIndex(1);
+    assert_int_equal(expected_x_sprite2, sprite2->x);
+    assert_int_equal(expected_y_sprites, sprite2->y);
 }
 
 void
