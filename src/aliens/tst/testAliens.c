@@ -9,6 +9,7 @@
 
 #include "testAliens.h"
 #include "aliens.h"
+#include "events.h"
 #include "graph.h"
 #include "physic.h"
 #include <cmocka.h>
@@ -16,7 +17,6 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 int
 setup(void **state)
@@ -33,12 +33,6 @@ __wrap_rand(void)
     return (int)mock();
 }
 
-static void
-foo_cb(void)
-{
-    function_called();
-}
-
 void
 testAliensCreate(void **status)
 {
@@ -50,7 +44,7 @@ testAliensCreate(void **status)
         expect_function_call(__wrap_graphRegisterPrint);
     }
 
-    aliensCreate(foo_cb);
+    aliensCreate();
 
     for (int i = 0; i < ALIENS_INITIAL_NUMBER; i++)
     {
@@ -262,29 +256,9 @@ testAliensReachBottom(void **status)
         .y = 16,
     };
 
-    helperUT_alienInjectReachBottomCb(foo_cb);
     helperUT_alienInjectInPool(0, 0, &sprite);
-
-    expect_function_call(foo_cb);
-
-    aliensMove();
-}
-
-void
-testAliensReachBottomCallbackNull(void **status)
-{
-    (void)status;
-    sprite_t sprite = {
-        .x = 0,
-        .y = 16,
-    };
-
-    helperUT_alienInjectReachBottomCb(NULL);
-    helperUT_alienSetCurrentDirection(RIGHT);
-    helperUT_alienInjectInPool(0, 0, &sprite);
-
-    expect_uint_value(__wrap_physicMoveSprite, direction, RIGHT);
-    expect_function_call(__wrap_physicMoveSprite);
+    expect_uint_value(__wrap_eventEmit, type, EVENT_ALIENS_REACHED_BOTTOM);
+    expect_function_call(__wrap_eventEmit);
 
     aliensMove();
 }

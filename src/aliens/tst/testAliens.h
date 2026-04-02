@@ -61,7 +61,4 @@ testAliensMoveMaxRight(void **status);
 void
 testAliensReachBottom(void **status);
 
-void
-testAliensReachBottomCallbackNull(void **status);
-
 #endif /* __TESTALIENS_H__ */

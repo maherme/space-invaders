@@ -10,10 +10,6 @@
 include ../../toolchain.mk
 include ../common.mk
 
-INCLUDES += -I../graphic/src \
-			-I../graphicglut/src \
-			-I../events/src
+INCLUDES +=
 
-LDFLAGS += -Wl,--wrap=graphRegisterPrint \
-		   -Wl,--wrap=graphUnregisterPrint \
-		   -Wl,--wrap=eventEmit
+LDFLAGS +=

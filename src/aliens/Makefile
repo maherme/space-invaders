@@ -13,7 +13,8 @@ include ../common.mk
 INCLUDES += -I../graphic/src \
 			-I../utils/src \
 			-I../physic/src \
-			-I../graphicglut/src
+			-I../graphicglut/src \
+			-I../events/src
 
 LDFLAGS += -Wl,--wrap=utilsCalloc \
 		   -Wl,--wrap=utilsFree \
@@ -22,4 +23,5 @@ LDFLAGS += -Wl,--wrap=utilsCalloc \
 		   -Wl,--wrap=graphRegisterPrint \
 		   -Wl,--wrap=graphUnregisterPrint \
 		   -Wl,--wrap=physicMoveSprite \
-		   -Wl,--wrap=rand
+		   -Wl,--wrap=rand \
+		   -Wl,--wrap=eventEmit

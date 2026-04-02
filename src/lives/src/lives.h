@@ -11,7 +11,7 @@
 #define __LIVES_H__
 
 void
-livesCreate(int x, int y, void (*livesDepletedCallback)(void));
+livesCreate(int x, int y);
 
 void
 livesRemove(void);
@@ -31,9 +31,6 @@ typedef struct sprite sprite_t;
 
 sprite_t *
 helperUT_livesGetSpriteByInstanceIndex(int idx);
-
-void
-helperUT_livesInjectLivesDepletedCb(void (*cb)(void));
 #endif /* UNIT_TESTING */
 
 #endif /* __LIVES_H__ */

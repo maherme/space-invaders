@@ -17,9 +17,6 @@ void
 testLivesRemoveLastLive(void **status);
 
 void
-testLivesRemoveLastLiveNullCallback(void **status);
-
-void
 testLivesRemovePenultimateLive(void **status);
 
 void

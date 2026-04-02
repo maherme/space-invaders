@@ -8,6 +8,7 @@
  */
 
 #include "testLives.h"
+#include "events.h"
 #include "graph.h"
 #include "lives.h"
 #include <cmocka.h>
@@ -15,12 +16,6 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-
-void
-foo_cb(void)
-{
-    function_called();
-}
 
 void
 testLivesCreate(void **status)
@@ -39,7 +34,7 @@ testLivesCreate(void **status)
         expect_function_call(__wrap_graphRegisterPrint);
     }
 
-    livesCreate(x, y, foo_cb);
+    livesCreate(x, y);
     assert_int_equal(expected_num_lives, helperUT_livesGetNumLives());
     sprite_t *sprite1 = helperUT_livesGetSpriteByInstanceIndex(0);
     assert_int_equal(expected_x_sprite1, sprite1->x);
@@ -55,21 +50,8 @@ testLivesRemoveLastLive(void **status)
     (void)status;
 
     helperUT_livesSetNumLives(1);
-    helperUT_livesInjectLivesDepletedCb(foo_cb);
-
-    expect_function_call(foo_cb);
-
-    livesRemove();
-    assert_int_equal(0, helperUT_livesGetNumLives());
-}
-
-void
-testLivesRemoveLastLiveNullCallback(void **status)
-{
-    (void)status;
-
-    helperUT_livesSetNumLives(1);
-    helperUT_livesInjectLivesDepletedCb(NULL);
+    expect_uint_value(__wrap_eventEmit, type, EVENT_LIVES_DEPLETED);
+    expect_function_call(__wrap_eventEmit);
 
     livesRemove();
     assert_int_equal(0, helperUT_livesGetNumLives());
