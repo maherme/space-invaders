@@ -44,13 +44,13 @@ static const char liveImage[LIVE_HEIGHT][LIVE_WIDTH][NUM_RGBA_CHANNELS] = {
 };
 
 void
-livesCreate(void (*livesDepletedCallback)(void))
+livesCreate(int x, int y, void (*livesDepletedCallback)(void))
 {
     for (int i = 0; i < MAX_LIVES_TO_PRINT; i++)
     {
         struct live_instance_t *live = &livePool.lives[i];
-        live->sprite.x = LIVE_START_COORD_X + i * (LIVE_WIDTH + LIVE_PIXELS_SPACE);
-        live->sprite.y = LIVE_START_COORD_Y;
+        live->sprite.x = x + i * (LIVE_WIDTH + LIVE_PIXELS_SPACE);
+        live->sprite.y = y;
         live->sprite.width = LIVE_WIDTH;
         live->sprite.height = LIVE_HEIGHT;
         live->sprite.image = (const char *)liveImage;

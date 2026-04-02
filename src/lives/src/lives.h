@@ -11,7 +11,7 @@
 #define __LIVES_H__
 
 void
-livesCreate(void (*livesDepletedCallback)(void));
+livesCreate(int x, int y, void (*livesDepletedCallback)(void));
 
 void
 livesRemove(void);

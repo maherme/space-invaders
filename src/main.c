@@ -367,7 +367,7 @@ main(int argc, char **argv)
     spaceship = spaceshipCreate(GAME_WIDTH / 2, 0);
     aliensCreate(gameOver);
     bunkersCreate();
-    livesCreate(gameOver);
+    livesCreate(16, 5, gameOver);
     engineRegister(keyboardUpdate);
     engineRegister(explosionsDestroy);
     engineRegister(ufoActions);
