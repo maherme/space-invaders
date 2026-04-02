@@ -20,7 +20,6 @@ main(void)
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(testLivesCreate),
         cmocka_unit_test(testLivesRemoveLastLive),
-        cmocka_unit_test(testLivesRemoveLastLiveNullCallback),
         cmocka_unit_test(testLivesRemovePenultimateLive),
         cmocka_unit_test(testLivesRemoveMaxLivesPrinted),
         cmocka_unit_test(testLivesRemoveZeroLives),

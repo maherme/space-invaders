@@ -8,6 +8,7 @@
  */
 
 #include "lives.h"
+#include "events.h"
 #include "graph.h"
 #include "graphGlutCallbacks.h"
 #include <stdbool.h>
@@ -44,7 +45,7 @@ static const char liveImage[LIVE_HEIGHT][LIVE_WIDTH][NUM_RGBA_CHANNELS] = {
 };
 
 void
-livesCreate(int x, int y, void (*livesDepletedCallback)(void))
+livesCreate(int x, int y)
 {
     for (int i = 0; i < MAX_LIVES_TO_PRINT; i++)
     {
@@ -63,7 +64,6 @@ livesCreate(int x, int y, void (*livesDepletedCallback)(void))
         }
 
         livePool.num_lives = LIVE_INITIAL_NUM;
-        livePool.livesDepletedCallback = livesDepletedCallback;
     }
 }
 
@@ -84,9 +84,9 @@ livesRemove(void)
         graphUnregisterPrint(&livePool.lives[sprite_index].sprite);
     }
 
-    if (livePool.num_lives == 0 && livePool.livesDepletedCallback)
+    if (livePool.num_lives == 0)
     {
-        livePool.livesDepletedCallback();
+        eventEmit(EVENT_LIVES_DEPLETED);
     }
 }
 
@@ -126,11 +126,4 @@ helperUT_livesGetSpriteByInstanceIndex(int idx)
 {
     return &livePool.lives[idx].sprite;
 }
-
-void
-helperUT_livesInjectLivesDepletedCb(void (*cb)(void))
-{
-    livePool.livesDepletedCallback = cb;
-}
-
 #endif /* UNIT_TESTING */

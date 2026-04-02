@@ -8,6 +8,7 @@
  */
 
 #include "aliens.h"
+#include "events.h"
 #include "graph.h"
 #include "graphGlutCallbacks.h"
 #include "physic.h"
@@ -43,7 +44,6 @@ static struct
     max_movement_t max_movement;
     int pixels_to_move;
     unsigned int aliens_alive;
-    void (*reachBottomCallback)(void);
 } alienPool;
 
 static alien_type_t alienTypeByRow[ALIENS_ROWS] = {
@@ -204,7 +204,7 @@ alienWidth(alien_type_t type)
 }
 
 void
-aliensCreate(void (*reachBottomCallback)(void))
+aliensCreate(void)
 {
     int formation_width = ALIENS_COLS * ALIEN_CELL_WIDTH;
     alienPool.origin_x = (GAME_WIDTH - formation_width) / 2;
@@ -213,7 +213,6 @@ aliensCreate(void (*reachBottomCallback)(void))
     alienPool.descend_pending = false;
     alienPool.pixels_to_move = ALIEN_CELL_WIDTH / 4;
     alienPool.aliens_alive = ALIENS_INITIAL_NUMBER;
-    alienPool.reachBottomCallback = reachBottomCallback;
 
     for (int i = 0; i < ALIENS_INITIAL_NUMBER; i++)
     {
@@ -311,9 +310,9 @@ aliensMove(void)
     int left, right, down;
     getFormationBounds(&left, &right, &down);
 
-    if (down <= ALIENS_HEIGHT_GAME_OVER && alienPool.reachBottomCallback)
+    if (down <= ALIENS_HEIGHT_GAME_OVER)
     {
-        alienPool.reachBottomCallback();
+        eventEmit(EVENT_ALIENS_REACHED_BOTTOM);
         return;
     }
 
@@ -387,12 +386,6 @@ void
 helperUT_alienSetCurrentDirection(direction_t dir)
 {
     alienPool.current_dir = dir;
-}
-
-void
-helperUT_alienInjectReachBottomCb(void (*cb)(void))
-{
-    alienPool.reachBottomCallback = cb;
 }
 
 #endif /* UNIT_TESTING */

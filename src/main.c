@@ -11,6 +11,7 @@
 #include "bullet.h"
 #include "bunkers.h"
 #include "engine.h"
+#include "events.h"
 #include "explosion.h"
 #include "graph.h"
 #include "graphGlut.h"
@@ -87,7 +88,7 @@ spaceshipCreateAfterDie(void)
 static void
 spaceshipExplosionCallback(void)
 {
-    livesRemove();
+    eventEmit(EVENT_REMOVE_LIFE);
     engineRegister(spaceshipCreateAfterDie);
 }
 
@@ -364,10 +365,14 @@ main(int argc, char **argv)
     keyboardRegisterAction(spaceshipFire, ACTION_KEY_DOWN, ' ');
     keyboardInit();
 
+    eventRegister(EVENT_LIVES_DEPLETED, gameOver);
+    eventRegister(EVENT_ALIENS_REACHED_BOTTOM, gameOver);
+    eventRegister(EVENT_REMOVE_LIFE, livesRemove);
+
     spaceship = spaceshipCreate(GAME_WIDTH / 2, 0);
-    aliensCreate(gameOver);
+    aliensCreate();
     bunkersCreate();
-    livesCreate(16, 5, gameOver);
+    livesCreate(16, 5);
     engineRegister(keyboardUpdate);
     engineRegister(explosionsDestroy);
     engineRegister(ufoActions);
