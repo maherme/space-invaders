@@ -190,6 +190,7 @@ checkCollisionsBulletAlienSingle(bullet_t bullet)
             bulletDestroy(bullet);
             explosionCreate(alien_sprite->x + alien_sprite->width / 2, alien_sprite->y, EXPLOSION_ALIEN, NULL);
             alienDestroy(alien);
+            livesAdd();
             return;
         }
     }
@@ -337,10 +338,12 @@ keyboardUpdate(void)
     }
 }
 
+#include <stdio.h>
 static void
 gameOver(void)
 {
     /* NOTE: TBD */
+    printf("game over\n");
 }
 
 int
