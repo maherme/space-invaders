@@ -33,5 +33,4 @@ LDFLAGS += -Wl,--wrap=glutInit \
 		   -Wl,--wrap=graphCreateImage \
 		   -Wl,--wrap=graphDestroyImage \
 		   -Wl,--wrap=graphPrintBorder \
-		   -Wl,--wrap=utilsCalloc \
-		   -Wl,--wrap=utilsFree
+		   -Wl,--wrap=utilsCalloc

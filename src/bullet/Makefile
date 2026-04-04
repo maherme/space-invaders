@@ -15,7 +15,6 @@ INCLUDES += -I../graphic/src \
 			-I../graphicglut/src
 
 LDFLAGS += -Wl,--wrap=utilsCalloc \
-		   -Wl,--wrap=utilsFree \
 		   -Wl,--wrap=graphGetSprite \
 		   -Wl,--wrap=graphPrintImage \
 		   -Wl,--wrap=graphRegisterPrint \

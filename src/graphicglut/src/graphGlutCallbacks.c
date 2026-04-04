@@ -80,7 +80,7 @@ graphUnregisterPrint(sprite_t *sprite)
             {
                 graphDestroyImage(n->sprite);
                 list_del(&n->node);
-                utilsFree((void **)&n);
+                UTILS_FREE(n);
                 removed++;
             }
         }

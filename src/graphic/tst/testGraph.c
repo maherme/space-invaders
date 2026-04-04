@@ -158,14 +158,6 @@ __wrap_glPopAttrib(void)
     function_called();
 }
 
-void
-__wrap_utilsFree(void **ptr)
-{
-    check_expected_ptr(ptr);
-    function_called();
-    free(*ptr);
-}
-
 int
 __wrap_clock_gettime(clockid_t clockid, struct timespec *tp)
 {

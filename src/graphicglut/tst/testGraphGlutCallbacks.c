@@ -154,7 +154,6 @@ testGraphUnregisterPrintSuccessOneCallback(void **status)
     assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[0]));
 
     expect_function_call(__wrap_graphDestroyImage);
-    expect_function_call(__wrap_utilsFree);
     int result = graphUnregisterPrint(expected_sprites[0]);
     assert_int_equal(result, 1);
     assert_false(helperUT_graphGlutSpriteIsRegistered(expected_sprites[0]));
@@ -174,7 +173,6 @@ testGraphUnregisterPrintSuccessLastCallback(void **status)
     assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[1]));
 
     expect_function_call(__wrap_graphDestroyImage);
-    expect_function_call(__wrap_utilsFree);
     int result = graphUnregisterPrint(expected_sprites[1]);
     assert_int_equal(result, 1);
     assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[0]));
@@ -197,7 +195,6 @@ testGraphUnregisterPrintSuccessMiddleCallback(void **status)
     assert_true(helperUT_graphGlutSpriteIsRegistered(expected_sprites[2]));
 
     expect_function_call(__wrap_graphDestroyImage);
-    expect_function_call(__wrap_utilsFree);
 
     int result = graphUnregisterPrint(expected_sprites[1]);
     assert_int_equal(result, 1);

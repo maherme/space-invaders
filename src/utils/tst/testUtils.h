@@ -17,12 +17,6 @@ void
 testUtilsCallocSuccess(void **status);
 
 void
-testUtilsFreeFail(void **status);
-
-void
-testUtilsFreeSuccess(void **status);
-
-void
 testUtilsCheckTimeoutNegativeTimeoutParameter(void **status);
 
 void

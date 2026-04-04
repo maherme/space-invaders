@@ -21,11 +21,3 @@ __wrap_utilsCalloc(size_t nelem, size_t elsize)
     function_called();
     return calloc(nelem, elsize);
 }
-
-void
-__wrap_utilsFree(void **ptr)
-{
-    function_called();
-    free(*ptr);
-    *ptr = NULL;
-}

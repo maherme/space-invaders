@@ -16,7 +16,6 @@ INCLUDES += -I../graphic/src \
 			-I../physic/src
 
 LDFLAGS += -Wl,--wrap=utilsCalloc \
-		   -Wl,--wrap=utilsFree \
 		   -Wl,--wrap=utilsCheckTimeout \
 		   -Wl,--wrap=graphGetSprite \
 		   -Wl,--wrap=graphUpdateTimeSprite \
