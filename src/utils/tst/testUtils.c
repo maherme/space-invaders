@@ -95,27 +95,6 @@ testUtilsCallocSuccess(void **status)
 }
 
 void
-testUtilsFreeFail(void **status)
-{
-    (void)status;
-    void *ptr = NULL;
-
-    utilsFree(NULL);
-    utilsFree(&ptr);
-}
-
-void
-testUtilsFreeSuccess(void **status)
-{
-    (void)status;
-    void *ptr = malloc(1);
-
-    assert_non_null(ptr);
-    utilsFree(&ptr);
-    assert_null(ptr);
-}
-
-void
 testUtilsCheckTimeoutNegativeTimeoutParameter(void **status)
 {
     (void)status;

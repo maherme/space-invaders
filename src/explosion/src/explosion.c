@@ -273,7 +273,7 @@ explosionTimeout(explosion_t explosion)
         {
             explosion->callback();
         }
-        utilsFree((void **)&explosion);
+        UTILS_FREE(explosion);
         return true;
     }
 
@@ -303,7 +303,7 @@ explosionsDestroy(void)
         if (explosionTimeout(n->explosion))
         {
             list_del(&n->node);
-            utilsFree((void **)&n);
+            UTILS_FREE(n);
         }
     }
 }

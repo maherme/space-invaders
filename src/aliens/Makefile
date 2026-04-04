@@ -17,7 +17,6 @@ INCLUDES += -I../graphic/src \
 			-I../events/src
 
 LDFLAGS += -Wl,--wrap=utilsCalloc \
-		   -Wl,--wrap=utilsFree \
 		   -Wl,--wrap=graphUpdateTimeSprite \
 		   -Wl,--wrap=graphGetSprite \
 		   -Wl,--wrap=graphRegisterPrint \

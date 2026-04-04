@@ -76,7 +76,7 @@ engineRun(int rate)
             if (n->pending_remove)
             {
                 list_del(&n->node);
-                utilsFree((void **)&n);
+                UTILS_FREE(n);
             }
         }
         usleep(1000);

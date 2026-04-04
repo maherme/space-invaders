@@ -13,5 +13,4 @@ include ../common.mk
 INCLUDES += -I../utils/src
 
 LDFLAGS += -Wl,--wrap=usleep \
-		   -Wl,--wrap=utilsCalloc \
-		   -Wl,--wrap=utilsFree
+		   -Wl,--wrap=utilsCalloc

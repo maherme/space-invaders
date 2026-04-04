@@ -20,8 +20,6 @@ main(void)
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(testUtilsCallocFail),
         cmocka_unit_test(testUtilsCallocSuccess),
-        cmocka_unit_test(testUtilsFreeFail),
-        cmocka_unit_test(testUtilsFreeSuccess),
         cmocka_unit_test(testUtilsCheckTimeoutNegativeTimeoutParameter),
         cmocka_unit_test(testUtilsCheckTimeoutExact),
         cmocka_unit_test(testUtilsCheckTimeoutBefore),

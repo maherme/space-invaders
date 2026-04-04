@@ -119,7 +119,6 @@ testEngineUnregisterSuccess(void **status)
 
     check_enginerun(true);
 
-    expect_function_call(__wrap_utilsFree);
     int result = engineUnregister(callback_foo);
     assert_int_equal(result, 1);
 

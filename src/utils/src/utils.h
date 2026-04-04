@@ -22,11 +22,15 @@
 #define UNREACHABLE() __builtin_unreachable();
 #endif
 
+#define UTILS_FREE(p)                                                                                                           \
+    do                                                                                                                          \
+    {                                                                                                                           \
+        free(p);                                                                                                                \
+        (p) = NULL;                                                                                                             \
+    } while (0)
+
 void *
 utilsCalloc(size_t nelem, size_t elsize);
-
-void
-utilsFree(void **ptr);
 
 bool
 utilsCheckTimeout(struct timespec time, long long timeout_ns);

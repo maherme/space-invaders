@@ -22,13 +22,6 @@ __wrap_utilsCalloc(size_t nelem, size_t elsize)
     return calloc(nelem, elsize);
 }
 
-void
-__wrap_utilsFree(void **ptr)
-{
-    check_expected_ptr(ptr);
-    function_called();
-}
-
 bool
 __wrap_utilsCheckTimeout(struct timespec time, long long timeout_ns)
 {
