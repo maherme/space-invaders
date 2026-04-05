@@ -88,7 +88,7 @@ spaceshipCreateAfterDie(void)
 static void
 spaceshipExplosionCallback(void)
 {
-    eventEmit(EVENT_REMOVE_LIFE);
+    eventEmit(EVENT_REMOVE_LIFE, NULL);
     engineRegister(spaceshipCreateAfterDie);
 }
 
@@ -340,10 +340,18 @@ keyboardUpdate(void)
 
 #include <stdio.h>
 static void
-gameOver(void)
+gameOver(void *data)
 {
+    (void)data;
     /* NOTE: TBD */
     printf("game over\n");
+}
+
+static void
+onLivesRemove(void *data)
+{
+    (void)data;
+    livesRemove();
 }
 
 int
@@ -370,7 +378,7 @@ main(int argc, char **argv)
 
     eventRegister(EVENT_LIVES_DEPLETED, gameOver);
     eventRegister(EVENT_ALIENS_REACHED_BOTTOM, gameOver);
-    eventRegister(EVENT_REMOVE_LIFE, livesRemove);
+    eventRegister(EVENT_REMOVE_LIFE, onLivesRemove);
 
     spaceship = spaceshipCreate(GAME_WIDTH / 2, 0);
     aliensCreate();
