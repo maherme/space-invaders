@@ -18,6 +18,15 @@
 #include <stdint.h>
 
 static void
+checkEmitEventLivesChanged(void)
+{
+    int *expected_num_lives_ptr = helperUT_livesGetNumLivesPointer();
+    expect_uint_value(__wrap_eventEmit, data, (uintptr_t)expected_num_lives_ptr);
+    expect_uint_value(__wrap_eventEmit, type, EVENT_LIVES_CHANGED);
+    expect_function_call(__wrap_eventEmit);
+}
+
+static void
 checkEmitEventLivesDepleted(void)
 {
     expect_uint_value(__wrap_eventEmit, data, (uintptr_t)NULL);
@@ -41,6 +50,7 @@ testLivesCreate(void **status)
         expect_uint_value(__wrap_graphRegisterPrint, sprite, (uintptr_t)helperUT_livesGetSpriteByInstanceIndex(i));
         expect_function_call(__wrap_graphRegisterPrint);
     }
+    checkEmitEventLivesChanged();
 
     livesCreate(x, y);
     assert_int_equal(expected_num_lives, helperUT_livesGetNumLives());
@@ -58,6 +68,7 @@ testLivesRemoveLastLive(void **status)
     (void)status;
 
     helperUT_livesSetNumLives(1);
+    checkEmitEventLivesChanged();
     checkEmitEventLivesDepleted();
 
     livesRemove();
@@ -71,6 +82,7 @@ testLivesRemovePenultimateLive(void **status)
     int num_lives_no_last = 2;
 
     helperUT_livesSetNumLives(num_lives_no_last);
+    checkEmitEventLivesChanged();
     expect_uint_value(__wrap_graphUnregisterPrint, sprite, (uintptr_t)helperUT_livesGetSpriteByInstanceIndex(0));
     expect_function_call(__wrap_graphUnregisterPrint);
 
@@ -85,6 +97,7 @@ testLivesRemoveMaxLivesPrinted(void **status)
     int num_lives_no_more_print = 6;
 
     helperUT_livesSetNumLives(num_lives_no_more_print);
+    checkEmitEventLivesChanged();
 
     livesRemove();
     assert_int_equal(num_lives_no_more_print - 1, helperUT_livesGetNumLives());
@@ -108,6 +121,7 @@ testLivesAdd(void **status)
     int num_lives = 1;
 
     helperUT_livesSetNumLives(num_lives);
+    checkEmitEventLivesChanged();
     expect_uint_value(__wrap_graphRegisterPrint, sprite, (uintptr_t)helperUT_livesGetSpriteByInstanceIndex(num_lives - 1));
     expect_function_call(__wrap_graphRegisterPrint);
 
@@ -122,6 +136,7 @@ testLivesAddMaxLivesPrinted(void **status)
     int num_lives = 5;
 
     helperUT_livesSetNumLives(num_lives);
+    checkEmitEventLivesChanged();
 
     livesAdd();
     assert_int_equal(num_lives + 1, helperUT_livesGetNumLives());

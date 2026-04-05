@@ -16,6 +16,7 @@
 #include "graph.h"
 #include "graphGlut.h"
 #include "graphGlutCallbacks.h"
+#include "hud.h"
 #include "keyboard.h"
 #include "lives.h"
 #include "physic.h"
@@ -190,7 +191,6 @@ checkCollisionsBulletAlienSingle(bullet_t bullet)
             bulletDestroy(bullet);
             explosionCreate(alien_sprite->x + alien_sprite->width / 2, alien_sprite->y, EXPLOSION_ALIEN, NULL);
             alienDestroy(alien);
-            livesAdd();
             return;
         }
     }
@@ -338,13 +338,11 @@ keyboardUpdate(void)
     }
 }
 
-#include <stdio.h>
 static void
 gameOver(void *data)
 {
     (void)data;
     /* NOTE: TBD */
-    printf("game over\n");
 }
 
 static void
@@ -379,11 +377,12 @@ main(int argc, char **argv)
     eventRegister(EVENT_LIVES_DEPLETED, gameOver);
     eventRegister(EVENT_ALIENS_REACHED_BOTTOM, gameOver);
     eventRegister(EVENT_REMOVE_LIFE, onLivesRemove);
+    eventRegister(EVENT_LIVES_CHANGED, onLivesChanged);
 
     spaceship = spaceshipCreate(GAME_WIDTH / 2, 0);
     aliensCreate();
     bunkersCreate();
-    livesCreate(16, 5);
+    hudInit();
     engineRegister(keyboardUpdate);
     engineRegister(explosionsDestroy);
     engineRegister(ufoActions);

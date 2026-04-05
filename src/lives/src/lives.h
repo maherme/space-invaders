@@ -20,6 +20,9 @@ void
 livesAdd(void);
 
 #ifdef UNIT_TESTING
+int *
+helperUT_livesGetNumLivesPointer(void);
+
 int
 helperUT_livesGetNumLives(void);
 
