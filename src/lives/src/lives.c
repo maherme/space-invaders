@@ -62,9 +62,10 @@ livesCreate(int x, int y)
         {
             graphRegisterPrint(&live->sprite);
         }
-
-        livePool.num_lives = LIVE_INITIAL_NUM;
     }
+
+    livePool.num_lives = LIVE_INITIAL_NUM;
+    eventEmit(EVENT_LIVES_CHANGED, &livePool.num_lives);
 }
 
 void
@@ -76,6 +77,7 @@ livesRemove(void)
     }
 
     livePool.num_lives--;
+    eventEmit(EVENT_LIVES_CHANGED, &livePool.num_lives);
 
     int sprite_index = livePool.num_lives - 1;
 
@@ -101,6 +103,7 @@ livesAdd(void)
     int sprite_index = livePool.num_lives - 1;
 
     livePool.num_lives++;
+    eventEmit(EVENT_LIVES_CHANGED, &livePool.num_lives);
 
     if (sprite_index < MAX_LIVES_TO_PRINT)
     {
@@ -109,6 +112,12 @@ livesAdd(void)
 }
 
 #ifdef UNIT_TESTING
+int *
+helperUT_livesGetNumLivesPointer(void)
+{
+    return &livePool.num_lives;
+}
+
 int
 helperUT_livesGetNumLives(void)
 {
