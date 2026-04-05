@@ -15,8 +15,9 @@
 #include <stdint.h>
 
 void
-__wrap_eventEmit(event_type_t type)
+__wrap_eventEmit(event_type_t type, void *data)
 {
+    check_expected_ptr(data);
     check_expected_uint(type);
     function_called();
 }

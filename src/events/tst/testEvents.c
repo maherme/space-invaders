@@ -24,8 +24,9 @@ setup(void **state)
 }
 
 void
-foo_cb(void)
+foo_cb(void *data)
 {
+    check_expected_ptr(data);
     function_called();
 }
 
@@ -64,12 +65,14 @@ void
 testEventEmit(void **status)
 {
     (void)status;
+    int expected_data = 0;
 
     helperUT_eventSetCallback(EVENT_LIVES_DEPLETED, foo_cb);
 
+    expect_uint_value(foo_cb, data, (uintptr_t)&expected_data);
     expect_function_call(foo_cb);
 
-    eventEmit(EVENT_LIVES_DEPLETED);
+    eventEmit(EVENT_LIVES_DEPLETED, &expected_data);
 }
 
 void
@@ -77,7 +80,7 @@ testEventEmitNotRegistered(void **status)
 {
     (void)status;
 
-    eventEmit(EVENT_LIVES_DEPLETED);
+    eventEmit(EVENT_LIVES_DEPLETED, NULL);
 }
 
 void
@@ -85,6 +88,6 @@ testEventEmitInvalidType(void **status)
 {
     (void)status;
 
-    eventEmit(-1);
-    eventEmit(EVENT_COUNT);
+    eventEmit(-1, NULL);
+    eventEmit(EVENT_COUNT, NULL);
 }

@@ -26,7 +26,7 @@ eventRegister(event_type_t type, event_cb_t cb)
 }
 
 void
-eventEmit(event_type_t type)
+eventEmit(event_type_t type, void *data)
 {
     if (type < 0 || type >= EVENT_COUNT)
     {
@@ -35,7 +35,7 @@ eventEmit(event_type_t type)
 
     if (callbacks[type])
     {
-        callbacks[type]();
+        callbacks[type](data);
     }
 }
 

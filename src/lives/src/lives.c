@@ -86,7 +86,7 @@ livesRemove(void)
 
     if (livePool.num_lives == 0)
     {
-        eventEmit(EVENT_LIVES_DEPLETED);
+        eventEmit(EVENT_LIVES_DEPLETED, NULL);
     }
 }
 

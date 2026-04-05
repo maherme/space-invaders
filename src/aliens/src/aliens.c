@@ -312,7 +312,7 @@ aliensMove(void)
 
     if (down <= ALIENS_HEIGHT_GAME_OVER)
     {
-        eventEmit(EVENT_ALIENS_REACHED_BOTTOM);
+        eventEmit(EVENT_ALIENS_REACHED_BOTTOM, NULL);
         return;
     }
 

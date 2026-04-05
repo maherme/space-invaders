@@ -18,13 +18,13 @@ typedef enum
     EVENT_COUNT
 } event_type_t;
 
-typedef void (*event_cb_t)(void);
+typedef void (*event_cb_t)(void *data);
 
 void
 eventRegister(event_type_t type, event_cb_t cb);
 
 void
-eventEmit(event_type_t type);
+eventEmit(event_type_t type, void *data);
 
 #ifdef UNIT_TESTING
 event_cb_t

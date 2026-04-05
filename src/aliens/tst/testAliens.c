@@ -257,6 +257,7 @@ testAliensReachBottom(void **status)
     };
 
     helperUT_alienInjectInPool(0, 0, &sprite);
+    expect_uint_value(__wrap_eventEmit, data, (uintptr_t)NULL);
     expect_uint_value(__wrap_eventEmit, type, EVENT_ALIENS_REACHED_BOTTOM);
     expect_function_call(__wrap_eventEmit);
 

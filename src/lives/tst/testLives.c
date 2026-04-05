@@ -17,6 +17,14 @@
 #include <stddef.h>
 #include <stdint.h>
 
+static void
+checkEmitEventLivesDepleted(void)
+{
+    expect_uint_value(__wrap_eventEmit, data, (uintptr_t)NULL);
+    expect_uint_value(__wrap_eventEmit, type, EVENT_LIVES_DEPLETED);
+    expect_function_call(__wrap_eventEmit);
+}
+
 void
 testLivesCreate(void **status)
 {
@@ -50,8 +58,7 @@ testLivesRemoveLastLive(void **status)
     (void)status;
 
     helperUT_livesSetNumLives(1);
-    expect_uint_value(__wrap_eventEmit, type, EVENT_LIVES_DEPLETED);
-    expect_function_call(__wrap_eventEmit);
+    checkEmitEventLivesDepleted();
 
     livesRemove();
     assert_int_equal(0, helperUT_livesGetNumLives());
