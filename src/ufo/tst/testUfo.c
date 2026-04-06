@@ -8,6 +8,7 @@
  */
 
 #include "testUfo.h"
+#include "events.h"
 #include "ufo.h"
 #include <cmocka.h>
 #include <setjmp.h>
@@ -169,4 +170,38 @@ testUfoCheckForMovingTrueMoreCalls(void **status)
     assert_true(ufoCheckForMoving(ufo));
     /* no more calls to utilsCheckTimeout are expected from here */
     assert_true(ufoCheckForMoving(ufo));
+}
+
+void
+testUfoGetPoints(void **status)
+{
+    (void)status;
+
+    unsigned int expected_points = 50;
+    helperUT_ufoSetPoints(expected_points);
+
+    assert_uint_equal(expected_points, ufoGetPoints());
+}
+
+void
+testUfoPointsByDangerLevel(void **status)
+{
+    (void)status;
+    danger_level_t danger_lv = DANGER_LOW;
+    unsigned int expected_points = 50;
+
+    ufoOnDangerLevelChanged(&danger_lv);
+    assert_uint_equal(expected_points, helperUT_ufoGetPoints());
+
+    danger_lv = DANGER_MID;
+    expected_points = 150;
+
+    ufoOnDangerLevelChanged(&danger_lv);
+    assert_uint_equal(expected_points, helperUT_ufoGetPoints());
+
+    danger_lv = DANGER_HIGH;
+    expected_points = 300;
+
+    ufoOnDangerLevelChanged(&danger_lv);
+    assert_uint_equal(expected_points, helperUT_ufoGetPoints());
 }

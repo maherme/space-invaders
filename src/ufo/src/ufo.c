@@ -8,6 +8,7 @@
  */
 
 #include "ufo.h"
+#include "events.h"
 #include "graph.h"
 #include "graphGlutCallbacks.h"
 #include "physic.h"
@@ -17,6 +18,7 @@
 
 #define UFO_WIDTH 16
 #define UFO_HEIGHT 8
+#define UFO_INITIAL_POINTS 50
 
 struct ufo_instance_t
 {
@@ -24,6 +26,7 @@ struct ufo_instance_t
     direction_t direction;
     long long time_to_appear;
     bool alive;
+    unsigned int points;
 };
 
 static struct ufo_instance_t ufo;
@@ -88,6 +91,7 @@ ufoCreate(void)
     graphUpdateTimeSprite(&inst->sprite);
     graphRegisterPrint(&inst->sprite);
     inst->alive = true;
+    inst->points = UFO_INITIAL_POINTS;
 
     return inst;
 }
@@ -146,6 +150,32 @@ ufoCheckForMoving(ufo_t ufo)
     return true;
 }
 
+unsigned int
+ufoGetPoints(void)
+{
+    return ufo.points;
+}
+
+void
+ufoOnDangerLevelChanged(void *data)
+{
+    danger_level_t level = *(danger_level_t *)data;
+
+    switch (level)
+    {
+        case DANGER_HIGH:
+            ufo.points = 300;
+            break;
+        case DANGER_MID:
+            ufo.points = 150;
+            break;
+        case DANGER_LOW:
+        default:
+            ufo.points = UFO_INITIAL_POINTS;
+            break;
+    }
+}
+
 #ifdef UNIT_TESTING
 #include <string.h>
 
@@ -170,5 +200,17 @@ void
 helperUT_ufoSetTimeToAppear(ufo_t ufo, long long time)
 {
     ufo->time_to_appear = time;
+}
+
+void
+helperUT_ufoSetPoints(unsigned int points)
+{
+    ufo.points = points;
+}
+
+unsigned int
+helperUT_ufoGetPoints()
+{
+    return ufo.points;
 }
 #endif /* UNIT_TESTING */

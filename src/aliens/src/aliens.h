@@ -49,6 +49,9 @@ aliensGetShooter(void);
 void
 aliensMove(void);
 
+unsigned int
+aliensGetPoints(alien_t alien);
+
 #ifdef UNIT_TESTING
 #include "physic.h"
 
@@ -63,6 +66,9 @@ helperUT_alienInjectInPool(int row, int col, sprite_t *sprite);
 
 void
 helperUT_alienSetCurrentDirection(direction_t dir);
+
+void
+helperUT_aliensSetType(alien_t alien, alien_type_t type);
 
 #endif /* UNIT_TESTING */
 

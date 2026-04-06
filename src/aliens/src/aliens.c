@@ -21,10 +21,13 @@
 #define ALIEN_NUM_FRAMES 2
 #define SQUID_WIDTH 8
 #define SQUID_HEIGHT 8
+#define SQUID_POINTS 30
 #define CRAB_WIDTH 11
 #define CRAB_HEIGHT 8
+#define CRAB_POINTS 20
 #define OCTOPUS_WIDTH 12
 #define OCTOPUS_HEIGHT 8
+#define OCTOPUS_POINTS 10
 
 #define INDEX_ALIENS(row, col) ((row) * ALIENS_COLS + (col))
 
@@ -32,6 +35,7 @@ struct alien_instance
 {
     sprite_t sprite;
     bool alive;
+    unsigned int points;
 };
 
 static struct
@@ -123,16 +127,19 @@ setAlienType(alien_t inst, alien_type_t type)
             inst->sprite.width = SQUID_WIDTH;
             inst->sprite.height = SQUID_HEIGHT;
             inst->sprite.image_base = (const char *)squidImage;
+            inst->points = SQUID_POINTS;
             break;
         case CRAB:
             inst->sprite.width = CRAB_WIDTH;
             inst->sprite.height = CRAB_HEIGHT;
             inst->sprite.image_base = (const char *)crabImage;
+            inst->points = CRAB_POINTS;
             break;
         case OCTOPUS:
             inst->sprite.width = OCTOPUS_WIDTH;
             inst->sprite.height = OCTOPUS_HEIGHT;
             inst->sprite.image_base = (const char *)octopusImage;
+            inst->points = OCTOPUS_POINTS;
             break;
             /* GCOVR_EXCL_START */
         default:
@@ -344,6 +351,17 @@ aliensMove(void)
     alienPool.descend_pending = false;
 }
 
+unsigned int
+aliensGetPoints(alien_t alien)
+{
+    if (!alien)
+    {
+        return 0;
+    }
+
+    return alien->points;
+}
+
 #ifdef UNIT_TESTING
 #include <string.h>
 
@@ -382,6 +400,12 @@ void
 helperUT_alienSetCurrentDirection(direction_t dir)
 {
     alienPool.current_dir = dir;
+}
+
+void
+helperUT_aliensSetType(alien_t alien, alien_type_t type)
+{
+    setAlienType(alien, type);
 }
 
 #endif /* UNIT_TESTING */

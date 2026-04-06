@@ -7,7 +7,7 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
-#include "testHud.h"
+#include "testScore.h"
 #include <cmocka.h>
 #include <setjmp.h>
 #include <stdarg.h>
@@ -18,9 +18,8 @@ int
 main(void)
 {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test(testHudInit),
-        cmocka_unit_test(testOnLivesChanged),
-        cmocka_unit_test(testOnScoreChanged),
+        cmocka_unit_test_setup(testScoreInit, setup),
+        cmocka_unit_test_setup(testScoreAddPoints, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

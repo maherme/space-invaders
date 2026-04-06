@@ -190,8 +190,8 @@ fontsDraw(const char *const text, fonts_handler_t *fonts_handler)
 void
 fontsDrawNumber(int num, fonts_handler_t *fonts_handler)
 {
-    char buf[12];
-    snprintf(buf, sizeof(buf), "%d", num);
+    char buf[fonts_handler->size + 1];
+    snprintf(buf, sizeof(buf), "%0*d", (int)fonts_handler->size, num);
     fontsDraw(buf, fonts_handler);
 }
 
