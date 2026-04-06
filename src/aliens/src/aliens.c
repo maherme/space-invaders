@@ -310,11 +310,7 @@ aliensMove(void)
     int left, right, down;
     getFormationBounds(&left, &right, &down);
 
-    if (down <= ALIENS_HEIGHT_GAME_OVER)
-    {
-        eventEmit(EVENT_ALIENS_REACHED_BOTTOM, NULL);
-        return;
-    }
+    eventEmit(EVENT_ALIENS_HEIGHT, &down);
 
     if (alienPool.current_dir == RIGHT && right + alienPool.pixels_to_move >= GAME_WIDTH)
     {

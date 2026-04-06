@@ -12,12 +12,21 @@
 
 typedef enum
 {
+    EVENT_GAME_OVER,
     EVENT_LIVES_DEPLETED,
-    EVENT_ALIENS_REACHED_BOTTOM,
+    EVENT_ALIENS_HEIGHT,
     EVENT_REMOVE_LIFE,
     EVENT_LIVES_CHANGED,
+    EVENT_DANGER_LEVEL_CHANGED,
     EVENT_COUNT
 } event_type_t;
+
+typedef enum
+{
+    DANGER_LOW,
+    DANGER_MID,
+    DANGER_HIGH
+} danger_level_t;
 
 typedef void (*event_cb_t)(void *data);
 

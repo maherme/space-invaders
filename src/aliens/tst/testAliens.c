@@ -185,6 +185,8 @@ testAliensMoveRight(void **status)
     helperUT_alienInjectInPool(1, 0, &sprite_alien2);
 
     /* Each alien is moved */
+    expect_uint_value(__wrap_eventEmit, type, EVENT_ALIENS_HEIGHT);
+    expect_function_call(__wrap_eventEmit);
     expect_uint_value(__wrap_physicMoveSprite, direction, RIGHT);
     expect_function_call(__wrap_physicMoveSprite);
     expect_uint_value(__wrap_physicMoveSprite, direction, RIGHT);
@@ -205,6 +207,8 @@ testAliensMoveLeft(void **status)
     helperUT_alienSetCurrentDirection(LEFT);
     helperUT_alienInjectInPool(0, 0, &sprite);
 
+    expect_uint_value(__wrap_eventEmit, type, EVENT_ALIENS_HEIGHT);
+    expect_function_call(__wrap_eventEmit);
     expect_uint_value(__wrap_physicMoveSprite, direction, LEFT);
     expect_function_call(__wrap_physicMoveSprite);
 
@@ -223,6 +227,8 @@ testAliensMoveMaxLeft(void **status)
     helperUT_alienSetCurrentDirection(LEFT);
     helperUT_alienInjectInPool(0, 0, &sprite);
 
+    expect_uint_value(__wrap_eventEmit, type, EVENT_ALIENS_HEIGHT);
+    expect_function_call(__wrap_eventEmit);
     expect_uint_value(__wrap_physicMoveSprite, direction, DOWN);
     expect_function_call(__wrap_physicMoveSprite);
 
@@ -241,25 +247,10 @@ testAliensMoveMaxRight(void **status)
     helperUT_alienSetCurrentDirection(RIGHT);
     helperUT_alienInjectInPool(0, 0, &sprite);
 
+    expect_uint_value(__wrap_eventEmit, type, EVENT_ALIENS_HEIGHT);
+    expect_function_call(__wrap_eventEmit);
     expect_uint_value(__wrap_physicMoveSprite, direction, DOWN);
     expect_function_call(__wrap_physicMoveSprite);
-
-    aliensMove();
-}
-
-void
-testAliensReachBottom(void **status)
-{
-    (void)status;
-    sprite_t sprite = {
-        .x = 0,
-        .y = 16,
-    };
-
-    helperUT_alienInjectInPool(0, 0, &sprite);
-    expect_uint_value(__wrap_eventEmit, data, (uintptr_t)NULL);
-    expect_uint_value(__wrap_eventEmit, type, EVENT_ALIENS_REACHED_BOTTOM);
-    expect_function_call(__wrap_eventEmit);
 
     aliensMove();
 }
