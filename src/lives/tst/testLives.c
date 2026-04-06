@@ -18,10 +18,9 @@
 #include <stdint.h>
 
 static void
-checkEmitEventLivesChanged(void)
+checkEmitEventLivesChanged(unsigned int expected_num_lives)
 {
-    int *expected_num_lives_ptr = helperUT_livesGetNumLivesPointer();
-    expect_uint_value(__wrap_eventEmit, data, (uintptr_t)expected_num_lives_ptr);
+    expect_uint_value(__wrap_eventEmit, value, expected_num_lives);
     expect_uint_value(__wrap_eventEmit, type, EVENT_LIVES_CHANGED);
     expect_function_call(__wrap_eventEmit);
 }
@@ -50,7 +49,7 @@ testLivesCreate(void **status)
         expect_uint_value(__wrap_graphRegisterPrint, sprite, (uintptr_t)helperUT_livesGetSpriteByInstanceIndex(i));
         expect_function_call(__wrap_graphRegisterPrint);
     }
-    checkEmitEventLivesChanged();
+    checkEmitEventLivesChanged(expected_num_lives);
 
     livesCreate(x, y);
     assert_int_equal(expected_num_lives, helperUT_livesGetNumLives());
@@ -66,9 +65,11 @@ void
 testLivesRemoveLastLive(void **status)
 {
     (void)status;
+    int set_num_lives = 1;
+    int expected_num_lives = set_num_lives - 1;
 
-    helperUT_livesSetNumLives(1);
-    checkEmitEventLivesChanged();
+    helperUT_livesSetNumLives(set_num_lives);
+    checkEmitEventLivesChanged(expected_num_lives);
     checkEmitEventLivesDepleted();
 
     livesRemove();
@@ -79,28 +80,30 @@ void
 testLivesRemovePenultimateLive(void **status)
 {
     (void)status;
-    int num_lives_no_last = 2;
+    int set_num_lives = 2;
+    int expected_num_lives = set_num_lives - 1;
 
-    helperUT_livesSetNumLives(num_lives_no_last);
-    checkEmitEventLivesChanged();
+    helperUT_livesSetNumLives(set_num_lives);
+    checkEmitEventLivesChanged(expected_num_lives);
     expect_uint_value(__wrap_graphUnregisterPrint, sprite, (uintptr_t)helperUT_livesGetSpriteByInstanceIndex(0));
     expect_function_call(__wrap_graphUnregisterPrint);
 
     livesRemove();
-    assert_int_equal(num_lives_no_last - 1, helperUT_livesGetNumLives());
+    assert_int_equal(expected_num_lives, helperUT_livesGetNumLives());
 }
 
 void
 testLivesRemoveMaxLivesPrinted(void **status)
 {
     (void)status;
-    int num_lives_no_more_print = 6;
+    int set_num_lives = 6;
+    int expected_num_lives = set_num_lives - 1;
 
-    helperUT_livesSetNumLives(num_lives_no_more_print);
-    checkEmitEventLivesChanged();
+    helperUT_livesSetNumLives(set_num_lives);
+    checkEmitEventLivesChanged(expected_num_lives);
 
     livesRemove();
-    assert_int_equal(num_lives_no_more_print - 1, helperUT_livesGetNumLives());
+    assert_int_equal(expected_num_lives, helperUT_livesGetNumLives());
 }
 
 void
@@ -118,28 +121,30 @@ void
 testLivesAdd(void **status)
 {
     (void)status;
-    int num_lives = 1;
+    int set_num_lives = 1;
+    int expected_num_lives = set_num_lives + 1;
 
-    helperUT_livesSetNumLives(num_lives);
-    checkEmitEventLivesChanged();
-    expect_uint_value(__wrap_graphRegisterPrint, sprite, (uintptr_t)helperUT_livesGetSpriteByInstanceIndex(num_lives - 1));
+    helperUT_livesSetNumLives(set_num_lives);
+    checkEmitEventLivesChanged(expected_num_lives);
+    expect_uint_value(__wrap_graphRegisterPrint, sprite, (uintptr_t)helperUT_livesGetSpriteByInstanceIndex(set_num_lives - 1));
     expect_function_call(__wrap_graphRegisterPrint);
 
     livesAdd();
-    assert_int_equal(num_lives + 1, helperUT_livesGetNumLives());
+    assert_int_equal(expected_num_lives, helperUT_livesGetNumLives());
 }
 
 void
 testLivesAddMaxLivesPrinted(void **status)
 {
     (void)status;
-    int num_lives = 5;
+    int set_num_lives = 5;
+    int expected_num_lives = set_num_lives + 1;
 
-    helperUT_livesSetNumLives(num_lives);
-    checkEmitEventLivesChanged();
+    helperUT_livesSetNumLives(set_num_lives);
+    checkEmitEventLivesChanged(expected_num_lives);
 
     livesAdd();
-    assert_int_equal(num_lives + 1, helperUT_livesGetNumLives());
+    assert_int_equal(expected_num_lives, helperUT_livesGetNumLives());
 }
 
 void

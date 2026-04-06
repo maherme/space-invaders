@@ -14,6 +14,7 @@ include configuration.mk
 include toolchain.mk
 
 LDFLAGS += -lglut -lGL -lGLU
+CFLAGS += -Wswitch-enum -Wswitch-default 
 GCOVRFLAGS += $(GCOV_EXCLUDE)
 
 SUBGOALS := run-test test clean-test

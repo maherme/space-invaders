@@ -44,6 +44,13 @@ static const char liveImage[LIVE_HEIGHT][LIVE_WIDTH][NUM_RGBA_CHANNELS] = {
     {B, G, G, G, G, B, B, B, G, G, G, G, B},
 };
 
+static void
+eventEmitLivesChanged(void)
+{
+    int value = livePool.num_lives;
+    eventEmit(EVENT_LIVES_CHANGED, &value);
+}
+
 void
 livesCreate(int x, int y)
 {
@@ -65,7 +72,7 @@ livesCreate(int x, int y)
     }
 
     livePool.num_lives = LIVE_INITIAL_NUM;
-    eventEmit(EVENT_LIVES_CHANGED, &livePool.num_lives);
+    eventEmitLivesChanged();
 }
 
 void
@@ -77,7 +84,7 @@ livesRemove(void)
     }
 
     livePool.num_lives--;
-    eventEmit(EVENT_LIVES_CHANGED, &livePool.num_lives);
+    eventEmitLivesChanged();
 
     int sprite_index = livePool.num_lives - 1;
 
@@ -103,7 +110,7 @@ livesAdd(void)
     int sprite_index = livePool.num_lives - 1;
 
     livePool.num_lives++;
-    eventEmit(EVENT_LIVES_CHANGED, &livePool.num_lives);
+    eventEmitLivesChanged();
 
     if (sprite_index < MAX_LIVES_TO_PRINT)
     {
@@ -112,12 +119,6 @@ livesAdd(void)
 }
 
 #ifdef UNIT_TESTING
-int *
-helperUT_livesGetNumLivesPointer(void)
-{
-    return &livePool.num_lives;
-}
-
 int
 helperUT_livesGetNumLives(void)
 {
