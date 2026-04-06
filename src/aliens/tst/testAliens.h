@@ -58,7 +58,4 @@ testAliensMoveMaxLeft(void **status);
 void
 testAliensMoveMaxRight(void **status);
 
-void
-testAliensReachBottom(void **status);
-
 #endif /* __TESTALIENS_H__ */

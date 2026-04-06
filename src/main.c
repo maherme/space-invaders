@@ -352,6 +352,28 @@ onLivesRemove(void *data)
     livesRemove();
 }
 
+static void
+deriveGameStateFromAliensHeight(void *data)
+{
+    int height = *(int *)data;
+    danger_level_t danger_lv = DANGER_LOW;
+
+    if (height <= 16)
+    {
+        eventEmit(EVENT_GAME_OVER, NULL);
+    }
+    else if (height <= 52)
+    {
+        danger_lv = DANGER_HIGH;
+        eventEmit(EVENT_DANGER_LEVEL_CHANGED, &danger_lv);
+    }
+    else if (height <= 90)
+    {
+        danger_lv = DANGER_MID;
+        eventEmit(EVENT_DANGER_LEVEL_CHANGED, &danger_lv);
+    }
+}
+
 int
 main(int argc, char **argv)
 {
@@ -374,8 +396,9 @@ main(int argc, char **argv)
     keyboardRegisterAction(spaceshipFire, ACTION_KEY_DOWN, ' ');
     keyboardInit();
 
+    eventRegister(EVENT_GAME_OVER, gameOver);
     eventRegister(EVENT_LIVES_DEPLETED, gameOver);
-    eventRegister(EVENT_ALIENS_REACHED_BOTTOM, gameOver);
+    eventRegister(EVENT_ALIENS_HEIGHT, deriveGameStateFromAliensHeight);
     eventRegister(EVENT_REMOVE_LIFE, onLivesRemove);
     eventRegister(EVENT_LIVES_CHANGED, onLivesChanged);
 
