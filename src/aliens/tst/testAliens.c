@@ -254,3 +254,30 @@ testAliensMoveMaxRight(void **status)
 
     aliensMove();
 }
+
+void
+testAliensGetPointsNullParameter(void **status)
+{
+    (void)status;
+
+    assert_uint_equal(0, aliensGetPoints(NULL));
+}
+
+void
+testAliensPointsByType(void **state)
+{
+    (void)state;
+    alien_t alien = helperUT_alienInjectInPool(0, 0, NULL);
+
+    unsigned int expected_points = 10;
+    helperUT_aliensSetType(alien, OCTOPUS);
+    assert_uint_equal(expected_points, aliensGetPoints(alien));
+
+    expected_points = 20;
+    helperUT_aliensSetType(alien, CRAB);
+    assert_uint_equal(expected_points, aliensGetPoints(alien));
+
+    expected_points = 30;
+    helperUT_aliensSetType(alien, SQUID);
+    assert_uint_equal(expected_points, aliensGetPoints(alien));
+}

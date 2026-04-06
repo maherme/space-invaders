@@ -30,6 +30,12 @@ ufoGetDirection(const ufo_t ufo);
 bool
 ufoCheckForMoving(ufo_t ufo);
 
+unsigned int
+ufoGetPoints(void);
+
+void
+ufoOnDangerLevelChanged(void *data);
+
 #ifdef UNIT_TESTING
 ufo_t
 helperUT_ufoGetInstance(void);
@@ -39,6 +45,12 @@ helperUT_ufoSetAlive(ufo_t ufo, bool alive);
 
 void
 helperUT_ufoSetTimeToAppear(ufo_t ufo, long long time);
+
+void
+helperUT_ufoSetPoints(unsigned int points);
+
+unsigned int
+helperUT_ufoGetPoints(void);
 #endif /* UNIT_TESTING */
 
 #endif /* __UFO_H__ */

@@ -11,10 +11,12 @@ include ../../toolchain.mk
 include ../common.mk
 
 INCLUDES += -I../fonts/src \
-			-I../lives/src
+			-I../lives/src \
+			-I../score/src
 
 LDFLAGS += -Wl,--wrap=fontsCreateFontsHandler \
 		   -Wl,--wrap=fontsInitLayout \
 		   -Wl,--wrap=fontsRegisterSprites \
 		   -Wl,--wrap=fontsDrawNumber \
-		   -Wl,--wrap=livesCreate
+		   -Wl,--wrap=livesCreate \
+		   -Wl,--wrap=scoreInit

@@ -20,6 +20,7 @@
 #include "keyboard.h"
 #include "lives.h"
 #include "physic.h"
+#include "score.h"
 #include "spaceship.h"
 #include "ufo.h"
 #include "utils.h"
@@ -190,6 +191,8 @@ checkCollisionsBulletAlienSingle(bullet_t bullet)
         {
             bulletDestroy(bullet);
             explosionCreate(alien_sprite->x + alien_sprite->width / 2, alien_sprite->y, EXPLOSION_ALIEN, NULL);
+            int points = aliensGetPoints(alien);
+            scoreAddPoints(points);
             alienDestroy(alien);
             return;
         }
@@ -248,6 +251,8 @@ checkCollisionBulletUfoSingle(bullet_t bullet)
     {
         bulletDestroy(bullet);
         explosionCreate(ufo_sprite->x + ufo_sprite->width / 2, ufo_sprite->y, EXPLOSION_UFO, NULL);
+        int points = ufoGetPoints();
+        scoreAddPoints(points);
         ufoDestroy(ufo);
     }
 }
@@ -401,6 +406,8 @@ main(int argc, char **argv)
     eventRegister(EVENT_ALIENS_HEIGHT, deriveGameStateFromAliensHeight);
     eventRegister(EVENT_REMOVE_LIFE, onLivesRemove);
     eventRegister(EVENT_LIVES_CHANGED, onLivesChanged);
+    eventRegister(EVENT_SCORE_CHANGED, onScoreChanged);
+    eventRegister(EVENT_DANGER_LEVEL_CHANGED, ufoOnDangerLevelChanged);
 
     spaceship = spaceshipCreate(GAME_WIDTH / 2, 0);
     aliensCreate();

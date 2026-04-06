@@ -33,6 +33,8 @@ main(void)
         cmocka_unit_test_setup(testAliensMoveLeft, setup),
         cmocka_unit_test_setup(testAliensMoveMaxLeft, setup),
         cmocka_unit_test_setup(testAliensMoveMaxRight, setup),
+        cmocka_unit_test_setup(testAliensGetPointsNullParameter, setup),
+        cmocka_unit_test_setup(testAliensPointsByType, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

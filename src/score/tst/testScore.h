@@ -7,16 +7,16 @@
  *   Manuel Hernández Méndez <maherme.dev@gmail.com>
  */
 
-#ifndef __TESTHUD_H__
-#define __TESTHUD_H__
+#ifndef __TESTSCORE_H__
+#define __TESTSCORE_H__
+
+int
+setup(void **status);
 
 void
-testHudInit(void **status);
+testScoreInit(void **status);
 
 void
-testOnLivesChanged(void **status);
+testScoreAddPoints(void **status);
 
-void
-testOnScoreChanged(void **status);
-
-#endif /* __TESTHUD_H__ */
+#endif /* __TESTSCORE_H__ */

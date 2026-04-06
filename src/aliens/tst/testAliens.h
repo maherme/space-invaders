@@ -58,4 +58,10 @@ testAliensMoveMaxLeft(void **status);
 void
 testAliensMoveMaxRight(void **status);
 
+void
+testAliensGetPointsNullParameter(void **status);
+
+void
+testAliensPointsByType(void **state);
+
 #endif /* __TESTALIENS_H__ */

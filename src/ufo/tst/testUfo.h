@@ -49,4 +49,10 @@ testUfoCheckForMovingTrue(void **status);
 void
 testUfoCheckForMovingTrueMoreCalls(void **status);
 
+void
+testUfoGetPoints(void **status);
+
+void
+testUfoPointsByDangerLevel(void **status);
+
 #endif /* __TESTUFO_H__ */
