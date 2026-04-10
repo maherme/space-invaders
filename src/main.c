@@ -30,6 +30,10 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define ALIEN_HEIGHT_FOR_GAME_OVER 16
+#define ALIEN_HEIGHT_FOR_DANGER_MID 90
+#define ALIEN_HEIGHT_FOR_DANGER_HIGHT 52
+
 static struct
 {
     bool gaming;
@@ -373,16 +377,16 @@ deriveGameStateFromAliensHeight(void *data)
     int height = *(int *)data;
     danger_level_t danger_lv = DANGER_LOW;
 
-    if (height <= 16)
+    if (height <= ALIEN_HEIGHT_FOR_GAME_OVER)
     {
         eventEmit(EVENT_GAME_OVER, NULL);
     }
-    else if (height <= 52)
+    else if (height <= ALIEN_HEIGHT_FOR_DANGER_HIGHT)
     {
         danger_lv = DANGER_HIGH;
         eventEmit(EVENT_DANGER_LEVEL_CHANGED, &danger_lv);
     }
-    else if (height <= 90)
+    else if (height <= ALIEN_HEIGHT_FOR_DANGER_MID)
     {
         danger_lv = DANGER_MID;
         eventEmit(EVENT_DANGER_LEVEL_CHANGED, &danger_lv);
