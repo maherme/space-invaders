@@ -10,6 +10,8 @@
 #ifndef __EVENTS_H__
 #define __EVENTS_H__
 
+#define EVENTS_MAX_NUM_CB 16
+
 typedef enum
 {
     EVENT_GAME_OVER,
@@ -39,10 +41,10 @@ eventEmit(event_type_t type, void *data);
 
 #ifdef UNIT_TESTING
 event_cb_t
-helperUT_eventGetCallback(event_type_t type);
+helperUT_eventGetCallback(event_type_t type, unsigned int index);
 
 void
-helperUT_eventSetCallback(event_type_t type, event_cb_t cb);
+helperUT_eventSetCallback(event_type_t type, unsigned int index, event_cb_t cb);
 
 void
 helperUT_eventsClear(void);

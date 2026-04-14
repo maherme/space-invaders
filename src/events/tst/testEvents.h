@@ -17,7 +17,7 @@ void
 testEventRegister(void **status);
 
 void
-testEventAlreadyRegistered(void **status);
+testEventMaxRegistered(void **status);
 
 void
 testEventRegisterInvalidType(void **status);

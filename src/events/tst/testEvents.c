@@ -37,17 +37,19 @@ testEventRegister(void **status)
 
     eventRegister(EVENT_LIVES_DEPLETED, foo_cb);
 
-    assert_uint_equal((uintptr_t)foo_cb, (uintptr_t)helperUT_eventGetCallback(EVENT_LIVES_DEPLETED));
+    assert_uint_equal((uintptr_t)foo_cb, (uintptr_t)helperUT_eventGetCallback(EVENT_LIVES_DEPLETED, 0));
 }
 
 void
-testEventAlreadyRegistered(void **status)
+testEventMaxRegistered(void **status)
 {
     (void)status;
 
-    eventRegister(EVENT_LIVES_DEPLETED, foo_cb);
-
-    assert_uint_equal((uintptr_t)foo_cb, (uintptr_t)helperUT_eventGetCallback(EVENT_LIVES_DEPLETED));
+    for (int i = 0; i < EVENTS_MAX_NUM_CB; i++)
+    {
+        eventRegister(EVENT_LIVES_DEPLETED, foo_cb);
+        assert_uint_equal((uintptr_t)foo_cb, (uintptr_t)helperUT_eventGetCallback(EVENT_LIVES_DEPLETED, i));
+    }
 
     eventRegister(EVENT_LIVES_DEPLETED, foo_cb);
 }
@@ -67,10 +69,13 @@ testEventEmit(void **status)
     (void)status;
     int expected_data = 0;
 
-    helperUT_eventSetCallback(EVENT_LIVES_DEPLETED, foo_cb);
+    for (int i = 0; i < EVENTS_MAX_NUM_CB; i++)
+    {
+        helperUT_eventSetCallback(EVENT_LIVES_DEPLETED, i, foo_cb);
 
-    expect_uint_value(foo_cb, data, (uintptr_t)&expected_data);
-    expect_function_call(foo_cb);
+        expect_uint_value(foo_cb, data, (uintptr_t)&expected_data);
+        expect_function_call(foo_cb);
+    }
 
     eventEmit(EVENT_LIVES_DEPLETED, &expected_data);
 }
