@@ -19,7 +19,7 @@ main(void)
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(testEventRegister, setup),
-        cmocka_unit_test_setup(testEventAlreadyRegistered, setup),
+        cmocka_unit_test_setup(testEventMaxRegistered, setup),
         cmocka_unit_test_setup(testEventRegisterInvalidType, setup),
         cmocka_unit_test_setup(testEventEmit, setup),
         cmocka_unit_test_setup(testEventEmitNotRegistered, setup),

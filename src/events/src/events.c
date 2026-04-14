@@ -9,7 +9,7 @@
 
 #include "events.h"
 
-static event_cb_t callbacks[EVENT_COUNT];
+static event_cb_t callbacks[EVENT_COUNT][EVENTS_MAX_NUM_CB];
 
 void
 eventRegister(event_type_t type, event_cb_t cb)
@@ -19,23 +19,30 @@ eventRegister(event_type_t type, event_cb_t cb)
         return;
     }
 
-    if (!callbacks[type])
+    for (int i = 0; i < EVENTS_MAX_NUM_CB; i++)
     {
-        callbacks[type] = cb;
+        if (!callbacks[type][i])
+        {
+            callbacks[type][i] = cb;
+            return;
+        }
     }
 }
 
 void
 eventEmit(event_type_t type, void *data)
 {
+    int i = 0;
+
     if (type < 0 || type >= EVENT_COUNT)
     {
         return;
     }
 
-    if (callbacks[type])
+    while (i < EVENTS_MAX_NUM_CB && callbacks[type][i])
     {
-        callbacks[type](data);
+        callbacks[type][i](data);
+        i++;
     }
 }
 
@@ -43,15 +50,15 @@ eventEmit(event_type_t type, void *data)
 #include <stddef.h>
 
 event_cb_t
-helperUT_eventGetCallback(event_type_t type)
+helperUT_eventGetCallback(event_type_t type, unsigned int index)
 {
-    return callbacks[type];
+    return callbacks[type][index];
 }
 
 void
-helperUT_eventSetCallback(event_type_t type, event_cb_t cb)
+helperUT_eventSetCallback(event_type_t type, unsigned int index, event_cb_t cb)
 {
-    callbacks[type] = cb;
+    callbacks[type][index] = cb;
 }
 
 void
@@ -59,7 +66,10 @@ helperUT_eventsClear(void)
 {
     for (int i = 0; i < EVENT_COUNT; i++)
     {
-        callbacks[i] = NULL;
+        for (int j = 0; j < EVENTS_MAX_NUM_CB; j++)
+        {
+            callbacks[i][j] = NULL;
+        }
     }
 }
 #endif /* UNIT_TESTING */
