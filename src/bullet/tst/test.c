@@ -21,6 +21,7 @@ main(void)
         cmocka_unit_test_setup(testBulletCreate, setup),
         cmocka_unit_test_setup(testBulletCreateAllTypeBulletAlien, setup),
         cmocka_unit_test_setup(testBulletCreateTwoBulletSpaceship, setup),
+        cmocka_unit_test_setup(testBulletCreateInvalidEntity, setup),
         cmocka_unit_test_setup(testBulletDestroyNullParameter, setup),
         cmocka_unit_test_setup(testBulletDestroy, setup),
         cmocka_unit_test_setup(testBulletUsedNullParameter, setup),

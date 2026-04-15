@@ -23,6 +23,9 @@ void
 testBulletCreateTwoBulletSpaceship(void **status);
 
 void
+testBulletCreateInvalidEntity(void **status);
+
+void
 testBulletDestroyNullParameter(void **status);
 
 void

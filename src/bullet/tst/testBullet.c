@@ -9,6 +9,7 @@
 
 #include "testBullet.h"
 #include "bullet.h"
+#include "entity_types.h"
 #include <cmocka.h>
 #include <setjmp.h>
 #include <stdarg.h>
@@ -31,7 +32,7 @@ __wrap_rand(void)
     return (int)mock();
 }
 
-static bullet_type_t bullets[] = {BULLET_SPACESHIP, BULLET_ALIEN};
+static entity_type_t bullets[] = {ENTITY_SPACESHIP_BULLET, ENTITY_ALIEN_BULLET};
 
 void
 testBulletCreate(void **status)
@@ -40,7 +41,7 @@ testBulletCreate(void **status)
 
     for (size_t i = 0; i < sizeof(bullets) / sizeof(bullets[0]); i++)
     {
-        if (bullets[i] != BULLET_SPACESHIP)
+        if (bullets[i] != ENTITY_SPACESHIP_BULLET)
         {
             will_return(__wrap_rand, 1);
             expect_function_call(__wrap_rand);
@@ -63,7 +64,7 @@ testBulletCreateAllTypeBulletAlien(void **status)
 
     expect_function_call(__wrap_graphRegisterPrint);
 
-    bulletCreate(0, 0, BULLET_ALIEN);
+    bulletCreate(0, 0, ENTITY_ALIEN_BULLET);
 
     /* coil */
     will_return(__wrap_rand, 50);
@@ -71,7 +72,7 @@ testBulletCreateAllTypeBulletAlien(void **status)
 
     expect_function_call(__wrap_graphRegisterPrint);
 
-    bulletCreate(0, 0, BULLET_ALIEN);
+    bulletCreate(0, 0, ENTITY_ALIEN_BULLET);
 
     /* plasma */
     will_return(__wrap_rand, 80);
@@ -79,7 +80,7 @@ testBulletCreateAllTypeBulletAlien(void **status)
 
     expect_function_call(__wrap_graphRegisterPrint);
 
-    bulletCreate(0, 0, BULLET_ALIEN);
+    bulletCreate(0, 0, ENTITY_ALIEN_BULLET);
 }
 
 void
@@ -89,8 +90,16 @@ testBulletCreateTwoBulletSpaceship(void **status)
 
     expect_function_call(__wrap_graphRegisterPrint);
 
-    bulletCreate(0, 0, BULLET_SPACESHIP);
-    bulletCreate(0, 0, BULLET_SPACESHIP);
+    bulletCreate(0, 0, ENTITY_SPACESHIP_BULLET);
+    bulletCreate(0, 0, ENTITY_SPACESHIP_BULLET);
+}
+
+void
+testBulletCreateInvalidEntity(void **status)
+{
+    (void)status;
+
+    bulletCreate(0, 0, ENTITY_SPACESHIP);
 }
 
 void
@@ -105,7 +114,7 @@ void
 testBulletDestroy(void **status)
 {
     (void)status;
-    bullet_t bullet = helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
+    bullet_t bullet = helperUT_bulletInjectInPool(0, ENTITY_SPACESHIP_BULLET);
 
     expect_function_call(__wrap_graphGetSprite);
     expect_function_call(__wrap_graphUnregisterPrint);
@@ -125,7 +134,7 @@ void
 testBulletUsedFalse(void **status)
 {
     (void)status;
-    bullet_t bullet = helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
+    bullet_t bullet = helperUT_bulletInjectInPool(0, ENTITY_SPACESHIP_BULLET);
     helperUT_bulletSetUsed(bullet, false);
 
     assert_false(bulletUsed(bullet));
@@ -135,7 +144,7 @@ void
 testBulletUsedTrue(void **status)
 {
     (void)status;
-    bullet_t bullet = helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
+    bullet_t bullet = helperUT_bulletInjectInPool(0, ENTITY_SPACESHIP_BULLET);
 
     assert_true(bulletUsed(bullet));
 }
@@ -145,7 +154,7 @@ testBulletGetTypeNullParameters(void **status)
 {
     (void)status;
     bullet_t bullet = (bullet_t)0xdeadbeef;
-    bullet_type_t *type = (bullet_type_t *)0xdeadbeef;
+    entity_type_t *type = (entity_type_t *)0xdeadbeef;
 
     assert_int_equal(-1, bulletGetType(NULL, NULL));
     assert_int_equal(-1, bulletGetType(bullet, NULL));
@@ -156,11 +165,11 @@ void
 testBulletGetType(void **status)
 {
     (void)status;
-    bullet_t bullet = helperUT_bulletInjectInPool(0, BULLET_ALIEN);
-    bullet_type_t type;
+    bullet_t bullet = helperUT_bulletInjectInPool(0, ENTITY_ALIEN_BULLET);
+    entity_type_t type;
 
     assert_int_equal(0, bulletGetType(bullet, &type));
-    assert_int_equal(BULLET_ALIEN, type);
+    assert_int_equal(ENTITY_ALIEN_BULLET, type);
 }
 
 void
@@ -191,7 +200,7 @@ testBulletCallFunctionForEach(void **status)
 {
     (void)status;
 
-    helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
+    helperUT_bulletInjectInPool(0, ENTITY_SPACESHIP_BULLET);
 
     expect_function_call(foo);
 
@@ -204,7 +213,7 @@ testBulletAlienInhibit(void **status)
     (void)status;
 
     bulletAlienInhibit(true);
-    bulletCreate(0, 0, BULLET_ALIEN);
+    bulletCreate(0, 0, ENTITY_ALIEN_BULLET);
     assert_true(bulletNoneUsed());
 }
 
@@ -221,7 +230,7 @@ testBulletNoneUsedFalse(void **status)
 {
     (void)status;
 
-    helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
+    helperUT_bulletInjectInPool(0, ENTITY_SPACESHIP_BULLET);
 
     assert_false(bulletNoneUsed());
 }
@@ -250,8 +259,8 @@ testBulletSpaceshipHitBulletAliensCmpFalse(void **status)
     will_return(cmp_foo, false);
     expect_function_call(cmp_foo);
 
-    helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
-    helperUT_bulletInjectInPool(1, BULLET_ALIEN);
+    helperUT_bulletInjectInPool(0, ENTITY_SPACESHIP_BULLET);
+    helperUT_bulletInjectInPool(1, ENTITY_ALIEN_BULLET);
 
     assert_false(bulletSpaceshipHitBulletAliens(cmp_foo));
 }
@@ -268,8 +277,8 @@ testBulletSpaceshipHitBulletAliensCmpTrue(void **status)
     expect_function_call(__wrap_graphGetSprite);
     expect_function_call(__wrap_graphUnregisterPrint);
 
-    helperUT_bulletInjectInPool(0, BULLET_SPACESHIP);
-    helperUT_bulletInjectInPool(1, BULLET_ALIEN);
+    helperUT_bulletInjectInPool(0, ENTITY_SPACESHIP_BULLET);
+    helperUT_bulletInjectInPool(1, ENTITY_ALIEN_BULLET);
 
     assert_true(bulletSpaceshipHitBulletAliens(cmp_foo));
 }

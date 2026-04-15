@@ -11,6 +11,7 @@
 #include "bullet.h"
 #include "bunkers.h"
 #include "engine.h"
+#include "entity_types.h"
 #include "events.h"
 #include "explosion.h"
 #include "graph.h"
@@ -59,27 +60,27 @@ bulletActionsSingle(bullet_t bullet)
         return;
     }
 
-    bullet_type_t type;
+    entity_type_t type;
     bulletGetType(bullet, &type);
     sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
     if (physicCheckBorderCollision(bullet_sprite, UP) || physicCheckBorderCollision(bullet_sprite, DOWN))
     {
-        if (type == BULLET_SPACESHIP)
+        if (type == ENTITY_SPACESHIP_BULLET)
         {
             explosionCreate(bullet_sprite->x,
-                            GAME_HEIGHT - explosionsGetExplosionHeight(EXPLOSION_BULLET_SPACESHIP),
-                            EXPLOSION_BULLET_SPACESHIP,
+                            GAME_HEIGHT - explosionsGetExplosionHeight(ENTITY_SPACESHIP_BULLET),
+                            ENTITY_SPACESHIP_BULLET,
                             NULL);
         }
         else
         {
-            explosionCreate(bullet_sprite->x, bullet_sprite->y, EXPLOSION_BULLET_ALIEN, NULL);
+            explosionCreate(bullet_sprite->x, bullet_sprite->y, ENTITY_ALIEN_BULLET, NULL);
         }
         bulletDestroy(bullet);
     }
     else
     {
-        if (type == BULLET_SPACESHIP)
+        if (type == ENTITY_SPACESHIP_BULLET)
         {
             physicMoveSprite(bullet_sprite, UP);
         }
@@ -111,10 +112,10 @@ spaceshipExplosionCallback(void)
 static void
 checkCollisionBulletSpaceship(bullet_t bullet)
 {
-    bullet_type_t type;
+    entity_type_t type;
     bulletGetType(bullet, &type);
 
-    if (!bulletUsed(bullet) || !spaceshipAlive(gameContext.spaceship) || type != BULLET_ALIEN)
+    if (!bulletUsed(bullet) || !spaceshipAlive(gameContext.spaceship) || type != ENTITY_ALIEN_BULLET)
     {
         return;
     }
@@ -128,7 +129,7 @@ checkCollisionBulletSpaceship(bullet_t bullet)
         bulletDestroy(bullet);
         explosionCreate(spaceship_sprite->x + spaceship_sprite->width / 2,
                         spaceship_sprite->y,
-                        EXPLOSION_SPACESHIP,
+                        ENTITY_SPACESHIP,
                         spaceshipExplosionCallback);
         spaceshipDestroy(gameContext.spaceship);
     }
@@ -137,10 +138,10 @@ checkCollisionBulletSpaceship(bullet_t bullet)
 static void
 checkCollisionBulletSpaceshipBulletAliens(bullet_t bullet)
 {
-    bullet_type_t type;
+    entity_type_t type;
     bulletGetType(bullet, &type);
 
-    if (!bulletUsed(bullet) || type != BULLET_SPACESHIP)
+    if (!bulletUsed(bullet) || type != ENTITY_SPACESHIP_BULLET)
     {
         return;
     }
@@ -148,8 +149,8 @@ checkCollisionBulletSpaceshipBulletAliens(bullet_t bullet)
     if (bulletSpaceshipHitBulletAliens(physicCheckSpritesPixelCollision))
     {
         sprite_t *bullet_sprite = graphGetSprite((base_t *)bullet);
-        explosionCreate(bullet_sprite->x, bullet_sprite->y, EXPLOSION_BULLET_SPACESHIP, NULL);
-        explosionCreate(bullet_sprite->x, bullet_sprite->y, EXPLOSION_BULLET_ALIEN, NULL);
+        explosionCreate(bullet_sprite->x, bullet_sprite->y, ENTITY_SPACESHIP_BULLET, NULL);
+        explosionCreate(bullet_sprite->x, bullet_sprite->y, ENTITY_ALIEN_BULLET, NULL);
         bulletDestroy(bullet);
         return;
     }
@@ -174,16 +175,16 @@ spaceshipFire(void)
     sprite_t *spaceship_sprite = graphGetSprite((base_t *)gameContext.spaceship);
     bulletCreate(spaceship_sprite->x + spaceship_sprite->width / 2,
                  spaceship_sprite->y + spaceship_sprite->height,
-                 BULLET_SPACESHIP);
+                 ENTITY_SPACESHIP_BULLET);
 }
 
 static void
 checkCollisionsBulletAlienSingle(bullet_t bullet)
 {
-    bullet_type_t type;
+    entity_type_t type;
     bulletGetType(bullet, &type);
 
-    if (!bulletUsed(bullet) || type != BULLET_SPACESHIP)
+    if (!bulletUsed(bullet) || type != ENTITY_SPACESHIP_BULLET)
     {
         return;
     }
@@ -204,7 +205,7 @@ checkCollisionsBulletAlienSingle(bullet_t bullet)
         if (physicCheckSpritesPixelCollision(alien_sprite, bullet_sprite))
         {
             bulletDestroy(bullet);
-            explosionCreate(alien_sprite->x + alien_sprite->width / 2, alien_sprite->y, EXPLOSION_ALIEN, NULL);
+            explosionCreate(alien_sprite->x + alien_sprite->width / 2, alien_sprite->y, ENTITY_ALIEN, NULL);
             int points = aliensGetPoints(alien);
             scoreAddPoints(points);
             alienDestroy(alien);
@@ -235,7 +236,7 @@ aliensActions(void)
         if (alien)
         {
             sprite_t *alien_sprite = graphGetSprite((base_t *)alien);
-            bulletCreate(alien_sprite->x + alien_sprite->width / 2, alien_sprite->y, BULLET_ALIEN);
+            bulletCreate(alien_sprite->x + alien_sprite->width / 2, alien_sprite->y, ENTITY_ALIEN_BULLET);
             clock_gettime(CLOCK_MONOTONIC, &gameContext.timer_get_shooter);
         }
     }
@@ -250,10 +251,10 @@ aliensActions(void)
 static void
 checkCollisionBulletUfoSingle(bullet_t bullet)
 {
-    bullet_type_t type;
+    entity_type_t type;
     bulletGetType(bullet, &type);
 
-    if (!bulletUsed(bullet) || type != BULLET_SPACESHIP)
+    if (!bulletUsed(bullet) || type != ENTITY_SPACESHIP_BULLET)
     {
         return;
     }
@@ -264,7 +265,7 @@ checkCollisionBulletUfoSingle(bullet_t bullet)
     if (physicCheckSpritesPixelCollision(ufo_sprite, bullet_sprite))
     {
         bulletDestroy(bullet);
-        explosionCreate(ufo_sprite->x + ufo_sprite->width / 2, ufo_sprite->y, EXPLOSION_UFO, NULL);
+        explosionCreate(ufo_sprite->x + ufo_sprite->width / 2, ufo_sprite->y, ENTITY_UFO, NULL);
         int points = ufoGetPoints();
         scoreAddPoints(points);
         ufoDestroy(gameContext.ufo);
@@ -304,18 +305,18 @@ checkCollisionsBulletSingleBunkerSingle(bunker_t bunker, void *ctx)
 
     if (physicCheckSpritesPixelCollision(bunker_sprite, bullet_sprite))
     {
-        bullet_type_t type;
+        entity_type_t type;
         bulletGetType(bullet, &type);
         explosion_t explosion;
 
-        if (!bulletUsed(bullet) || type == BULLET_SPACESHIP)
+        if (!bulletUsed(bullet) || type == ENTITY_SPACESHIP_BULLET)
         {
-            explosion = explosionCreate(bullet_sprite->x, bullet_sprite->y, EXPLOSION_BULLET_SPACESHIP, NULL);
+            explosion = explosionCreate(bullet_sprite->x, bullet_sprite->y, ENTITY_SPACESHIP_BULLET, NULL);
         }
         else
         {
             explosion =
-                explosionCreate(bullet_sprite->x, bullet_sprite->y - bullet_sprite->height / 2, EXPLOSION_BULLET_ALIEN, NULL);
+                explosionCreate(bullet_sprite->x, bullet_sprite->y - bullet_sprite->height / 2, ENTITY_ALIEN_BULLET, NULL);
         }
 
         physicMakeFootprintSprite(bunker_sprite, graphGetSprite((base_t *)explosion));
@@ -327,7 +328,7 @@ checkCollisionsBulletSingleBunkerSingle(bunker_t bunker, void *ctx)
 static void
 checkCollisionsBulletSingleBunkers(bullet_t bullet)
 {
-    bullet_type_t type;
+    entity_type_t type;
     bulletGetType(bullet, &type);
 
     if (!bulletUsed(bullet))
