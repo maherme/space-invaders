@@ -8,6 +8,7 @@
  */
 
 #include "testExplosion.h"
+#include "entity_types.h"
 #include "explosion.h"
 #include <cmocka.h>
 #include <setjmp.h>
@@ -45,7 +46,7 @@ registerExplosionBullet(void (*callback)(void))
     expect_function_call(__wrap_clock_gettime);
     expect_function_call(__wrap_graphRegisterPrint);
 
-    explosionCreate(0, 0, EXPLOSION_BULLET_SPACESHIP, callback);
+    explosionCreate(0, 0, ENTITY_SPACESHIP_BULLET, callback);
 }
 
 static void
@@ -61,11 +62,10 @@ registerExplosionSpaceship(void (*callback)(void))
     expect_function_call(__wrap_clock_gettime);
     expect_function_call(__wrap_graphRegisterPrint);
 
-    explosionCreate(0, 0, EXPLOSION_SPACESHIP, callback);
+    explosionCreate(0, 0, ENTITY_SPACESHIP, callback);
 }
 
-static explosion_type_t explosions[] = {
-    EXPLOSION_BULLET_SPACESHIP, EXPLOSION_BULLET_ALIEN, EXPLOSION_SPACESHIP, EXPLOSION_UFO, EXPLOSION_ALIEN};
+static entity_type_t explosions[] = {ENTITY_SPACESHIP_BULLET, ENTITY_ALIEN_BULLET, ENTITY_SPACESHIP, ENTITY_UFO, ENTITY_ALIEN};
 
 void
 testExplosionCreate(void **status)
@@ -76,7 +76,7 @@ testExplosionCreate(void **status)
     {
         expect_function_call(__wrap_utilsCalloc);
         expect_function_call(__wrap_utilsCalloc);
-        if (i == EXPLOSION_SPACESHIP)
+        if (explosions[i] == ENTITY_SPACESHIP)
         {
             will_return(__wrap_clock_gettime, 0); /* tv_sec */
             will_return(__wrap_clock_gettime, 0); /* tv_nsec */
@@ -220,11 +220,11 @@ testExplosionAllFinishedFalse(void **status)
 }
 
 static const unsigned int expected_explosion_heights[] = {
-    [EXPLOSION_BULLET_SPACESHIP] = 8,
-    [EXPLOSION_BULLET_ALIEN] = 8,
-    [EXPLOSION_SPACESHIP] = 8,
-    [EXPLOSION_UFO] = 8,
-    [EXPLOSION_ALIEN] = 8,
+    [ENTITY_SPACESHIP_BULLET] = 8,
+    [ENTITY_ALIEN_BULLET] = 8,
+    [ENTITY_SPACESHIP] = 8,
+    [ENTITY_UFO] = 8,
+    [ENTITY_ALIEN] = 8,
 };
 
 void
@@ -234,6 +234,6 @@ testExplosionsGetExplosionHeight(void **status)
 
     for (size_t i = 0; i < sizeof(explosions) / sizeof(explosions[0]); i++)
     {
-        assert_uint_equal(expected_explosion_heights[i], explosionsGetExplosionHeight(explosions[i]));
+        assert_uint_equal(expected_explosion_heights[explosions[i]], explosionsGetExplosionHeight(explosions[i]));
     }
 }

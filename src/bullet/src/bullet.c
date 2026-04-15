@@ -8,6 +8,7 @@
  */
 
 #include "bullet.h"
+#include "entity_types.h"
 #include "graph.h"
 #include "graphGlutCallbacks.h"
 #include "utils.h"
@@ -34,7 +35,7 @@ typedef enum
 struct bullet_instance
 {
     sprite_t sprite;
-    bullet_type_t type;
+    entity_type_t type;
     bool used;
 };
 
@@ -44,6 +45,16 @@ typedef struct
     long long time_to_move;
     int pixels_to_move;
 } bullet_alien_t;
+
+typedef struct
+{
+    int width, height;
+    const char *image_base, *image;
+    int num_frames;
+    int pixels_to_move;
+    int max_movement_up, max_movement_down;
+    long long time_to_move;
+} bullet_config_t;
 
 static struct
 {
@@ -83,6 +94,32 @@ static const char bulletAlienImage[BULLET_ALIEN_NUM_TYPES][BULLET_ALIEN_NUM_FRAM
                                        /* frame 4 */
                                        {{B, W, B}, {B, W, W}, {B, W, B}, {W, W, B}, {B, W, B}, {B, W, W}, {B, W, B}}}};
 
+static const bullet_config_t bullet_configs[] = {
+    /* clang-format off */
+    [ENTITY_SPACESHIP_BULLET] = {
+        .height = BULLET_SPACESHIP_HEIGHT,
+        .width = BULLET_SPACESHIP_WIDTH,
+        .image = (const char *)bulletSpaceshipImage,
+        .image_base = NULL,
+        .num_frames = 0,
+        .pixels_to_move = 1,
+        .max_movement_down = 0,
+        .max_movement_up = GAME_HEIGHT,
+        .time_to_move = 2 * NS_PER_MS,
+    },
+    [ENTITY_ALIEN_BULLET] = {
+        .height = BULLET_ALIEN_HEIGHT,
+        .width = BULLET_ALIEN_WIDTH,
+        .image = NULL,
+        .image_base = NULL,
+        .num_frames = BULLET_ALIEN_NUM_FRAMES,
+        .pixels_to_move = 0,
+        .max_movement_up = GAME_HEIGHT,
+        .max_movement_down = 0,
+        .time_to_move = 0,
+    }};
+/* clang-format on */
+
 static bullet_alien_t bulletAlien[BULLET_ALIEN_NUM_TYPES] = {
     {.image = (const char *)&bulletAlienImage[CRACKLE], .time_to_move = 1000 / 60 * NS_PER_MS, .pixels_to_move = 1},
     {.image = (const char *)&bulletAlienImage[PLASMA], .time_to_move = 2000 / 60 * NS_PER_MS, .pixels_to_move = 1},
@@ -111,55 +148,46 @@ getBulletAlienType(void)
 }
 
 static void
-setBulletType(bullet_t bullet, bullet_type_t type)
+setBulletType(bullet_t bullet, entity_type_t type)
 {
-    switch (type)
+    bullet->sprite.width = bullet_configs[type].width;
+    bullet->sprite.height = bullet_configs[type].height;
+    bullet->sprite.num_frames = bullet_configs[type].num_frames;
+    bullet->sprite.max_movement.up = bullet_configs[type].max_movement_up;
+    bullet->sprite.max_movement.down = bullet_configs[type].max_movement_down;
+    bullet->sprite.time_to_move = bullet_configs[type].time_to_move;
+    bullet->sprite.pixels_to_move = bullet_configs[type].pixels_to_move;
+    bullet->sprite.image_base = bullet_configs[type].image_base;
+    bullet->sprite.image = bullet_configs[type].image;
+
+    if (type == ENTITY_ALIEN_BULLET)
     {
-        case BULLET_SPACESHIP:
-            bullet->sprite.width = BULLET_SPACESHIP_WIDTH;
-            bullet->sprite.height = BULLET_SPACESHIP_HEIGHT;
-            bullet->sprite.image = (const char *)bulletSpaceshipImage;
-            bullet->sprite.pixels_to_move = 1;
-            bullet->sprite.max_movement.up = GAME_HEIGHT;
-            bullet->sprite.max_movement.down = 0;
-            bullet->sprite.time_to_move = 2 * NS_PER_MS;
-            break;
-        case BULLET_ALIEN:
-        {
-            bullet_alien_type_t alien_bullet_type = getBulletAlienType();
-            bullet->sprite.width = BULLET_ALIEN_WIDTH;
-            bullet->sprite.height = BULLET_ALIEN_HEIGHT;
-            bullet->sprite.image_base = bulletAlien[alien_bullet_type].image;
-            bullet->sprite.image = bullet->sprite.image_base;
-            bullet->sprite.num_frames = BULLET_ALIEN_NUM_FRAMES;
-            bullet->sprite.pixels_to_move = bulletAlien[alien_bullet_type].pixels_to_move;
-            bullet->sprite.max_movement.up = GAME_HEIGHT;
-            bullet->sprite.max_movement.down = 0;
-            bullet->sprite.time_to_move = bulletAlien[alien_bullet_type].time_to_move;
-            break;
-        }
-            /* GCOVR_EXCL_START */
-        default:
-            assert(!"invalid bullet type");
-            UNREACHABLE();
-            break; /* GCOVR_EXCL_BR_SOURCE */
-                   /* GCOVR_EXCL_STOP */
+        bullet_alien_type_t alien_bullet_type = getBulletAlienType();
+        bullet->sprite.time_to_move = bulletAlien[alien_bullet_type].time_to_move;
+        bullet->sprite.pixels_to_move = bulletAlien[alien_bullet_type].pixels_to_move;
+        bullet->sprite.image_base = bulletAlien[alien_bullet_type].image;
+        bullet->sprite.image = bullet->sprite.image_base;
     }
 
     bullet->type = type;
 }
 
 void
-bulletCreate(int x, int y, bullet_type_t type)
+bulletCreate(int x, int y, entity_type_t type)
 {
+    if (type != ENTITY_SPACESHIP_BULLET && type != ENTITY_ALIEN_BULLET)
+    {
+        return;
+    }
+
     for (int i = 0; i < MAX_BULLETS; i++)
     {
-        if (type == BULLET_SPACESHIP && i != BULLET_SPACESHIP_SLOT)
+        if (type == ENTITY_SPACESHIP_BULLET && i != BULLET_SPACESHIP_SLOT)
         {
             continue;
         }
 
-        if (type == BULLET_ALIEN && (i == BULLET_SPACESHIP_SLOT || bulletPool.inhibitBulletAlien))
+        if (type == ENTITY_ALIEN_BULLET && (i == BULLET_SPACESHIP_SLOT || bulletPool.inhibitBulletAlien))
         {
             continue;
         }
@@ -202,7 +230,7 @@ bulletUsed(bullet_t bullet)
 }
 
 int
-bulletGetType(const bullet_t bullet, bullet_type_t *type)
+bulletGetType(const bullet_t bullet, entity_type_t *type)
 {
     if (!bullet || !type)
     {
@@ -284,7 +312,7 @@ helperUT_bulletSetUsed(bullet_t bullet, bool used)
 }
 
 bullet_t
-helperUT_bulletInjectInPool(int index, bullet_type_t type)
+helperUT_bulletInjectInPool(int index, entity_type_t type)
 {
     bullet_t bullet = &bulletPool.bullets[index];
     memset(bullet, 0, sizeof(*bullet));

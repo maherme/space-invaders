@@ -8,6 +8,7 @@
  */
 
 #include "explosion.h"
+#include "entity_types.h"
 #include "graph.h"
 #include "graphGlutCallbacks.h"
 #include "list.h"
@@ -29,11 +30,11 @@
 #define EXPLOSION_ALIEN_HEIGHT 8
 
 static const unsigned int explosion_heights[] = {
-    [EXPLOSION_BULLET_SPACESHIP] = EXPLOSION_BULLET_SPACESHIP_HEIGHT,
-    [EXPLOSION_BULLET_ALIEN] = EXPLOSION_BULLET_ALIEN_HEIGHT,
-    [EXPLOSION_SPACESHIP] = EXPLOSION_SPACESHIP_HEIGHT,
-    [EXPLOSION_UFO] = EXPLOSION_UFO_HEIGHT,
-    [EXPLOSION_ALIEN] = EXPLOSION_ALIEN_HEIGHT,
+    [ENTITY_SPACESHIP_BULLET] = EXPLOSION_BULLET_SPACESHIP_HEIGHT,
+    [ENTITY_ALIEN_BULLET] = EXPLOSION_BULLET_ALIEN_HEIGHT,
+    [ENTITY_SPACESHIP] = EXPLOSION_SPACESHIP_HEIGHT,
+    [ENTITY_UFO] = EXPLOSION_UFO_HEIGHT,
+    [ENTITY_ALIEN] = EXPLOSION_ALIEN_HEIGHT,
 };
 
 struct explosion_instance
@@ -43,7 +44,7 @@ struct explosion_instance
     long long explosion_time;
     struct timespec update_frame_timer;
     long long update_frame_time;
-    explosion_type_t type;
+    entity_type_t type;
     void (*callback)(void);
 };
 
@@ -188,32 +189,32 @@ static const struct
                      .explosion_time = 500 * NS_PER_MS};
 
 static void
-setExplosionType(explosion_t instance, explosion_type_t type)
+setExplosionType(explosion_t instance, entity_type_t type)
 {
     static int explosion_alien_next = 0;
 
     instance->type = type;
     switch (type)
     {
-        case EXPLOSION_BULLET_SPACESHIP:
+        case ENTITY_SPACESHIP_BULLET:
             instance->sprite.width = explosion_bullet_spaceship.image_width;
             instance->sprite.height = explosion_bullet_spaceship.image_height;
             instance->sprite.image = (const char *)explosion_bullet_spaceship.image;
             instance->explosion_time = explosion_bullet_spaceship.explosion_time;
             break;
-        case EXPLOSION_BULLET_ALIEN:
+        case ENTITY_ALIEN_BULLET:
             instance->sprite.width = explosion_bullet_alien.image_width;
             instance->sprite.height = explosion_bullet_alien.image_height;
             instance->sprite.image = (const char *)explosion_bullet_alien.image;
             instance->explosion_time = explosion_bullet_alien.explosion_time;
             break;
-        case EXPLOSION_UFO:
+        case ENTITY_UFO:
             instance->sprite.width = explosion_ufo.image_width;
             instance->sprite.height = explosion_ufo.image_height;
             instance->sprite.image = (const char *)explosion_ufo.image;
             instance->explosion_time = explosion_ufo.explosion_time;
             break;
-        case EXPLOSION_SPACESHIP:
+        case ENTITY_SPACESHIP:
             instance->sprite.width = explosion_spaceship.image_width;
             instance->sprite.height = explosion_spaceship.image_height;
             instance->sprite.image_base = (const char *)explosion_spaceship.image;
@@ -223,7 +224,7 @@ setExplosionType(explosion_t instance, explosion_type_t type)
             instance->update_frame_time = explosion_spaceship.update_frame_time;
             clock_gettime(CLOCK_MONOTONIC, &instance->update_frame_timer);
             break;
-        case EXPLOSION_ALIEN:
+        case ENTITY_ALIEN:
             instance->sprite.width = explosion_alien.image_width;
             instance->sprite.height = explosion_alien.image_height;
             instance->sprite.image = (const char *)explosion_alien.image[explosion_alien_next];
@@ -231,6 +232,8 @@ setExplosionType(explosion_t instance, explosion_type_t type)
             instance->explosion_time = explosion_alien.explosion_time;
             break;
             /* GCOVR_EXCL_START */
+        case ENTITY_BUNKER:
+        case ENTITY_COUNT:
         default:
             assert(!"invalid explosion type");
             UNREACHABLE();
@@ -240,7 +243,7 @@ setExplosionType(explosion_t instance, explosion_type_t type)
 }
 
 explosion_t
-explosionCreate(int x, int y, explosion_type_t type, void (*callback)(void))
+explosionCreate(int x, int y, entity_type_t type, void (*callback)(void))
 {
     explosion_node_t *new_node = utilsCalloc(1, sizeof(explosion_node_t));
     explosion_t new_explosion = utilsCalloc(1, sizeof(struct explosion_instance));
@@ -315,7 +318,7 @@ explosionsAllFinished(void)
 }
 
 unsigned int
-explosionsGetExplosionHeight(explosion_type_t type)
+explosionsGetExplosionHeight(entity_type_t type)
 {
     return explosion_heights[type];
 }
